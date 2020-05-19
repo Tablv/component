@@ -52,11 +52,6 @@ export default interface AnalysisData {
   isReact: boolean;
 
   /**
-   * 分析后暂存的数据
-   */
-  resultTmp: AnalysisResults;
-
-  /**
    * 过滤器
    */
   filter: {
