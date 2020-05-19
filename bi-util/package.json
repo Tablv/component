@@ -1,0 +1,15 @@
+{
+  "name": "glaway-bi-util",
+  "version": "0.0.5",
+  "description": "",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "registry": "http://192.168.1.138:9999/repository/glaway-npm-release/"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "lodash": "^4.17.15"
+  }
+}
