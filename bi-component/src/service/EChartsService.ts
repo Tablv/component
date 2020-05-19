@@ -10,8 +10,10 @@ import EChartsUtil from "glaway-bi-component/src/util/EChartsUtil";
 import EventsConfig from "glaway-bi-model/view/dashboard/EventsConfig";
 import ChartUIService from "glaway-bi-component/src/interfaces/ChartUIService";
 
-import ChartHandler from "./handleChart";
-import ParamsConverter from '@/util/ParamsConverter';
+import handleChart from "./handleChart";
+import ParamsConverter from 'glaway-bi-component/src/util/ParamsConverter';
+import DefaultTemplate from 'glaway-bi-component/src/config/DefaultTemplate';
+
 
 /**
  * ECharts 业务层
@@ -34,7 +36,7 @@ export default class EChartsService {
       return new Object() as EChartsOption;
     }
 
-    const resultStyle = ChartHandler(resultData, dashboard);
+    const resultStyle = handleChart(resultData, dashboard);
 
     return resultStyle as EChartsOption;
   }
@@ -43,10 +45,10 @@ export default class EChartsService {
    * 将图表数据的样式与分析结果合并为 ECharts 的 Option
    * @param dashboard {Dashboard} 仪表板的实例数据
    */
-  public static mergEChartstyle(dashboard: Dashboard): echarts.EChartOption {
+  public static mergEChartstyle(dashboard: Dashboard, result: AnalysisResults): echarts.EChartOption {
     let style: EChartsOption = ObjectUtil.copy(dashboard.echarts),
       resultStyle: EChartsOption = this.getResultStyle(
-        dashboard.analysis.resultTmp,
+        result,
         dashboard
       );
 
@@ -206,10 +208,16 @@ export function bindEvents(
  */
 export function renderChart(
   chartInstace: echarts.ECharts,
-  thisDashboard: Dashboard
+  thisDashboard: Dashboard,
+  result: AnalysisResults
 ): Promise<void> {
   try {
-    let echartsOption = EChartsService.mergEChartstyle(thisDashboard);
+    let chartType = thisDashboard.visualData.type,
+      defaultConfig = DefaultTemplate.getDefaultConfig(chartType);
+
+    thisDashboard = ObjectUtil.merge(thisDashboard, defaultConfig);
+
+    let echartsOption = EChartsService.mergEChartstyle(thisDashboard, result);
     EChartsUtil.setOption(chartInstace, echartsOption);
     return Promise.resolve();
   } catch (err) {

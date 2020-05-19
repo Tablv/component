@@ -21,8 +21,8 @@ export default class AxiosUtil {
    * @param url {string} 请求地址
    * @param data {any} 请求参数
    */
-  public static async get(url: string, data?: any): Promise<ResultJSON> {
-    return await axios
+  public static get(url: string, data?: any): Promise<ResultJSON> {
+    return axios
       .get(this.getBasePath() + url, {
         params: data
       })
@@ -38,12 +38,12 @@ export default class AxiosUtil {
    * @param data {any} 请求参数
    * @param isJSON {boolean} 是否为json格式
    */
-  public static async post(
+  public static post(
     url: string,
     data: any,
     isJSON?: boolean
   ): Promise<ResultJSON> {
-    return await this.request(url, data, "POST", isJSON);
+    return this.request(url, data, "POST", isJSON);
   }
 
   /**
@@ -53,13 +53,13 @@ export default class AxiosUtil {
    * @param type {Method} 请求类型
    * @param isJSON {boolean} 是否为json格式
    */
-  public static async request(
+  public static request(
     url: string,
     data: any,
     type: Method,
     isJSON?: boolean
   ): Promise<ResultJSON> {
-    return await axios({
+    return axios({
       url: this.getBasePath() + url,
       method: type,
       data: isJSON ? data : qs.stringify(data),

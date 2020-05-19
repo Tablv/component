@@ -147,7 +147,7 @@ export default class ChartComponent extends Vue implements ChartUIService {
         }
       );
     } else {
-      renderChart(this.$data.echartsInstance, this.dashboard)
+      renderChart(this.$data.echartsInstance, this.dashboard, this.data)
         .then(result => {})
         .catch(err => {
           console.error(err);
