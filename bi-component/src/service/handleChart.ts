@@ -18,7 +18,6 @@ export default function handleChart(
     throw new Error("找不到对应图表类型的处理方法");
   }
 
-  debugger
   const sampleStyle = dashboard.echarts.sampleStyle[chartType] as ChartOption;
   let styleCustomized = new CustomizedHandler(
       result,
