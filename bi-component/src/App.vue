@@ -26,7 +26,7 @@ import ChartUIService from "./interfaces/ChartUIService";
   }
 })
 export default class App extends Vue {
-  dashboards: Array<Dashboard> = [
+  dashboards: Array<any> = [
     {
       id: "6cba940665594ede989f696582313dde",
       visualData: {

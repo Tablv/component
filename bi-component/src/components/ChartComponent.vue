@@ -30,7 +30,6 @@ import EChartsService, {
   renderChart,
   renderChartByJSON
 } from "@/service/EChartsService";
-import { generalMenuOptions } from "glaway-bi-component/src/config/MenuOptions";
 import EChartsUtil from "glaway-bi-component/src/util/EChartsUtil";
 
 @Component
@@ -118,10 +117,7 @@ export default class ChartComponent extends Vue implements ChartUIService {
    */
   public bindChartEvents(clearEvent: boolean, thisEvents: EventsConfig): void {
     // 事件选项
-    let eventSelection = clearEvent
-        ? generalMenuOptions.events.method.selection
-        : null,
-      triggerCallback = this.getEventMethod(thisEvents);
+    let triggerCallback = this.getEventMethod(thisEvents);
 
     // 绑定事件
     triggerCallback &&
@@ -130,8 +126,7 @@ export default class ChartComponent extends Vue implements ChartUIService {
         this.$data.echartsInstance, // 实例
         thisEvents, // 事件配置
         triggerCallback, // 回调方法
-        this, // 回调上下文
-        eventSelection // 清空此前触发方法
+        this // 回调上下文
       );
   }
 

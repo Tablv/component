@@ -26,6 +26,7 @@ export default class ParamsConverter {
     const {
       dimensions,
       measures,
+      viewName,
       where,
       filter,
       sort
@@ -35,6 +36,7 @@ export default class ParamsConverter {
       dashboardId: currentDashboard.id,
       from: null,
       join: [],
+      viewName,
 
       // 追加维度、度量数据
       fields: ObjectUtil.mergeArray([], true, dimensions, measures),
@@ -69,9 +71,11 @@ export default class ParamsConverter {
   }
 
   /**
+   * 查询字段使用
+   * 
    * tableInfo 转 analysisDTO
    */
-  public static getFetchValuesDTO(
+  public static getQueryValuesDTO(
     fromTable: TableVO,
     joinRelations: Array<JoinRelation>,
     tableInfo: TableInfoVO
@@ -88,6 +92,7 @@ export default class ParamsConverter {
         tableName: fromTable.name,
         alias: fromTable.alias
       },
+      viewName: "",
       join: joinRelations,
       fields: [fieldDTO],
       where: [],

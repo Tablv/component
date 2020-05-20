@@ -1,4 +1,4 @@
-import { ChartOption } from "glaway-bi-model/view/dashboard/ChartOption";
+import { ChartOption } from "glaway-bi-model/view/dashboard/chart/ChartOption";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";

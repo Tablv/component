@@ -16,6 +16,11 @@ export default interface AnalysisDTO {
    * 主表信息
    */
   from?: TableRelation | null;
+
+  /**
+   * 视图名称
+   */
+  viewName: string;
   
   /**
    * join 查询

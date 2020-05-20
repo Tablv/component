@@ -1,7 +1,7 @@
 import { SplitedFieldNames } from "../service/EChartsService";
 import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
-import { ChartOption } from "glaway-bi-model/view/dashboard/ChartOption";
+import { ChartOption } from "glaway-bi-model/view/dashboard/chart/ChartOption";
 
 /**
  * 图表通用处理 接口

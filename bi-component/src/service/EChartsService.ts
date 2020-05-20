@@ -172,6 +172,8 @@ export function reactUpdate(
   }
 }
 
+const triggerMethods = ["click", "dblclick", "mousedown", "mousemove", "mouseup", "mouseover", "mouseout"];
+
 /**
  * 绑定图表点击事件
  *
@@ -185,16 +187,12 @@ export function bindEvents(
   chartInstance: echarts.ECharts,
   thisEvents: EventsConfig,
   triggerMethodCallback: Function,
-  thisContext: ChartUIService,
-  eventMethodSelection?: Array<any>
+  thisContext: ChartUIService
 ): void {
   // 传入，则先取消绑定事件
-  if (eventMethodSelection) {
-    for (const index in eventMethodSelection) {
-      const sel = eventMethodSelection[index];
-      chartInstance.off(sel.value);
-    }
-  }
+  triggerMethods.forEach(method => {
+    chartInstance.off(method);
+  })
 
   const nowTrigger = thisEvents.triggerMethod;
   if (nowTrigger && triggerMethodCallback) {

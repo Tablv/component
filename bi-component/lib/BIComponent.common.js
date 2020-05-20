@@ -125964,12 +125964,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"7288168a-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=10cd87ac&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"2f8003d0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=223c2f43&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"chart-wrapper"},[_c('div',{ref:"echartsContainer",staticClass:"chart-container",staticStyle:{"width":"400px","height":"400px"}})])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=10cd87ac&
+// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=223c2f43&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.function.name.js
 var es_function_name = __webpack_require__("b0c0");
@@ -126997,14 +126997,14 @@ var UUID_UUID = /*#__PURE__*/function () {
 }();
 
 
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.for-each.js
+var es_array_for_each = __webpack_require__("4160");
+
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.promise.js
 var es_promise = __webpack_require__("e6cf");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
 var es_array_concat = __webpack_require__("99af");
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.for-each.js
-var es_array_for_each = __webpack_require__("4160");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.reduce.js
 var es_array_reduce = __webpack_require__("13d5");
@@ -129180,6 +129180,7 @@ var ParamsConverter_ParamsConverter = /*#__PURE__*/function () {
       var _currentDashboard$ana = currentDashboard.analysis,
           dimensions = _currentDashboard$ana.dimensions,
           measures = _currentDashboard$ana.measures,
+          viewName = _currentDashboard$ana.viewName,
           where = _currentDashboard$ana.where,
           filter = _currentDashboard$ana.filter,
           sort = _currentDashboard$ana.sort;
@@ -129187,6 +129188,7 @@ var ParamsConverter_ParamsConverter = /*#__PURE__*/function () {
         dashboardId: currentDashboard.id,
         from: null,
         join: [],
+        viewName: viewName,
         // 追加维度、度量数据
         fields: ObjectUtil_ObjectUtil.mergeArray([], true, dimensions, measures),
         // 追加过滤、排序
@@ -129215,12 +129217,14 @@ var ParamsConverter_ParamsConverter = /*#__PURE__*/function () {
       }
     }
     /**
+     * 查询字段使用
+     *
      * tableInfo 转 analysisDTO
      */
 
   }, {
-    key: "getFetchValuesDTO",
-    value: function getFetchValuesDTO(fromTable, joinRelations, tableInfo) {
+    key: "getQueryValuesDTO",
+    value: function getQueryValuesDTO(fromTable, joinRelations, tableInfo) {
       var fieldDTO = FieldDTO_FieldDTOBuilder.buildFieldDTO(tableInfo); // 字段追加去重
 
       fieldDTO.func = ["distinct"];
@@ -129231,6 +129235,7 @@ var ParamsConverter_ParamsConverter = /*#__PURE__*/function () {
           tableName: fromTable.name,
           alias: fromTable.alias
         },
+        viewName: "",
         join: joinRelations,
         fields: [fieldDTO],
         where: [],
@@ -129246,6 +129251,388 @@ var ParamsConverter_ParamsConverter = /*#__PURE__*/function () {
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.map.js
 var es_map = __webpack_require__("4ec9");
 
+// CONCATENATED MODULE: ./node_modules/glaway-bi-model/enums/SortType.ts
+/**
+ * 排序类型
+ */
+var SortType;
+
+(function (SortType) {
+  /**
+   * 计算结果
+   */
+  SortType[SortType["result"] = 0] = "result";
+  /**
+   * 自定义字段
+   */
+
+  SortType[SortType["customField"] = 1] = "customField";
+  /**
+   * 自定义顺序
+   */
+
+  SortType[SortType["customOrder"] = 2] = "customOrder";
+})(SortType || (SortType = {}));
+// CONCATENATED MODULE: ./node_modules/glaway-bi-model/enums/DashboardSet.ts
+/**
+ * 仪表盘集枚举类
+ */
+// 终端类型
+var TerminalType;
+
+(function (TerminalType) {
+  /**
+   * PC
+   */
+  TerminalType[TerminalType["pc"] = 0] = "pc";
+  /**
+   * 大屏幕
+   */
+
+  TerminalType[TerminalType["dashboard"] = 1] = "dashboard";
+  /**
+   * 手机
+   */
+
+  TerminalType[TerminalType["mobile"] = 2] = "mobile";
+})(TerminalType || (TerminalType = {})); // 画布背景类型
+
+
+var BackgroundType;
+
+(function (BackgroundType) {
+  /**
+   * 颜色
+   */
+  BackgroundType[BackgroundType["color"] = 0] = "color";
+  /**
+   * 图片
+   */
+
+  BackgroundType[BackgroundType["picture"] = 1] = "picture";
+})(BackgroundType || (BackgroundType = {}));
+// CONCATENATED MODULE: ./node_modules/glaway-bi-model/enums/FilterType.ts
+/**
+ * 过滤器类型
+ */
+var FilterType;
+
+(function (FilterType) {
+  /**
+   * 标准
+   */
+  FilterType[FilterType["standard"] = 0] = "standard";
+  /**
+   * 范围
+   */
+
+  FilterType[FilterType["boundary"] = 1] = "boundary";
+})(FilterType || (FilterType = {}));
+// CONCATENATED MODULE: ./node_modules/glaway-bi-model/enums/WhereType.ts
+/**
+ * Where 类型
+ */
+var WhereType;
+
+(function (WhereType) {
+  // 等于
+  WhereType[WhereType["EQ"] = 1] = "EQ"; // 不等于
+
+  WhereType[WhereType["NEQ"] = 2] = "NEQ"; // 大于
+
+  WhereType[WhereType["GT"] = 3] = "GT"; // 大于等于
+
+  WhereType[WhereType["GE"] = 4] = "GE"; // 小于
+
+  WhereType[WhereType["LT"] = 5] = "LT"; // 小于等于
+
+  WhereType[WhereType["LE"] = 6] = "LE"; // 开头包含
+
+  WhereType[WhereType["BW"] = 7] = "BW"; // 结尾包含
+
+  WhereType[WhereType["EW"] = 8] = "EW"; // 包含
+
+  WhereType[WhereType["IN"] = 9] = "IN";
+})(WhereType || (WhereType = {}));
+
+var WhereTypeMapping = [{
+  value: 1,
+  text: "等于"
+}, {
+  value: 2,
+  text: "不等于"
+}, {
+  value: 3,
+  text: "大于"
+}, {
+  value: 4,
+  text: "大于等于"
+}, {
+  value: 5,
+  text: "小于"
+}, {
+  value: 6,
+  text: "小于等于"
+}, {
+  value: 7,
+  text: "开头包含"
+}, {
+  value: 8,
+  text: "结尾包含"
+}, {
+  value: 9,
+  text: "包含"
+}];
+// CONCATENATED MODULE: ./node_modules/glaway-bi-model/view/Filter.ts
+
+
+
+
+
+
+
+
+var FILTER_DEFAULT_VALUE = "DEFAULT";
+/**
+ * 构建类
+ */
+
+var Filter_FilterBuilder = /*#__PURE__*/function () {
+  function FilterBuilder() {
+    _classCallCheck(this, FilterBuilder);
+  }
+
+  _createClass(FilterBuilder, null, [{
+    key: "buildFilterPack",
+
+    /**
+     * 构建 FilterDatapack
+     *
+     * @param dashboardId 仪表盘ID
+     * @param currentLength 当前长度
+     */
+    value: function buildFilterPack(dashboardId, currentLength) {
+      var serialNo = currentLength + 1,
+          datapackId = UUID_UUID.generate();
+      return {
+        id: datapackId,
+        name: "过滤器 " + serialNo,
+        dashboardId: dashboardId,
+        config: [this.buildFilterConfig(datapackId)]
+      };
+    }
+    /**
+     * 构建 FilterConfig
+     *
+     * @param datapackId 数据包ID
+     */
+
+  }, {
+    key: "buildFilterConfig",
+    value: function buildFilterConfig(datapackId) {
+      var configId = UUID_UUID.generate();
+      return {
+        id: configId,
+        datapackId: datapackId,
+        fieldId: "",
+        fieldData: null,
+        type: FilterType.standard,
+        whereType: WhereType.EQ,
+        values: ""
+      };
+    }
+    /**
+     * 构建 WhereDTO
+     *
+     * @param filterConfig 配置
+     */
+
+  }, {
+    key: "buildWhere",
+    value: function buildWhere(filterConfig) {
+      if (!filterConfig.fieldData) return null;
+      var tableInfo = filterConfig.fieldData,
+          whereDTO = {
+        id: UUID_UUID.generate(),
+        tableAlias: tableInfo.tableAlias,
+        columnName: tableInfo.columnName,
+        columnAlias: tableInfo.alias,
+        w: [{
+          type: filterConfig.whereType,
+          value: filterConfig.values
+        }]
+      };
+      return whereDTO;
+    }
+  }]);
+
+  return FilterBuilder;
+}();
+// CONCATENATED MODULE: ./node_modules/glaway-bi-model/enums/OrderType.ts
+/**
+ * Order 类型
+ */
+var OrderType;
+
+(function (OrderType) {
+  // 正序
+  OrderType["ASC"] = "ASC"; // 倒序
+
+  OrderType["DESC"] = "DESC";
+})(OrderType || (OrderType = {}));
+
+var OrderTypeMapping = [{
+  value: "ASC",
+  text: "正序"
+}, {
+  value: "DESC",
+  text: "倒序"
+}];
+// CONCATENATED MODULE: ./node_modules/glaway-bi-model/view/Sort.ts
+
+
+
+
+
+
+
+var SORT_DEFAULT_VALUE = "NONE";
+/**
+ * 构建类
+ */
+
+var Sort_SortBuilder = /*#__PURE__*/function () {
+  function SortBuilder() {
+    _classCallCheck(this, SortBuilder);
+  }
+
+  _createClass(SortBuilder, null, [{
+    key: "buildSortPack",
+
+    /**
+     * 构建 SortDatapack
+     *
+     * @param dashboardId 仪表盘ID
+     * @param currentLength 当前长度
+     * @param currentMeasures 当前度量数据
+     */
+    value: function buildSortPack(dashboardId, currentLength, currentMeasures) {
+      var serialNo = currentLength + 1,
+          datapackId = UUID_UUID.generate();
+      return {
+        id: datapackId,
+        name: "排序 " + serialNo,
+        dashboardId: dashboardId,
+        config: this.buildSortConfig(datapackId, currentMeasures)
+      };
+    }
+    /**
+     * 构建 SortConfig
+     *
+     * @param datapackId 数据包ID
+     * @param currentMeasures 当前度量数据
+     */
+
+  }, {
+    key: "buildSortConfig",
+    value: function buildSortConfig(datapackId, currentMeasures) {
+      var configId = UUID_UUID.generate();
+      return {
+        id: configId,
+        datapackId: datapackId,
+        type: SortType.result,
+        data: this.buildResultOrders(currentMeasures),
+        custom: this.buildCustomOrder()
+      };
+    }
+    /**
+     * 构建 ResultOrder
+     * @param measures 当前度量数据
+     */
+
+  }, {
+    key: "buildResultOrders",
+    value: function buildResultOrders(measures) {
+      var _this = this;
+
+      var resultOrders = measures.map(function (measure) {
+        return _this.buildResultOrder(measure);
+      });
+      return resultOrders;
+    }
+    /**
+     * 通过字段 构建计算结果排序
+     *
+     * @param field 字段VO
+     */
+
+  }, {
+    key: "buildResultOrder",
+    value: function buildResultOrder(field) {
+      return {
+        fieldData: ObjectUtil_ObjectUtil.copy(field),
+        orderType: OrderType.ASC
+      };
+    }
+    /**
+     * 构建 CustomField
+     */
+
+  }, {
+    key: "buildCustomField",
+    value: function buildCustomField() {
+      return {
+        fieldId: "",
+        fieldData: null,
+        orderType: OrderType.ASC
+      };
+    }
+    /**
+     * 构建 CustomOrder
+     */
+
+  }, {
+    key: "buildCustomOrder",
+    value: function buildCustomOrder() {
+      return {
+        fieldId: "",
+        fieldData: null,
+        refData: []
+      };
+    }
+    /**
+     * 通过 ResultOrder 构建 WhereDTO
+     */
+
+  }, {
+    key: "buildOrderByResult",
+    value: function buildOrderByResult(resultOrder) {
+      var orderDTO = {
+        alias: resultOrder.fieldData.alias,
+        sort: resultOrder.orderType
+      };
+      return orderDTO;
+    }
+    /**
+     * 通过 ResultOrder 构建 WhereDTO
+     */
+
+  }, {
+    key: "buildOrderByCustomField",
+    value: function buildOrderByCustomField(customField) {
+      if (!customField.fieldData) return null;
+      var tableInfo = customField.fieldData,
+          orderDTO = {
+        tableAlias: tableInfo.tableAlias,
+        columnName: tableInfo.columnName,
+        sort: customField.orderType
+      };
+      return orderDTO;
+    }
+  }]);
+
+  return SortBuilder;
+}();
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.object.entries.js
 var es_object_entries = __webpack_require__("4fad");
 
@@ -130241,707 +130628,7 @@ ChartConfig_ChartConfig.chartConfigMap = {
    */
   targetpie: TargetPie
 };
-// CONCATENATED MODULE: ./src/config/MenuOptions.ts
-
-
-
-
-
-
-
-
-
-/**
- * 菜单通用可选配置
- */
-
-var generalMenuOptions = {
-  title: {
-    size: {
-      selection: [{
-        text: "16",
-        value: 16
-      }, {
-        text: "17",
-        value: 17
-      }, {
-        text: "18",
-        value: 18
-      }, {
-        text: "19",
-        value: 19
-      }, {
-        text: "20",
-        value: 20
-      }, {
-        text: "21",
-        value: 21
-      }, {
-        text: "22",
-        value: 22
-      }]
-    },
-    fontFamily: {
-      selection: [{
-        text: "微软雅黑",
-        value: "Microsoft YaHei"
-      }, {
-        text: "黑体",
-        value: "SimHei"
-      }, {
-        text: "宋体",
-        value: "SimSun"
-      }]
-    },
-    left: {
-      selection: [{
-        text: "左",
-        value: "left"
-      }, {
-        text: "中",
-        value: "center"
-      }, {
-        text: "右",
-        value: "right"
-      }]
-    },
-    color: {
-      selection: [{
-        text: "黑色",
-        value: "#000"
-      }, {
-        text: "红色",
-        value: "#f00"
-      }, {
-        text: "绿色",
-        value: "#0f0"
-      }, {
-        text: "蓝色",
-        value: "#00f"
-      }]
-    }
-  },
-  color: {
-    selection: [{
-      name: "默认",
-      colors: ["#118DFF", "#12239E", "#E66C37", "#6B007B", "#E044A7", "#744EC2", "#D9B300", "#D64550"]
-    }, {
-      name: "高层建筑",
-      colors: ["#499195", "#00acfc", "#c4b07b", "#f18f49", "#326633", "#f1c716", "#d8d7bf", "#224624"]
-    }, {
-      name: "主管",
-      colors: ["#3257a8", "#37a794", "#8b3d88", "#de657a", "#6b91c9", "#f5c869", "#77c4a8", "#dfa5cf"]
-    }, {
-      name: "边界",
-      colors: ["#426871", "#d2b04c", "#a3623a", "#c25a3d", "#c39b6a", "#016e51", "#bebbb7", "#ffa500"]
-    }, {
-      name: "创新",
-      colors: ["#70b0e0", "#fcb714", "#2878bd", "#0eb194", "#108372", "#af916d", "#c4b07b", "#f15628"]
-    }, {
-      name: "开花",
-      colors: ["#8250c4", "#5ecbc8", "#438fff", "#ff977e", "#eb5757", "#5b2071", "#ec5a96", "#a43b76"]
-    }]
-  },
-  grid: {
-    unit: {
-      selection: [{
-        text: "px",
-        value: ""
-      }, {
-        text: "%",
-        value: "%"
-      }]
-    }
-  },
-  legend: {
-    orient: {
-      selection: [{
-        text: "水平方向",
-        value: "horizontal"
-      }, {
-        text: "垂直方向",
-        value: "vertical"
-      }]
-    },
-    fontSize: {
-      selection: [{
-        text: "10",
-        value: 10
-      }, {
-        text: "11",
-        value: 11
-      }, {
-        text: "12",
-        value: 12
-      }, {
-        text: "13",
-        value: 13
-      }, {
-        text: "14",
-        value: 14
-      }, {
-        text: "15",
-        value: 15
-      }]
-    }
-  },
-  events: {
-    method: {
-      selection: [{
-        text: "无",
-        value: ""
-      }, {
-        text: "单击",
-        value: "click"
-      }, {
-        text: "双击",
-        value: "dblclick"
-      }, {
-        text: "鼠标按下",
-        value: "mousedown"
-      }, {
-        text: "鼠标移动",
-        value: "mousemove"
-      }, {
-        text: "鼠标按下后抬起",
-        value: "mouseup"
-      }, {
-        text: "鼠标移入",
-        value: "mouseover"
-      }, {
-        text: "鼠标移出",
-        value: "mouseout"
-      }]
-    },
-    event: {
-      selection: [{
-        text: "无",
-        value: ""
-      }, {
-        text: "联动",
-        value: "react"
-      }, {
-        text: "弹框",
-        value: "pop"
-      }, {
-        text: "穿透",
-        value: "jump"
-      }]
-    }
-  },
-  label: {
-    size: {
-      selection: [{
-        text: "12",
-        value: 12
-      }, {
-        text: "13",
-        value: 13
-      }, {
-        text: "14",
-        value: 14
-      }, {
-        text: "15",
-        value: 15
-      }, {
-        text: "16",
-        value: 16
-      }, {
-        text: "17",
-        value: 17
-      }, {
-        text: "18",
-        value: 18
-      }]
-    },
-    fontFamily: {
-      selection: [{
-        text: "微软雅黑",
-        value: "Microsoft YaHei"
-      }, {
-        text: "黑体",
-        value: "SimHei"
-      }, {
-        text: "宋体",
-        value: "SimSun"
-      }]
-    },
-    color: {
-      selection: [{
-        text: "黑色",
-        value: "#000"
-      }, {
-        text: "红色",
-        value: "#f00"
-      }, {
-        text: "绿色",
-        value: "#0f0"
-      }, {
-        text: "蓝色",
-        value: "#00f"
-      }]
-    },
-    position: {
-      selection: [{
-        text: "顶部",
-        value: "top"
-      }, {
-        text: "内部",
-        value: "inside"
-      }]
-    }
-  }
-};
-/**
- * 各类型图表额外可选配置
- */
-
-var customMenuOptions = ChartConfig_ChartConfig.getAllMenuOptions();
-/**
- * 各类型图表的功能配置
- *  - 定义是否可预警、是否为双度量、图表切换条件等
- */
-
-var customChartFunctionalOptions = ChartConfig_ChartConfig.getAllConfig();
-/**
- * 初始化模板类
- */
-
-var MenuOptions_MenuOptions = /*#__PURE__*/function () {
-  function MenuOptions() {
-    _classCallCheck(this, MenuOptions);
-  }
-
-  _createClass(MenuOptions, null, [{
-    key: "getChartStyleOptions",
-
-    /**
-     * 获取指定图表类型的样式配置
-     *
-     * @param chartType 图表类型
-     */
-    value: function getChartStyleOptions(chartType) {
-      // 读取缓存
-      var cache = this.optionCache.get(chartType);
-
-      if (cache !== undefined) {
-        return cache;
-      } // 合并选项
-
-
-      var generalOptions = generalMenuOptions,
-          customOptions = customMenuOptions[chartType],
-          options = ObjectUtil_ObjectUtil.merge(customOptions, generalOptions); // 保存缓存
-
-      this.optionCache.set(chartType, options);
-      return options;
-    }
-    /**
-     * 获取指定图表类型的功能配置
-     *
-     * @param chartType 图表类型
-     */
-
-  }, {
-    key: "getChartFunctionalOptions",
-    value: function getChartFunctionalOptions(chartType) {
-      return customChartFunctionalOptions[chartType];
-    }
-  }]);
-
-  return MenuOptions;
-}();
-/**
- * 选项缓存
- */
-
-
-
-MenuOptions_MenuOptions.optionCache = new Map();
-// CONCATENATED MODULE: ./node_modules/glaway-bi-model/enums/SortType.ts
-/**
- * 排序类型
- */
-var SortType;
-
-(function (SortType) {
-  /**
-   * 计算结果
-   */
-  SortType[SortType["result"] = 0] = "result";
-  /**
-   * 自定义字段
-   */
-
-  SortType[SortType["customField"] = 1] = "customField";
-  /**
-   * 自定义顺序
-   */
-
-  SortType[SortType["customOrder"] = 2] = "customOrder";
-})(SortType || (SortType = {}));
-// CONCATENATED MODULE: ./node_modules/glaway-bi-model/enums/DashboardSet.ts
-/**
- * 仪表盘集枚举类
- */
-// 终端类型
-var TerminalType;
-
-(function (TerminalType) {
-  /**
-   * PC
-   */
-  TerminalType[TerminalType["pc"] = 0] = "pc";
-  /**
-   * 大屏幕
-   */
-
-  TerminalType[TerminalType["dashboard"] = 1] = "dashboard";
-  /**
-   * 手机
-   */
-
-  TerminalType[TerminalType["mobile"] = 2] = "mobile";
-})(TerminalType || (TerminalType = {})); // 画布背景类型
-
-
-var BackgroundType;
-
-(function (BackgroundType) {
-  /**
-   * 颜色
-   */
-  BackgroundType[BackgroundType["color"] = 0] = "color";
-  /**
-   * 图片
-   */
-
-  BackgroundType[BackgroundType["picture"] = 1] = "picture";
-})(BackgroundType || (BackgroundType = {}));
-// CONCATENATED MODULE: ./node_modules/glaway-bi-model/enums/FilterType.ts
-/**
- * 过滤器类型
- */
-var FilterType;
-
-(function (FilterType) {
-  /**
-   * 标准
-   */
-  FilterType[FilterType["standard"] = 0] = "standard";
-  /**
-   * 范围
-   */
-
-  FilterType[FilterType["boundary"] = 1] = "boundary";
-})(FilterType || (FilterType = {}));
-// CONCATENATED MODULE: ./node_modules/glaway-bi-model/enums/WhereType.ts
-/**
- * Where 类型
- */
-var WhereType;
-
-(function (WhereType) {
-  // 等于
-  WhereType[WhereType["EQ"] = 1] = "EQ"; // 不等于
-
-  WhereType[WhereType["NEQ"] = 2] = "NEQ"; // 大于
-
-  WhereType[WhereType["GT"] = 3] = "GT"; // 大于等于
-
-  WhereType[WhereType["GE"] = 4] = "GE"; // 小于
-
-  WhereType[WhereType["LT"] = 5] = "LT"; // 小于等于
-
-  WhereType[WhereType["LE"] = 6] = "LE"; // 开头包含
-
-  WhereType[WhereType["BW"] = 7] = "BW"; // 结尾包含
-
-  WhereType[WhereType["EW"] = 8] = "EW"; // 包含
-
-  WhereType[WhereType["IN"] = 9] = "IN";
-})(WhereType || (WhereType = {}));
-
-var WhereTypeMapping = [{
-  value: 1,
-  text: "等于"
-}, {
-  value: 2,
-  text: "不等于"
-}, {
-  value: 3,
-  text: "大于"
-}, {
-  value: 4,
-  text: "大于等于"
-}, {
-  value: 5,
-  text: "小于"
-}, {
-  value: 6,
-  text: "小于等于"
-}, {
-  value: 7,
-  text: "开头包含"
-}, {
-  value: 8,
-  text: "结尾包含"
-}, {
-  value: 9,
-  text: "包含"
-}];
-// CONCATENATED MODULE: ./node_modules/glaway-bi-model/view/Filter.ts
-
-
-
-
-
-
-
-
-var FILTER_DEFAULT_VALUE = "DEFAULT";
-/**
- * 构建类
- */
-
-var Filter_FilterBuilder = /*#__PURE__*/function () {
-  function FilterBuilder() {
-    _classCallCheck(this, FilterBuilder);
-  }
-
-  _createClass(FilterBuilder, null, [{
-    key: "buildFilterPack",
-
-    /**
-     * 构建 FilterDatapack
-     *
-     * @param dashboardId 仪表盘ID
-     * @param currentLength 当前长度
-     */
-    value: function buildFilterPack(dashboardId, currentLength) {
-      var serialNo = currentLength + 1,
-          datapackId = UUID_UUID.generate();
-      return {
-        id: datapackId,
-        name: "过滤器 " + serialNo,
-        dashboardId: dashboardId,
-        config: [this.buildFilterConfig(datapackId)]
-      };
-    }
-    /**
-     * 构建 FilterConfig
-     *
-     * @param datapackId 数据包ID
-     */
-
-  }, {
-    key: "buildFilterConfig",
-    value: function buildFilterConfig(datapackId) {
-      var configId = UUID_UUID.generate();
-      return {
-        id: configId,
-        datapackId: datapackId,
-        fieldId: "",
-        fieldData: null,
-        type: FilterType.standard,
-        whereType: WhereType.EQ,
-        values: ""
-      };
-    }
-    /**
-     * 构建 WhereDTO
-     *
-     * @param filterConfig 配置
-     */
-
-  }, {
-    key: "buildWhere",
-    value: function buildWhere(filterConfig) {
-      if (!filterConfig.fieldData) return null;
-      var tableInfo = filterConfig.fieldData,
-          whereDTO = {
-        id: UUID_UUID.generate(),
-        tableAlias: tableInfo.tableAlias,
-        columnName: tableInfo.columnName,
-        columnAlias: tableInfo.alias,
-        w: [{
-          type: filterConfig.whereType,
-          value: filterConfig.values
-        }]
-      };
-      return whereDTO;
-    }
-  }]);
-
-  return FilterBuilder;
-}();
-// CONCATENATED MODULE: ./node_modules/glaway-bi-model/enums/OrderType.ts
-/**
- * Order 类型
- */
-var OrderType;
-
-(function (OrderType) {
-  // 正序
-  OrderType["ASC"] = "ASC"; // 倒序
-
-  OrderType["DESC"] = "DESC";
-})(OrderType || (OrderType = {}));
-
-var OrderTypeMapping = [{
-  value: "ASC",
-  text: "正序"
-}, {
-  value: "DESC",
-  text: "倒序"
-}];
-// CONCATENATED MODULE: ./node_modules/glaway-bi-model/view/Sort.ts
-
-
-
-
-
-
-
-var SORT_DEFAULT_VALUE = "NONE";
-/**
- * 构建类
- */
-
-var Sort_SortBuilder = /*#__PURE__*/function () {
-  function SortBuilder() {
-    _classCallCheck(this, SortBuilder);
-  }
-
-  _createClass(SortBuilder, null, [{
-    key: "buildSortPack",
-
-    /**
-     * 构建 SortDatapack
-     *
-     * @param dashboardId 仪表盘ID
-     * @param currentLength 当前长度
-     * @param currentMeasures 当前度量数据
-     */
-    value: function buildSortPack(dashboardId, currentLength, currentMeasures) {
-      var serialNo = currentLength + 1,
-          datapackId = UUID_UUID.generate();
-      return {
-        id: datapackId,
-        name: "排序 " + serialNo,
-        dashboardId: dashboardId,
-        config: this.buildSortConfig(datapackId, currentMeasures)
-      };
-    }
-    /**
-     * 构建 SortConfig
-     *
-     * @param datapackId 数据包ID
-     * @param currentMeasures 当前度量数据
-     */
-
-  }, {
-    key: "buildSortConfig",
-    value: function buildSortConfig(datapackId, currentMeasures) {
-      var configId = UUID_UUID.generate();
-      return {
-        id: configId,
-        datapackId: datapackId,
-        type: SortType.result,
-        data: this.buildResultOrders(currentMeasures),
-        custom: this.buildCustomOrder()
-      };
-    }
-    /**
-     * 构建 ResultOrder
-     * @param measures 当前度量数据
-     */
-
-  }, {
-    key: "buildResultOrders",
-    value: function buildResultOrders(measures) {
-      var _this = this;
-
-      var resultOrders = measures.map(function (measure) {
-        return _this.buildResultOrder(measure);
-      });
-      return resultOrders;
-    }
-    /**
-     * 通过字段 构建计算结果排序
-     *
-     * @param field 字段VO
-     */
-
-  }, {
-    key: "buildResultOrder",
-    value: function buildResultOrder(field) {
-      return {
-        fieldData: ObjectUtil_ObjectUtil.copy(field),
-        orderType: OrderType.ASC
-      };
-    }
-    /**
-     * 构建 CustomField
-     */
-
-  }, {
-    key: "buildCustomField",
-    value: function buildCustomField() {
-      return {
-        fieldId: "",
-        fieldData: null,
-        orderType: OrderType.ASC
-      };
-    }
-    /**
-     * 构建 CustomOrder
-     */
-
-  }, {
-    key: "buildCustomOrder",
-    value: function buildCustomOrder() {
-      return {
-        fieldId: "",
-        fieldData: null,
-        refData: []
-      };
-    }
-    /**
-     * 通过 ResultOrder 构建 WhereDTO
-     */
-
-  }, {
-    key: "buildOrderByResult",
-    value: function buildOrderByResult(resultOrder) {
-      var orderDTO = {
-        alias: resultOrder.fieldData.alias,
-        sort: resultOrder.orderType
-      };
-      return orderDTO;
-    }
-    /**
-     * 通过 ResultOrder 构建 WhereDTO
-     */
-
-  }, {
-    key: "buildOrderByCustomField",
-    value: function buildOrderByCustomField(customField) {
-      if (!customField.fieldData) return null;
-      var tableInfo = customField.fieldData,
-          orderDTO = {
-        tableAlias: tableInfo.tableAlias,
-        columnName: tableInfo.columnName,
-        sort: customField.orderType
-      };
-      return orderDTO;
-    }
-  }]);
-
-  return SortBuilder;
-}();
 // CONCATENATED MODULE: ./src/config/DefaultTemplate.ts
-
 
 
 
@@ -131032,7 +130719,7 @@ var generalDataTemplate = {
   echarts: {
     sampleStyle: {
       global: {
-        color: generalMenuOptions.color.selection[0].colors,
+        color: ["#118DFF", "#12239E", "#E66C37", "#6B007B", "#E044A7", "#744EC2", "#D9B300", "#D64550"],
         grid: {
           top: {
             value: 60,
@@ -131136,6 +130823,7 @@ var DefaultTemplate_DefaultTemplate = /*#__PURE__*/function () {
 
 DefaultTemplate_DefaultTemplate.configCache = new Map();
 // CONCATENATED MODULE: ./src/service/EChartsService.ts
+
 
 
 
@@ -131292,6 +130980,7 @@ function reactUpdate(thisDashboard, reactWhere, callback) {
     callback();
   }
 }
+var triggerMethods = ["click", "dblclick", "mousedown", "mousemove", "mouseup", "mouseover", "mouseout"];
 /**
  * 绑定图表点击事件
  *
@@ -131302,15 +130991,11 @@ function reactUpdate(thisDashboard, reactWhere, callback) {
  * @param eventMethodSelection 事件选项（传入则取消此前绑定的事件）
  */
 
-function bindEvents(chartInstance, thisEvents, triggerMethodCallback, thisContext, eventMethodSelection) {
+function bindEvents(chartInstance, thisEvents, triggerMethodCallback, thisContext) {
   // 传入，则先取消绑定事件
-  if (eventMethodSelection) {
-    for (var index in eventMethodSelection) {
-      var sel = eventMethodSelection[index];
-      chartInstance.off(sel.value);
-    }
-  }
-
+  triggerMethods.forEach(function (method) {
+    chartInstance.off(method);
+  });
   var nowTrigger = thisEvents.triggerMethod;
 
   if (nowTrigger && triggerMethodCallback) {
@@ -131353,7 +131038,6 @@ function renderChartByJSON(chartInstance, jsonString) {
   });
 }
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--14-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/ts-loader??ref--14-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=script&lang=ts&
-
 
 
 
@@ -131488,14 +131172,12 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
     key: "bindChartEvents",
     value: function bindChartEvents(clearEvent, thisEvents) {
       // 事件选项
-      var eventSelection = clearEvent ? generalMenuOptions.events.method.selection : null,
-          triggerCallback = this.getEventMethod(thisEvents); // 绑定事件
+      var triggerCallback = this.getEventMethod(thisEvents); // 绑定事件
 
       triggerCallback && this.$data.echartsInstance && bindEvents(this.$data.echartsInstance, // 实例
       thisEvents, // 事件配置
       triggerCallback, // 回调方法
-      this, // 回调上下文
-      eventSelection // 清空此前触发方法
+      this // 回调上下文
       );
     }
     /**
@@ -131695,7 +131377,9 @@ var component = normalizeComponent(
 )
 
 /* harmony default export */ var components_ChartComponent = (component.exports);
-// CONCATENATED MODULE: ./src/index.ts
+// CONCATENATED MODULE: ./package/index.ts
+
+
 
 
 function install(Vue) {
@@ -131707,14 +131391,16 @@ if (typeof window !== "undefined" && window.Vue) {
   install(window.Vue);
 }
 
-/* harmony default export */ var src_0 = ({
+/* harmony default export */ var package_0 = ({
   install: install,
-  ChartComponent: components_ChartComponent
+  ChartComponent: components_ChartComponent,
+  DefaultTemplate: DefaultTemplate_DefaultTemplate,
+  ParamsConverter: ParamsConverter_ParamsConverter
 });
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib.js
 
 
-/* harmony default export */ var entry_lib = __webpack_exports__["default"] = (src_0);
+/* harmony default export */ var entry_lib = __webpack_exports__["default"] = (package_0);
 
 
 

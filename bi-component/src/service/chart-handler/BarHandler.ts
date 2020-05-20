@@ -7,7 +7,7 @@ import warnConfigure from "./configure/WarnConfigure";
 import { WARN_DEFAULT_VALUE } from "glaway-bi-model/view/Warn";
 import { ChartHandler } from "../../interfaces/ChartHandler";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
-import { BarChartOption } from "glaway-bi-model/view/dashboard/ChartOption";
+import { BarChartOption } from "glaway-bi-model/view/dashboard//chart/ChartOption";
 
 /**
  * 柱图处理
