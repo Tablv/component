@@ -1,4 +1,4 @@
-import { DatasetType } from '../enums/DatasetType'
+import { DatasetType } from 'glaway-bi-model/enums/DatasetType'
 
 /**
  * 数据集分组

@@ -1,11 +1,12 @@
-import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
-import { WarnDisplayType, WarnSymbolType } from "glaway-bi-model/enums/WarnType";
-import { SortType } from "glaway-bi-model/enums/SortType";
+
 import TableVO from "glaway-bi-model/results/TableVO";
 import JoinRelation from "glaway-bi-model/params/JoinRelation";
 import FieldDTO from "glaway-bi-model/params/FieldDTO";
 import WhereDTO from "glaway-bi-model/params/WhereDTO";
 import OrderDTO from "glaway-bi-model/params/OrderDTO";
+import Filter from "glaway-bi-model/view/dashboard/utility/Filter";
+import Sort from "glaway-bi-model/view/dashboard/utility/Sort";
+import Warn from "glaway-bi-model/view/dashboard/utility/Warn";
 
 /**
  * 分析数据
@@ -32,6 +33,11 @@ export default interface AnalysisData {
   fromTable: TableVO | null;
 
   /**
+   * 视图名称
+   */
+  viewName: string;
+
+  /**
    * 表关联字段信息
    */
   joinRelation: Array<JoinRelation>;
@@ -54,83 +60,15 @@ export default interface AnalysisData {
   /**
    * 过滤器
    */
-  filter: {
-    /**
-     * ID
-     */
-    id: string;
-
-    /**
-     * 条件数据
-     */
-    data: Array<WhereDTO>;
-  };
+  filter: Filter;
 
   /**
    * 排序
    */
-  sort: {
-    /**
-     * ID
-     */
-    id: string;
-
-    /**
-     * 排序类型
-     */
-    type: SortType;
-
-    /**
-     * 排序数据
-     */
-    data: Array<OrderDTO>;
-
-    /**
-     * 自定义排序
-     */
-    custom: Array<string>;
-  };
+  sort: Sort;
 
   /**
    * 预警
    */
-  warn: {
-    /**
-     * ID
-     */
-    id: string;
-
-    /**
-     * 预警颜色
-     */
-    color: string;
-
-    /**
-     * 预警信息显示类型
-     *  - 0: 不显示预警信息
-     *  - 1: 在图表右侧显示
-     *  - 2: 在鼠标移入时显示 tooltip
-     */
-    displayType: WarnDisplayType;
-
-    /**
-     * 预警度量与条件
-     */
-    value: Array<{
-      /**
-       * 度量名称
-       */
-      seriesName: string;
-
-      /**
-       * 判断符号（大于小于等）
-       */
-      symbol: WarnSymbolType;
-
-      /**
-       * 预警数值
-       */
-      value: number;
-    }>;
-  };
+  warn: Warn;
 }

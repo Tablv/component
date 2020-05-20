@@ -1,3 +1,4 @@
+import DefaultTemplate from 'glaway-bi-component/src/config/DefaultTemplate';
 import ChartComponent from "glaway-bi-component/src/components/ChartComponent.vue";
 
 function install(Vue: any, opt = {}) {
@@ -10,5 +11,6 @@ if (typeof window !== "undefined" && window.Vue) {
 
 export default {
   install,
-  ChartComponent
+  ChartComponent,
+  DefaultTemplate
 };

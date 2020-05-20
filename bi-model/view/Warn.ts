@@ -1,7 +1,7 @@
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
-import FieldDTO from "../params/FieldDTO";
-import { WarnDisplayType, WarnSymbolType } from "glaway-bi-model/enums/WarnType";
 import UUID from "glaway-bi-util/UUID";
+import FieldDTO from "glaway-bi-model/params/FieldDTO";
+import { WarnDisplayType, WarnSymbolType } from "glaway-bi-model/enums/WarnType";
 
 export const WARN_DEFAULT_VALUE = "NONE";
 

@@ -1,4 +1,3 @@
-import { generalMenuOptions } from "./MenuOptions";
 import { WarnDisplayType } from "glaway-bi-model/enums/WarnType";
 import { SortType } from "glaway-bi-model/enums/SortType";
 import { ChartType } from "glaway-bi-model/enums/ChartType";
@@ -85,7 +84,16 @@ export const generalDataTemplate: any = {
   echarts: {
     sampleStyle: {
       global: {
-        color: generalMenuOptions.color.selection[0].colors,
+        color: [
+          "#118DFF",
+          "#12239E",
+          "#E66C37",
+          "#6B007B",
+          "#E044A7",
+          "#744EC2",
+          "#D9B300",
+          "#D64550"
+        ],
         grid: {
           top: {
             value: 60,

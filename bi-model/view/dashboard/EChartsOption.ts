@@ -14,7 +14,7 @@ import {
   HBarPercentageChartOption,
   GaugeChartOption,
   TargetPieChartOption
-} from "glaway-bi-model/view/dashboard/ChartOption";
+} from "glaway-bi-model/view/dashboard/chart/ChartOption";
 /**
  * ECharts Option
  */
