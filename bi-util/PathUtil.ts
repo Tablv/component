@@ -7,7 +7,7 @@ export default class PathUtil {
    */
   public static getPathParams(): PathParamMap {
     const url = window.location.search, //获取url中"?"符后的字串
-      paramMap: RequestParamMap = {};
+      paramMap: PathParamMap = {};
 
     if (url.indexOf("?") !== -1) {
       let params = url.substr(1),
