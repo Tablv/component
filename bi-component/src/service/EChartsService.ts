@@ -1,5 +1,8 @@
-import AnalysisDTO from 'glaway-bi-model/params/AnalysisDTO';
-import { AnalysisResult, AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
+import AnalysisDTO from "glaway-bi-model/params/AnalysisDTO";
+import {
+  AnalysisResult,
+  AnalysisResults
+} from "glaway-bi-model/types/AnalysisResults";
 import ReactWhere from "glaway-bi-model/view/ReactWhere";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import EChartsOption from "glaway-bi-model/view/dashboard/EChartsOption";
@@ -11,9 +14,8 @@ import EventsConfig from "glaway-bi-model/view/dashboard/EventsConfig";
 import ChartUIService from "glaway-bi-component/src/interfaces/ChartUIService";
 
 import handleChart from "./handleChart";
-import ParamsConverter from 'glaway-bi-component/src/util/ParamsConverter';
-import DefaultTemplate from 'glaway-bi-component/src/config/DefaultTemplate';
-
+import ParamsConverter from "glaway-bi-component/src/util/ParamsConverter";
+import DefaultTemplate from "glaway-bi-component/src/config/DefaultTemplate";
 
 /**
  * ECharts 业务层
@@ -45,12 +47,12 @@ export default class EChartsService {
    * 将图表数据的样式与分析结果合并为 ECharts 的 Option
    * @param dashboard {Dashboard} 仪表板的实例数据
    */
-  public static mergEChartstyle(dashboard: Dashboard, result: AnalysisResults): echarts.EChartOption {
+  public static mergEChartstyle(
+    dashboard: Dashboard,
+    result: AnalysisResults
+  ): echarts.EChartOption {
     let style: EChartsOption = ObjectUtil.copy(dashboard.echarts),
-      resultStyle: EChartsOption = this.getResultStyle(
-        result,
-        dashboard
-      );
+      resultStyle: EChartsOption = this.getResultStyle(result, dashboard);
 
     // 获取当前的style对象
     if (!style) {

@@ -1,4 +1,3 @@
-import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
 import EventsConfig from "glaway-bi-model/view/dashboard/EventsConfig";
 /**
  * 图表通用 UI 方法 接口

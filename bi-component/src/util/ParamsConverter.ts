@@ -1,15 +1,14 @@
-import TableInfoVO from 'glaway-bi-model/results/TableInfoVO';
-import TableVO from 'glaway-bi-model/results/TableVO';
-import Dashboard from 'glaway-bi-model/view/dashboard/Dashboard';
-import AnalysisDTO from 'glaway-bi-model/params/AnalysisDTO';
-import ObjectUtil from 'glaway-bi-util/ObjectUtil';
-import WhereDTO from 'glaway-bi-model/params/WhereDTO';
-import ReactWhere from 'glaway-bi-model/view/ReactWhere';
-import { FieldDTOBuilder } from 'glaway-bi-model/params/FieldDTO';
-import JoinRelation from 'glaway-bi-model/params/JoinRelation';
+import TableInfoVO from "glaway-bi-model/results/TableInfoVO";
+import TableVO from "glaway-bi-model/results/TableVO";
+import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
+import AnalysisDTO from "glaway-bi-model/params/AnalysisDTO";
+import ObjectUtil from "glaway-bi-util/ObjectUtil";
+import WhereDTO from "glaway-bi-model/params/WhereDTO";
+import ReactWhere from "glaway-bi-model/view/ReactWhere";
+import { FieldDTOBuilder } from "glaway-bi-model/params/FieldDTO";
+import JoinRelation from "glaway-bi-model/params/JoinRelation";
 
 export default class ParamsConverter {
-  
   /**
    * 获取分析对象
    *
@@ -31,7 +30,7 @@ export default class ParamsConverter {
       filter,
       sort
     } = currentDashboard.analysis;
-    
+
     const analysisDTO: AnalysisDTO = {
       dashboardId: currentDashboard.id,
       from: null,
@@ -63,7 +62,9 @@ export default class ParamsConverter {
       const reactColName = reactWhere.where.columnName;
 
       // 去除相同的where
-      wheres = wheres.filter(where => where.columnName !== reactColName).concat(reactWhere.where);
+      wheres = wheres
+        .filter(where => where.columnName !== reactColName)
+        .concat(reactWhere.where);
     }
   }
 
@@ -88,10 +89,9 @@ export default class ParamsConverter {
         alias: fromTable.alias
       },
       join: joinRelations,
-      fields: [ fieldDTO ],
+      fields: [fieldDTO],
       where: [],
       order: []
     };
   }
-
 }

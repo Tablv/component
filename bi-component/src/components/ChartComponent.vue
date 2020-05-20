@@ -1,6 +1,10 @@
 <template>
   <div class="chart-wrapper">
-    <div class="chart-container" style="width: 400px; height: 400px;" ref="echartsContainer"></div>
+    <div
+      class="chart-container"
+      style="width: 400px; height: 400px;"
+      ref="echartsContainer"
+    ></div>
   </div>
 </template>
 
@@ -17,7 +21,10 @@ import UUID from "glaway-bi-util/UUID";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import { SortType } from "glaway-bi-model/enums/SortType";
 import FieldDTO from "glaway-bi-model/params/FieldDTO";
-import { AnalysisResult, AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
+import {
+  AnalysisResult,
+  AnalysisResults
+} from "glaway-bi-model/types/AnalysisResults";
 import EChartsService, {
   bindEvents,
   renderChart,
@@ -36,7 +43,11 @@ export default class ChartComponent extends Vue implements ChartUIService {
   data!: AnalysisResults;
 
   // 联动数据
-  @Prop({ default: () => { return {}; } })
+  @Prop({
+    default: () => {
+      return {};
+    }
+  })
   reactWhere!: ReactWhere;
 
   // 设置联动
@@ -48,7 +59,8 @@ export default class ChartComponent extends Vue implements ChartUIService {
   @Emit("error")
   onError(errorPart: string, error: Error) {
     return {
-      errorPart, error
+      errorPart,
+      error
     };
   }
 

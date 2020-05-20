@@ -5,8 +5,11 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint --fix",
-    "lib": "vue-cli-service build --target lib --name bi-visual-core --dest lib pkg/entry/registry.js"
+    "lib": "vue-cli-service build --target lib --name BIComponent --dest lib src/index.ts"
   },
+  "main": "lib/BIComponent.umd.min.js",
+  "style": "lib/BIComponent.css",
+  "typings": "types/index.d.ts",
   "publishConfig": {
     "registry": "http://192.168.1.138:9999/repository/glaway-npm-release/"
   },

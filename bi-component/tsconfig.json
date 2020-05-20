@@ -30,8 +30,7 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx", "src/dependencies/element-ui.js"
+    "types/index.d.ts"
   ],
   "exclude": [
     "node_modules"

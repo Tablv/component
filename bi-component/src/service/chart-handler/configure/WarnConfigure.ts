@@ -1,6 +1,9 @@
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
 import AnalysisData from "glaway-bi-model/view/dashboard/AnalysisData";
-import { WarnSymbolType, WarnDisplayType } from "glaway-bi-model/enums/WarnType";
+import {
+  WarnSymbolType,
+  WarnDisplayType
+} from "glaway-bi-model/enums/WarnType";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import { thresholdComparators } from "glaway-bi-model/enums/ComparableSymbol";
 
