@@ -9,7 +9,9 @@
     "registry": "http://192.168.1.138:9999/repository/glaway-npm-release/"
   },
   "dependencies": {
+    "@types/axios": "^0.14.0",
     "@types/lodash": "^4.14.151",
+    "@types/qs": "^6.9.3",
     "axios": "^0.19.2",
     "lodash": "^4.17.15",
     "qs": "^6.9.4"
