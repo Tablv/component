@@ -2,7 +2,10 @@ import qs from "qs";
 // qs是一个url参数转化（parse和stringify）的js库
 import axios, { Method, AxiosResponse } from "axios";
 
-interface ResultJSON {
+/**
+ * 响应数据
+ */
+export interface ResultJSON {
   code: string;
 
   message: string;
