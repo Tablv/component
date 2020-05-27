@@ -1,4 +1,4 @@
-import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
+import EChartDataUtil from "@/util/EChartDataUtil";
 import BarHandler from "./BarHandler";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 

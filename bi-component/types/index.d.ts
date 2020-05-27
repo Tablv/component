@@ -1,5 +1,5 @@
-import Vue from 'vue'
-import ChartUIService from 'glaway-bi-component/src/interfaces/ChartUIService';
+import Vue from "vue";
+import ChartUIService from "glaway-bi-component/src/interfaces/ChartUIService";
 
 export interface InstallationOptions {
   locale: any,

@@ -1,15 +1,11 @@
 <template>
   <div class="chart-wrapper">
-    <div
-      class="chart-container"
-      style="width: 400px; height: 400px;"
-      ref="echartsContainer"
-    ></div>
+    <div class="chart-container" ref="echartsContainer"></div>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Prop, Component, Emit } from "vue-property-decorator";
+import { Vue, Prop, Component, Emit, Watch } from "vue-property-decorator";
 import echarts from "echarts";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
 import ChartUIService from "@/interfaces/ChartUIService";
@@ -29,7 +25,7 @@ import EChartsService, {
   bindEvents,
   renderChart,
   renderChartByJSON
-} from "@/service/EChartsService";
+} from "glaway-bi-component/src/service/EChartsService";
 import EChartsUtil from "glaway-bi-component/src/util/EChartsUtil";
 
 @Component
@@ -38,8 +34,8 @@ export default class ChartComponent extends Vue implements ChartUIService {
   @Prop()
   dashboard!: Dashboard;
 
-  @Prop({ default: () => [] })
-  data!: AnalysisResults;
+  @Prop()
+  anslysisdata!: AnalysisResults;
 
   // 联动数据
   @Prop({
@@ -48,6 +44,22 @@ export default class ChartComponent extends Vue implements ChartUIService {
     }
   })
   reactWhere!: ReactWhere;
+
+  get thisAnalysisData(): AnalysisResults {
+    return this.anslysisdata;
+  }
+
+  set thisAnalysisData(anslysisdata: AnalysisResults) {
+    this.$emit("update:anslysisdata", anslysisdata);
+  }
+
+  get thisDashboard() {
+    return this.dashboard;
+  }
+
+  set thisDashboard(dashboard: Dashboard) {
+    this.$emit("update:dashboard", dashboard);
+  }
 
   // 设置联动
   @Emit("setReact")
@@ -118,7 +130,6 @@ export default class ChartComponent extends Vue implements ChartUIService {
   public bindChartEvents(clearEvent: boolean, thisEvents: EventsConfig): void {
     // 事件选项
     let triggerCallback = this.getEventMethod(thisEvents);
-
     // 绑定事件
     triggerCallback &&
       this.$data.echartsInstance &&
@@ -130,10 +141,14 @@ export default class ChartComponent extends Vue implements ChartUIService {
       );
   }
 
+  public getDashBoard() {
+    console.error(this.dashboard);
+  }
+
   /**
    * 绘制图表
    */
-  public renderChart(): void {
+  public renderChart(result?: AnalysisResults, dashboard?: Dashboard): void {
     // JSON 配置
     const JSONConfig = this.dashboard.staticData.json;
 
@@ -154,10 +169,14 @@ export default class ChartComponent extends Vue implements ChartUIService {
         }
       );
     } else {
-      renderChart(this.$data.echartsInstance, this.dashboard, this.data)
-        .then(result => {})
+      result = result || this.thisAnalysisData;
+      renderChart(this.$data.echartsInstance, this.thisDashboard, result)
+        .then(result => {
+          // this.$emit("update:dashboard", result);
+          this.thisDashboard = result;
+        })
         .catch(err => {
-          console.error(err);
+          console.error("rendererr", err);
         });
     }
   }

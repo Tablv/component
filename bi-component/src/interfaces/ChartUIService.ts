@@ -1,4 +1,5 @@
 import EventsConfig from "glaway-bi-model/view/dashboard/EventsConfig";
+import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
 /**
  * 图表通用 UI 方法 接口
  */
@@ -34,5 +35,7 @@ export default interface ChartUIService {
   /**
    * 渲染图表
    */
-  renderChart(): void;
+  renderChart(result?: AnalysisResults): void;
+
+  getDashBoard(): void;
 }

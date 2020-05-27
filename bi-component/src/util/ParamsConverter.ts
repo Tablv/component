@@ -72,7 +72,7 @@ export default class ParamsConverter {
 
   /**
    * 查询字段使用
-   * 
+   *
    * tableInfo 转 analysisDTO
    */
   public static getQueryValuesDTO(

@@ -172,7 +172,15 @@ export function reactUpdate(
   }
 }
 
-const triggerMethods = ["click", "dblclick", "mousedown", "mousemove", "mouseup", "mouseover", "mouseout"];
+const triggerMethods = [
+  "click",
+  "dblclick",
+  "mousedown",
+  "mousemove",
+  "mouseup",
+  "mouseover",
+  "mouseout"
+];
 
 /**
  * 绑定图表点击事件
@@ -192,7 +200,7 @@ export function bindEvents(
   // 传入，则先取消绑定事件
   triggerMethods.forEach(method => {
     chartInstance.off(method);
-  })
+  });
 
   const nowTrigger = thisEvents.triggerMethod;
   if (nowTrigger && triggerMethodCallback) {
@@ -210,16 +218,16 @@ export function renderChart(
   chartInstace: echarts.ECharts,
   thisDashboard: Dashboard,
   result: AnalysisResults
-): Promise<void> {
+): Promise<Dashboard> {
   try {
     let chartType = thisDashboard.visualData.type,
       defaultConfig = DefaultTemplate.getDefaultConfig(chartType);
-
-    thisDashboard = ObjectUtil.merge(thisDashboard, defaultConfig);
+    thisDashboard = ObjectUtil.merge(defaultConfig, thisDashboard);
 
     let echartsOption = EChartsService.mergEChartstyle(thisDashboard, result);
+
     EChartsUtil.setOption(chartInstace, echartsOption);
-    return Promise.resolve();
+    return Promise.resolve(thisDashboard);
   } catch (err) {
     return Promise.reject(err);
   }

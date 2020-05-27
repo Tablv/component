@@ -1385,37 +1385,6 @@ ComponentView.extend({
 
 /***/ }),
 
-/***/ "0366":
-/***/ (function(module, exports, __webpack_require__) {
-
-var aFunction = __webpack_require__("1c0b");
-
-// optional / simple context binding
-module.exports = function (fn, that, length) {
-  aFunction(fn);
-  if (that === undefined) return fn;
-  switch (length) {
-    case 0: return function () {
-      return fn.call(that);
-    };
-    case 1: return function (a) {
-      return fn.call(that, a);
-    };
-    case 2: return function (a, b) {
-      return fn.call(that, a, b);
-    };
-    case 3: return function (a, b, c) {
-      return fn.call(that, a, b, c);
-    };
-  }
-  return function (/* ...args */) {
-    return fn.apply(that, arguments);
-  };
-};
-
-
-/***/ }),
-
 /***/ "04f6":
 /***/ (function(module, exports) {
 
@@ -8165,15 +8134,11 @@ module.exports = _default;
 
 var $ = __webpack_require__("23e7");
 var $reduce = __webpack_require__("d58f").left;
-var arrayMethodIsStrict = __webpack_require__("a640");
-var arrayMethodUsesToLength = __webpack_require__("ae40");
-
-var STRICT_METHOD = arrayMethodIsStrict('reduce');
-var USES_TO_LENGTH = arrayMethodUsesToLength('reduce', { 1: 0 });
+var sloppyArrayMethod = __webpack_require__("b301");
 
 // `Array.prototype.reduce` method
 // https://tc39.github.io/ecma262/#sec-array.prototype.reduce
-$({ target: 'Array', proto: true, forced: !STRICT_METHOD || !USES_TO_LENGTH }, {
+$({ target: 'Array', proto: true, forced: sloppyArrayMethod('reduce') }, {
   reduce: function reduce(callbackfn /* , initialValue */) {
     return $reduce(this, callbackfn, arguments.length, arguments.length > 1 ? arguments[1] : undefined);
   }
@@ -9789,15 +9754,11 @@ module.exports = _default;
 "use strict";
 
 var $forEach = __webpack_require__("b727").forEach;
-var arrayMethodIsStrict = __webpack_require__("a640");
-var arrayMethodUsesToLength = __webpack_require__("ae40");
-
-var STRICT_METHOD = arrayMethodIsStrict('forEach');
-var USES_TO_LENGTH = arrayMethodUsesToLength('forEach');
+var sloppyArrayMethod = __webpack_require__("b301");
 
 // `Array.prototype.forEach` method implementation
 // https://tc39.github.io/ecma262/#sec-array.prototype.foreach
-module.exports = (!STRICT_METHOD || !USES_TO_LENGTH) ? function forEach(callbackfn /* , thisArg */) {
+module.exports = sloppyArrayMethod('forEach') ? function forEach(callbackfn /* , thisArg */) {
   return $forEach(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
 } : [].forEach;
 
@@ -11546,16 +11507,6 @@ CoordinateSystem.register('polar', polarCreator);
 
 /***/ }),
 
-/***/ "1cdc":
-/***/ (function(module, exports, __webpack_require__) {
-
-var userAgent = __webpack_require__("342f");
-
-module.exports = /(iphone|ipod|ipad).*applewebkit/i.test(userAgent);
-
-
-/***/ }),
-
 /***/ "1d80":
 /***/ (function(module, exports) {
 
@@ -11574,7 +11525,7 @@ module.exports = function (it) {
 
 var fails = __webpack_require__("d039");
 var wellKnownSymbol = __webpack_require__("b622");
-var V8_VERSION = __webpack_require__("2d00");
+var V8_VERSION = __webpack_require__("60ae");
 
 var SPECIES = wellKnownSymbol('species');
 
@@ -14256,7 +14207,7 @@ module.exports = _default;
 var anObject = __webpack_require__("825a");
 var isArrayIteratorMethod = __webpack_require__("e95a");
 var toLength = __webpack_require__("50c4");
-var bind = __webpack_require__("0366");
+var bind = __webpack_require__("f8c2");
 var getIteratorMethod = __webpack_require__("35a1");
 var callWithSafeIterationClosing = __webpack_require__("9bdd");
 
@@ -20589,10 +20540,10 @@ exports.devicePixelRatio = devicePixelRatio;
 var global = __webpack_require__("da84");
 var fails = __webpack_require__("d039");
 var classof = __webpack_require__("c6b6");
-var bind = __webpack_require__("0366");
+var bind = __webpack_require__("f8c2");
 var html = __webpack_require__("1be4");
 var createElement = __webpack_require__("cc12");
-var IS_IOS = __webpack_require__("1cdc");
+var IS_IOS = __webpack_require__("b629");
 
 var location = global.location;
 var set = global.setImmediate;
@@ -20664,13 +20615,7 @@ if (!set || !clear) {
     defer = bind(port.postMessage, port, 1);
   // Browsers with postMessage, skip WebWorkers
   // IE8 has postMessage, but it's sync & typeof its postMessage is 'object'
-  } else if (
-    global.addEventListener &&
-    typeof postMessage == 'function' &&
-    !global.importScripts &&
-    !fails(post) &&
-    location.protocol !== 'file:'
-  ) {
+  } else if (global.addEventListener && typeof postMessage == 'function' && !global.importScripts && !fails(post)) {
     defer = post;
     global.addEventListener('message', listener, false);
   // IE8-
@@ -20753,33 +20698,6 @@ __webpack_require__("f138");
 echarts.extendComponentView({
   type: 'single'
 });
-
-/***/ }),
-
-/***/ "2d00":
-/***/ (function(module, exports, __webpack_require__) {
-
-var global = __webpack_require__("da84");
-var userAgent = __webpack_require__("342f");
-
-var process = global.process;
-var versions = process && process.versions;
-var v8 = versions && versions.v8;
-var match, version;
-
-if (v8) {
-  match = v8.split('.');
-  version = match[0] + match[1];
-} else if (userAgent) {
-  match = userAgent.match(/Edge\/(\d+)/);
-  if (!match || match[1] >= 74) {
-    match = userAgent.match(/Chrome\/(\d+)/);
-    if (match) version = match[1];
-  }
-}
-
-module.exports = version && +version;
-
 
 /***/ }),
 
@@ -42329,16 +42247,6 @@ exports.mergePath = mergePath;
 
 /***/ }),
 
-/***/ "342f":
-/***/ (function(module, exports, __webpack_require__) {
-
-var getBuiltIn = __webpack_require__("d066");
-
-module.exports = getBuiltIn('navigator', 'userAgent') || '';
-
-
-/***/ }),
-
 /***/ "347f":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -52568,7 +52476,7 @@ module.exports = _default;
 
 var $ = __webpack_require__("23e7");
 var $trim = __webpack_require__("58a8").trim;
-var forcedStringTrimMethod = __webpack_require__("c8d2");
+var forcedStringTrimMethod = __webpack_require__("e070");
 
 // `String.prototype.trim` method
 // https://tc39.github.io/ecma262/#sec-string.prototype.trim
@@ -55000,12 +54908,14 @@ module.exports = _default;
 
 var $ = __webpack_require__("23e7");
 var $filter = __webpack_require__("b727").filter;
+var fails = __webpack_require__("d039");
 var arrayMethodHasSpeciesSupport = __webpack_require__("1dde");
-var arrayMethodUsesToLength = __webpack_require__("ae40");
 
 var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('filter');
 // Edge 14- issue
-var USES_TO_LENGTH = arrayMethodUsesToLength('filter');
+var USES_TO_LENGTH = HAS_SPECIES_SUPPORT && !fails(function () {
+  [].filter.call({ length: -1, 0: 1 }, function (it) { throw it; });
+});
 
 // `Array.prototype.filter` method
 // https://tc39.github.io/ecma262/#sec-array.prototype.filter
@@ -57730,9 +57640,9 @@ var store = __webpack_require__("c6cd");
 (module.exports = function (key, value) {
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
-  version: '3.6.5',
+  version: '3.6.1',
   mode: IS_PURE ? 'pure' : 'global',
-  copyright: '© 2020 Denis Pushkarev (zloirock.ru)'
+  copyright: '© 2019 Denis Pushkarev (zloirock.ru)'
 });
 
 
@@ -61244,6 +61154,33 @@ exports.notLeftMouse = notLeftMouse;
 
 /***/ }),
 
+/***/ "60ae":
+/***/ (function(module, exports, __webpack_require__) {
+
+var global = __webpack_require__("da84");
+var userAgent = __webpack_require__("b39a");
+
+var process = global.process;
+var versions = process && process.versions;
+var v8 = versions && versions.v8;
+var match, version;
+
+if (v8) {
+  match = v8.split('.');
+  version = match[0] + match[1];
+} else if (userAgent) {
+  match = userAgent.match(/Edge\/(\d+)/);
+  if (!match || match[1] >= 74) {
+    match = userAgent.match(/Chrome\/(\d+)/);
+    if (match) version = match[1];
+  }
+}
+
+module.exports = version && +version;
+
+
+/***/ }),
+
 /***/ "60d7":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -64383,7 +64320,7 @@ module.exports = {
 var defineProperty = __webpack_require__("9bf2").f;
 var create = __webpack_require__("7c73");
 var redefineAll = __webpack_require__("e2cc");
-var bind = __webpack_require__("0366");
+var bind = __webpack_require__("f8c2");
 var anInstance = __webpack_require__("19aa");
 var iterate = __webpack_require__("2266");
 var defineIterator = __webpack_require__("7dd0");
@@ -72799,7 +72736,7 @@ echarts.registerPreprocessor(preprocessor);
 
 var path = __webpack_require__("428f");
 var has = __webpack_require__("5135");
-var wrappedWellKnownSymbolModule = __webpack_require__("e538");
+var wrappedWellKnownSymbolModule = __webpack_require__("c032");
 var defineProperty = __webpack_require__("9bf2").f;
 
 module.exports = function (NAME) {
@@ -78371,7 +78308,7 @@ var fails = __webpack_require__("d039");
 
 // Thank's IE8 for his funny defineProperty
 module.exports = !fails(function () {
-  return Object.defineProperty({}, 1, { get: function () { return 7; } })[1] != 7;
+  return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a != 7;
 });
 
 
@@ -85467,7 +85404,7 @@ var createProperty = __webpack_require__("8418");
 var arraySpeciesCreate = __webpack_require__("65f0");
 var arrayMethodHasSpeciesSupport = __webpack_require__("1dde");
 var wellKnownSymbol = __webpack_require__("b622");
-var V8_VERSION = __webpack_require__("2d00");
+var V8_VERSION = __webpack_require__("60ae");
 
 var IS_CONCAT_SPREADABLE = wellKnownSymbol('isConcatSpreadable');
 var MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF;
@@ -88203,16 +88140,16 @@ exports.createSymbol = createSymbol;
 var $ = __webpack_require__("23e7");
 var IndexedObject = __webpack_require__("44ad");
 var toIndexedObject = __webpack_require__("fc6a");
-var arrayMethodIsStrict = __webpack_require__("a640");
+var sloppyArrayMethod = __webpack_require__("b301");
 
 var nativeJoin = [].join;
 
 var ES3_STRINGS = IndexedObject != Object;
-var STRICT_METHOD = arrayMethodIsStrict('join', ',');
+var SLOPPY_METHOD = sloppyArrayMethod('join', ',');
 
 // `Array.prototype.join` method
 // https://tc39.github.io/ecma262/#sec-array.prototype.join
-$({ target: 'Array', proto: true, forced: ES3_STRINGS || !STRICT_METHOD }, {
+$({ target: 'Array', proto: true, forced: ES3_STRINGS || SLOPPY_METHOD }, {
   join: function join(separator) {
     return nativeJoin.call(toIndexedObject(this), separator === undefined ? ',' : separator);
   }
@@ -88663,7 +88600,7 @@ var sharedKey = __webpack_require__("f772");
 var hiddenKeys = __webpack_require__("d012");
 var uid = __webpack_require__("90e3");
 var wellKnownSymbol = __webpack_require__("b622");
-var wrappedWellKnownSymbolModule = __webpack_require__("e538");
+var wrappedWellKnownSymbolModule = __webpack_require__("c032");
 var defineWellKnownSymbol = __webpack_require__("746f");
 var setToStringTag = __webpack_require__("d44e");
 var InternalStateModule = __webpack_require__("69f3");
@@ -89029,24 +88966,6 @@ echarts.registerAction({
 exports.take = take;
 exports.release = release;
 exports.isTaken = isTaken;
-
-/***/ }),
-
-/***/ "a640":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var fails = __webpack_require__("d039");
-
-module.exports = function (METHOD_NAME, argument) {
-  var method = [][METHOD_NAME];
-  return !!method && fails(function () {
-    // eslint-disable-next-line no-useless-call,no-throw-literal
-    method.call(null, argument || function () { throw 1; }, 1);
-  });
-};
-
 
 /***/ }),
 
@@ -93129,40 +93048,6 @@ module.exports = _default;
 
 /***/ }),
 
-/***/ "ae40":
-/***/ (function(module, exports, __webpack_require__) {
-
-var DESCRIPTORS = __webpack_require__("83ab");
-var fails = __webpack_require__("d039");
-var has = __webpack_require__("5135");
-
-var defineProperty = Object.defineProperty;
-var cache = {};
-
-var thrower = function (it) { throw it; };
-
-module.exports = function (METHOD_NAME, options) {
-  if (has(cache, METHOD_NAME)) return cache[METHOD_NAME];
-  if (!options) options = {};
-  var method = [][METHOD_NAME];
-  var ACCESSORS = has(options, 'ACCESSORS') ? options.ACCESSORS : false;
-  var argument0 = has(options, 0) ? options[0] : thrower;
-  var argument1 = has(options, 1) ? options[1] : undefined;
-
-  return cache[METHOD_NAME] = !!method && !fails(function () {
-    if (ACCESSORS && !DESCRIPTORS) return true;
-    var O = { length: -1 };
-
-    if (ACCESSORS) defineProperty(O, 1, { enumerable: true, get: thrower });
-    else O[1] = 1;
-
-    method.call(O, argument0, argument1);
-  });
-};
-
-
-/***/ }),
-
 /***/ "ae46":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -94619,6 +94504,24 @@ module.exports = _default;
 
 /***/ }),
 
+/***/ "b301":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var fails = __webpack_require__("d039");
+
+module.exports = function (METHOD_NAME, argument) {
+  var method = [][METHOD_NAME];
+  return !method || !fails(function () {
+    // eslint-disable-next-line no-useless-call,no-throw-literal
+    method.call(null, argument || function () { throw 1; }, 1);
+  });
+};
+
+
+/***/ }),
+
 /***/ "b336":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -95643,6 +95546,16 @@ module.exports = _default;
 
 /***/ }),
 
+/***/ "b39a":
+/***/ (function(module, exports, __webpack_require__) {
+
+var getBuiltIn = __webpack_require__("d066");
+
+module.exports = getBuiltIn('navigator', 'userAgent') || '';
+
+
+/***/ }),
+
 /***/ "b419":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -96004,7 +95917,7 @@ var global = __webpack_require__("da84");
 var getOwnPropertyDescriptor = __webpack_require__("06cf").f;
 var classof = __webpack_require__("c6b6");
 var macrotask = __webpack_require__("2cf49").set;
-var IS_IOS = __webpack_require__("1cdc");
+var IS_IOS = __webpack_require__("b629");
 
 var MutationObserver = global.MutationObserver || global.WebKitMutationObserver;
 var process = global.process;
@@ -96163,6 +96076,16 @@ module.exports = function (name) {
     else WellKnownSymbolsStore[name] = createWellKnownSymbol('Symbol.' + name);
   } return WellKnownSymbolsStore[name];
 };
+
+
+/***/ }),
+
+/***/ "b629":
+/***/ (function(module, exports, __webpack_require__) {
+
+var userAgent = __webpack_require__("b39a");
+
+module.exports = /(iphone|ipod|ipad).*applewebkit/i.test(userAgent);
 
 
 /***/ }),
@@ -96421,7 +96344,7 @@ exports.graphic = graphic;
 /***/ "b727":
 /***/ (function(module, exports, __webpack_require__) {
 
-var bind = __webpack_require__("0366");
+var bind = __webpack_require__("f8c2");
 var IndexedObject = __webpack_require__("44ad");
 var toObject = __webpack_require__("7b0b");
 var toLength = __webpack_require__("50c4");
@@ -98691,6 +98614,16 @@ echarts.registerAction({
 
 /***/ }),
 
+/***/ "c032":
+/***/ (function(module, exports, __webpack_require__) {
+
+var wellKnownSymbol = __webpack_require__("b622");
+
+exports.f = wellKnownSymbol;
+
+
+/***/ }),
+
 /***/ "c037":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -99583,25 +99516,6 @@ try {
 // easier to handle this case. if(!global) { ...}
 
 module.exports = g;
-
-
-/***/ }),
-
-/***/ "c8d2":
-/***/ (function(module, exports, __webpack_require__) {
-
-var fails = __webpack_require__("d039");
-var whitespaces = __webpack_require__("5899");
-
-var non = '\u200B\u0085\u180E';
-
-// check that a method works with the correct list
-// of whitespaces and has a correct name
-module.exports = function (METHOD_NAME) {
-  return fails(function () {
-    return !!whitespaces[METHOD_NAME]() || non[METHOD_NAME]() != non || whitespaces[METHOD_NAME].name !== METHOD_NAME;
-  });
-};
 
 
 /***/ }),
@@ -107656,12 +107570,14 @@ echarts.registerAction(actionInfo, function (payload, ecModel) {
 
 var $ = __webpack_require__("23e7");
 var $map = __webpack_require__("b727").map;
+var fails = __webpack_require__("d039");
 var arrayMethodHasSpeciesSupport = __webpack_require__("1dde");
-var arrayMethodUsesToLength = __webpack_require__("ae40");
 
 var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('map');
 // FF49- issue
-var USES_TO_LENGTH = arrayMethodUsesToLength('map');
+var USES_TO_LENGTH = HAS_SPECIES_SUPPORT && !fails(function () {
+  [].map.call({ length: -1, 0: 1 }, function (it) { throw it; });
+});
 
 // `Array.prototype.map` method
 // https://tc39.github.io/ecma262/#sec-array.prototype.map
@@ -111829,6 +111745,25 @@ function hasOwn(host, prop) {
 
 /***/ }),
 
+/***/ "e070":
+/***/ (function(module, exports, __webpack_require__) {
+
+var fails = __webpack_require__("d039");
+var whitespaces = __webpack_require__("5899");
+
+var non = '\u200B\u0085\u180E';
+
+// check that a method works with the correct list
+// of whitespaces and has a correct name
+module.exports = function (METHOD_NAME) {
+  return fails(function () {
+    return !!whitespaces[METHOD_NAME]() || non[METHOD_NAME]() != non || whitespaces[METHOD_NAME].name !== METHOD_NAME;
+  });
+};
+
+
+/***/ }),
+
 /***/ "e073":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -114021,16 +113956,6 @@ __webpack_require__("9e87");
 
 /***/ }),
 
-/***/ "e538":
-/***/ (function(module, exports, __webpack_require__) {
-
-var wellKnownSymbol = __webpack_require__("b622");
-
-exports.f = wellKnownSymbol;
-
-
-/***/ }),
-
 /***/ "e667":
 /***/ (function(module, exports) {
 
@@ -114220,7 +114145,7 @@ var perform = __webpack_require__("e667");
 var InternalStateModule = __webpack_require__("69f3");
 var isForced = __webpack_require__("94ca");
 var wellKnownSymbol = __webpack_require__("b622");
-var V8_VERSION = __webpack_require__("2d00");
+var V8_VERSION = __webpack_require__("60ae");
 
 var SPECIES = wellKnownSymbol('species');
 var PROMISE = 'Promise';
@@ -124509,6 +124434,37 @@ module.exports = _default;
 
 /***/ }),
 
+/***/ "f8c2":
+/***/ (function(module, exports, __webpack_require__) {
+
+var aFunction = __webpack_require__("1c0b");
+
+// optional / simple context binding
+module.exports = function (fn, that, length) {
+  aFunction(fn);
+  if (that === undefined) return fn;
+  switch (length) {
+    case 0: return function () {
+      return fn.call(that);
+    };
+    case 1: return function (a) {
+      return fn.call(that, a);
+    };
+    case 2: return function (a, b) {
+      return fn.call(that, a, b);
+    };
+    case 3: return function (a, b, c) {
+      return fn.call(that, a, b, c);
+    };
+  }
+  return function (/* ...args */) {
+    return fn.apply(that, arguments);
+  };
+};
+
+
+/***/ }),
+
 /***/ "f934":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -125964,12 +125920,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"2f8003d0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=223c2f43&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"chart-wrapper"},[_c('div',{ref:"echartsContainer",staticClass:"chart-container",staticStyle:{"width":"400px","height":"400px"}})])}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"7b8e2f14-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=3bc17eba&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"chart-wrapper"},[_c('div',{ref:"echartsContainer",staticClass:"chart-container"})])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=223c2f43&
+// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=3bc17eba&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.function.name.js
 var es_function_name = __webpack_require__("b0c0");
@@ -126243,8 +126199,13 @@ function __generator(thisArg, body) {
     }
 }
 
+function __createBinding(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}
+
 function __exportStar(m, exports) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 
 function __values(o) {
@@ -126675,7 +126636,7 @@ vue_class_component_esm_Component.registerHooks = function registerHooks(keys) {
 
 
 // CONCATENATED MODULE: ./node_modules/vue-property-decorator/lib/vue-property-decorator.js
-/** vue-property-decorator verson 8.4.2 MIT LICENSE copyright 2019 kaorun343 */
+/** vue-property-decorator verson 8.2.2 MIT LICENSE copyright 2019 kaorun343 */
 /// <reference types='reflect-metadata'/>
 
 
@@ -126721,39 +126682,6 @@ function InjectReactive(options) {
         }
     });
 }
-function produceProvide(original) {
-    var provide = function () {
-        var _this = this;
-        var rv = typeof original === 'function' ? original.call(this) : original;
-        rv = Object.create(rv || null);
-        // set reactive services (propagates previous services if necessary)
-        rv[reactiveInjectKey] = this[reactiveInjectKey] || {};
-        for (var i in provide.managed) {
-            rv[provide.managed[i]] = this[i];
-        }
-        var _loop_1 = function (i) {
-            rv[provide.managedReactive[i]] = this_1[i]; // Duplicates the behavior of `@Provide`
-            if (!rv[reactiveInjectKey].hasOwnProperty(provide.managedReactive[i])) {
-                Object.defineProperty(rv[reactiveInjectKey], provide.managedReactive[i], {
-                    enumerable: true,
-                    get: function () { return _this[i]; },
-                });
-            }
-        };
-        var this_1 = this;
-        for (var i in provide.managedReactive) {
-            _loop_1(i);
-        }
-        return rv;
-    };
-    provide.managed = {};
-    provide.managedReactive = {};
-    return provide;
-}
-function needToProduceProvide(original) {
-    return (typeof original !== 'function' ||
-        (!original.managed && !original.managedReactive));
-}
 /**
  * decorator of a provide
  * @param key key
@@ -126762,8 +126690,16 @@ function needToProduceProvide(original) {
 function Provide(key) {
     return createDecorator(function (componentOptions, k) {
         var provide = componentOptions.provide;
-        if (needToProduceProvide(provide)) {
-            provide = componentOptions.provide = produceProvide(provide);
+        if (typeof provide !== 'function' || !provide.managed) {
+            var original_1 = componentOptions.provide;
+            provide = componentOptions.provide = function () {
+                var rv = Object.create((typeof original_1 === 'function' ? original_1.call(this) : original_1) ||
+                    null);
+                for (var i in provide.managed)
+                    rv[provide.managed[i]] = this[i];
+                return rv;
+            };
+            provide.managed = {};
         }
         provide.managed[k] = key || k;
     });
@@ -126779,13 +126715,32 @@ function ProvideReactive(key) {
         // inject parent reactive services (if any)
         if (!Array.isArray(componentOptions.inject)) {
             componentOptions.inject = componentOptions.inject || {};
-            componentOptions.inject[reactiveInjectKey] = {
-                from: reactiveInjectKey,
-                default: {},
-            };
+            componentOptions.inject[reactiveInjectKey] = { from: reactiveInjectKey, default: {} };
         }
-        if (needToProduceProvide(provide)) {
-            provide = componentOptions.provide = produceProvide(provide);
+        if (typeof provide !== 'function' || !provide.managedReactive) {
+            var original_2 = componentOptions.provide;
+            provide = componentOptions.provide = function () {
+                var _this = this;
+                var rv = typeof original_2 === 'function'
+                    ? original_2.call(this)
+                    : original_2;
+                rv = Object.create(rv || null);
+                // set reactive services (propagates previous services if necessary)
+                rv[reactiveInjectKey] = this[reactiveInjectKey] || {};
+                var _loop_1 = function (i) {
+                    rv[provide.managedReactive[i]] = this_1[i]; // Duplicates the behavior of `@Provide`
+                    Object.defineProperty(rv[reactiveInjectKey], provide.managedReactive[i], {
+                        enumerable: true,
+                        get: function () { return _this[i]; },
+                    });
+                };
+                var this_1 = this;
+                for (var i in provide.managedReactive) {
+                    _loop_1(i);
+                }
+                return rv;
+            };
+            provide.managedReactive = {};
         }
         provide.managedReactive[k] = key || k;
     });
@@ -126797,10 +126752,7 @@ function applyMetadata(options, target, key) {
         if (!Array.isArray(options) &&
             typeof options !== 'function' &&
             typeof options.type === 'undefined') {
-            var type = Reflect.getMetadata('design:type', target, key);
-            if (type !== Object) {
-                options.type = type;
-            }
+            options.type = Reflect.getMetadata('design:type', target, key);
         }
     }
 }
@@ -126894,8 +126846,8 @@ var hyphenate = function (str) { return str.replace(hyphenateRE, '-$1').toLowerC
  * @return MethodDecorator
  */
 function Emit(event) {
-    return function (_target, propertyKey, descriptor) {
-        var key = hyphenate(propertyKey);
+    return function (_target, key, descriptor) {
+        key = hyphenate(key);
         var original = descriptor.value;
         descriptor.value = function emitter() {
             var _this = this;
@@ -126904,29 +126856,9 @@ function Emit(event) {
                 args[_i] = arguments[_i];
             }
             var emit = function (returnValue) {
-                var emitName = event || key;
-                if (returnValue === undefined) {
-                    if (args.length === 0) {
-                        _this.$emit(emitName);
-                    }
-                    else if (args.length === 1) {
-                        _this.$emit(emitName, args[0]);
-                    }
-                    else {
-                        _this.$emit.apply(_this, [emitName].concat(args));
-                    }
-                }
-                else {
-                    if (args.length === 0) {
-                        _this.$emit(emitName, returnValue);
-                    }
-                    else if (args.length === 1) {
-                        _this.$emit(emitName, returnValue, args[0]);
-                    }
-                    else {
-                        _this.$emit.apply(_this, [emitName, returnValue].concat(args));
-                    }
-                }
+                if (returnValue !== undefined)
+                    args.unshift(returnValue);
+                _this.$emit.apply(_this, [event || key].concat(args));
             };
             var returnValue = original.apply(this, args);
             if (isPromise(returnValue)) {
@@ -131013,7 +130945,7 @@ function EChartsService_renderChart(chartInstace, thisDashboard, result) {
   try {
     var chartType = thisDashboard.visualData.type,
         defaultConfig = DefaultTemplate_DefaultTemplate.getDefaultConfig(chartType);
-    thisDashboard = ObjectUtil_ObjectUtil.merge(thisDashboard, defaultConfig);
+    thisDashboard = ObjectUtil_ObjectUtil.merge(defaultConfig, thisDashboard);
     var echartsOption = EChartsService_EChartsService.mergEChartstyle(thisDashboard, result);
     EChartsUtil_EChartsUtil.setOption(chartInstace, echartsOption);
     return Promise.resolve();
@@ -131095,11 +131027,11 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
       jump: function jump(echartsParams) {}
     };
     return _this;
-  } // 设置联动
-
+  }
 
   _createClass(ChartComponent, [{
     key: "setReact",
+    // 设置联动
     value: function setReact(reactWhere) {
       return reactWhere;
     }
@@ -131180,13 +131112,18 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
       this // 回调上下文
       );
     }
+  }, {
+    key: "getDashBoard",
+    value: function getDashBoard() {
+      console.error(this.dashboard);
+    }
     /**
      * 绘制图表
      */
 
   }, {
     key: "renderChart",
-    value: function renderChart() {
+    value: function renderChart(result, dashboard) {
       var _this2 = this;
 
       // JSON 配置
@@ -131207,8 +131144,10 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
           _this2.onError("JSON", new Error("解析 JSON 出错，请检查格式"));
         });
       } else {
-        EChartsService_renderChart(this.$data.echartsInstance, this.dashboard, this.data).then(function (result) {}).catch(function (err) {
-          console.error(err);
+        result = result || this.thisAnalysisData;
+
+        EChartsService_renderChart(this.$data.echartsInstance, this.thisDashboard, result).then(function (result) {}).catch(function (err) {
+          console.error("rendererr", err);
         });
       }
     }
@@ -131222,6 +131161,22 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
       return this.eventMethod[eventsConfig.triggerEvent] || null;
     }
   }, {
+    key: "thisAnalysisData",
+    get: function get() {
+      return this.anslysisdata;
+    },
+    set: function set(anslysisdata) {
+      this.$emit("update:anslysisdata", anslysisdata);
+    }
+  }, {
+    key: "thisDashboard",
+    get: function get() {
+      return this.dashboard;
+    },
+    set: function set(dashboard) {
+      this.$emit("update:dashboard", dashboard);
+    }
+  }, {
     key: "thisAnalysis",
     get: function get() {
       return this.dashboard.analysis;
@@ -131233,11 +131188,7 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
 
 __decorate([Prop()], ChartComponentvue_type_script_lang_ts_ChartComponent.prototype, "dashboard", void 0);
 
-__decorate([Prop({
-  default: function _default() {
-    return [];
-  }
-})], ChartComponentvue_type_script_lang_ts_ChartComponent.prototype, "data", void 0);
+__decorate([Prop()], ChartComponentvue_type_script_lang_ts_ChartComponent.prototype, "anslysisdata", void 0);
 
 __decorate([Prop({
   default: function _default() {

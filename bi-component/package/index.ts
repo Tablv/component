@@ -1,6 +1,6 @@
 import ChartComponent from "glaway-bi-component/src/components/ChartComponent.vue";
-import DefaultTemplate from 'glaway-bi-component/src/config/DefaultTemplate';
-import ParamsConverter from 'glaway-bi-component/src/util/ParamsConverter';
+import DefaultTemplate from "@/config/DefaultTemplate";
+import ParamsConverter from "glaway-bi-component/src/util/ParamsConverter";
 
 function install(Vue: any, opt = {}) {
   Vue.component("bi-component", ChartComponent);
