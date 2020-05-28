@@ -8,7 +8,7 @@
 import { Vue, Prop, Component, Emit, Watch } from "vue-property-decorator";
 import echarts from "echarts";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
-import ChartUIService from "@/interfaces/ChartUIService";
+import ChartUIService from "glaway-bi-component/src/interfaces/ChartUIService";
 import EChartsOption from "glaway-bi-model/view/dashboard/EChartsOption";
 import AnalysisData from "glaway-bi-model/view/dashboard/AnalysisData";
 import EventsConfig from "glaway-bi-model/view/dashboard/EventsConfig";
@@ -172,7 +172,6 @@ export default class ChartComponent extends Vue implements ChartUIService {
       result = result || this.thisAnalysisData;
       renderChart(this.$data.echartsInstance, this.thisDashboard, result)
         .then(result => {
-          // this.$emit("update:dashboard", result);
           this.thisDashboard = result;
         })
         .catch(err => {

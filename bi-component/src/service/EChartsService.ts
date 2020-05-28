@@ -221,7 +221,9 @@ export function renderChart(
 ): Promise<Dashboard> {
   try {
     let chartType = thisDashboard.visualData.type,
-      defaultConfig = DefaultTemplate.getDefaultConfig(chartType);
+      defaultConfig = ObjectUtil.copy(
+        DefaultTemplate.getDefaultConfig(chartType)
+      );
     thisDashboard = ObjectUtil.merge(defaultConfig, thisDashboard);
 
     let echartsOption = EChartsService.mergEChartstyle(thisDashboard, result);

@@ -125920,12 +125920,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"7b8e2f14-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=3bc17eba&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"1f353a40-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=449dd67f&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"chart-wrapper"},[_c('div',{ref:"echartsContainer",staticClass:"chart-container"})])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=3bc17eba&
+// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=449dd67f&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.function.name.js
 var es_function_name = __webpack_require__("b0c0");
@@ -130944,11 +130944,11 @@ function bindEvents(chartInstance, thisEvents, triggerMethodCallback, thisContex
 function EChartsService_renderChart(chartInstace, thisDashboard, result) {
   try {
     var chartType = thisDashboard.visualData.type,
-        defaultConfig = DefaultTemplate_DefaultTemplate.getDefaultConfig(chartType);
+        defaultConfig = ObjectUtil_ObjectUtil.copy(DefaultTemplate_DefaultTemplate.getDefaultConfig(chartType));
     thisDashboard = ObjectUtil_ObjectUtil.merge(defaultConfig, thisDashboard);
     var echartsOption = EChartsService_EChartsService.mergEChartstyle(thisDashboard, result);
     EChartsUtil_EChartsUtil.setOption(chartInstace, echartsOption);
-    return Promise.resolve();
+    return Promise.resolve(thisDashboard);
   } catch (err) {
     return Promise.reject(err);
   }
@@ -131146,7 +131146,9 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
       } else {
         result = result || this.thisAnalysisData;
 
-        EChartsService_renderChart(this.$data.echartsInstance, this.thisDashboard, result).then(function (result) {}).catch(function (err) {
+        EChartsService_renderChart(this.$data.echartsInstance, this.thisDashboard, result).then(function (result) {
+          _this2.thisDashboard = result;
+        }).catch(function (err) {
           console.error("rendererr", err);
         });
       }

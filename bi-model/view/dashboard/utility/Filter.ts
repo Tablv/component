@@ -1,4 +1,4 @@
-import WhereDTO from 'glaway-bi-model/params/WhereDTO';
+import WhereDTO from "glaway-bi-model/params/WhereDTO";
 
 /**
  * 过滤
