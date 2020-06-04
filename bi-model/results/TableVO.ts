@@ -30,4 +30,10 @@ export default interface TableVO {
    * - 表字段集合
    */
   children: Array<TableInfoVO>;
+
+  /**
+   * - 表字段集合
+   */
+  columns?: Array<TableInfoVO>;
+
 }
