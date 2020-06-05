@@ -24,28 +24,32 @@ export interface WarnDatapack {
    */
   dashboardId: string;
 
-  /**
-   * 预警颜色
-   */
-  warnColor: string;
+  config: WarnDatapackConfig;
+}
 
+export interface WarnDatapackConfig {
   /**
-   * 预警信息显示类型
-   *  - 0: 不显示预警信息
-   *  - 1: 在图表右侧显示
-   *  - 2: 在鼠标移入时显示 tooltip
-   */
-  warnDisplayType: WarnDisplayType;
+     * 预警颜色
+     */
+    warnColor: string;
 
-  /**
-   * 当前选择度量的预警配置
-   */
-  appliedConfigId: string;
+    /**
+     * 预警信息显示类型
+     *  - 0: 不显示预警信息
+     *  - 1: 在图表右侧显示
+     *  - 2: 在鼠标移入时显示 tooltip
+     */
+    warnDisplayType: WarnDisplayType;
 
-  /**
-   * 所有度量的预警配置
-   */
-  config: Array<WarnConfig>;
+    /**
+     * 当前选择度量的预警配置
+     */
+    appliedConfigId: string;
+
+    /**
+     * 所有度量的预警配置
+     */
+    warnConfigList: Array<WarnConfig>;
 }
 
 /**
@@ -121,10 +125,12 @@ export class WarnBuilder {
       id: datapackId,
       name: "预警 " + serialNo,
       dashboardId,
-      warnColor: "#FF0000",
-      warnDisplayType: WarnDisplayType.ON_CHART,
-      appliedConfigId: "",
-      config: this.buildWarnConfig(datapackId, currentMeasures)
+      config: {
+        warnColor: "#FF0000",
+        warnDisplayType: WarnDisplayType.ON_CHART,
+        appliedConfigId: "",
+        warnConfigList: this.buildWarnConfig(datapackId, currentMeasures)
+      }
     };
   }
 
