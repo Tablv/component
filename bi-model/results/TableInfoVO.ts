@@ -15,6 +15,11 @@ export default interface TableInfoVO {
   columnName: string;
 
   /**
+   * - 视图别名
+   */
+  vcolumn: string;
+
+  /**
    * - 列别名
    */
   alias: string;
