@@ -41,4 +41,9 @@ export default interface AnalysisDTO {
    * order 排序
    */
   order: Array<OrderDTO>;
+
+  /**
+   * limit 排名
+   */
+  limit: string;
 }

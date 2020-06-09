@@ -29,7 +29,8 @@ export default class ParamsConverter {
       viewName,
       where,
       filter,
-      sort
+      sort,
+      limit
     } = currentDashboard.analysis;
 
     const analysisDTO: AnalysisDTO = {
@@ -41,11 +42,15 @@ export default class ParamsConverter {
       // 追加维度、度量数据
       fields: ObjectUtil.mergeArray([], true, dimensions, measures),
 
-      // 追加过滤、排序
+      // 追加过滤、排序、排名
       where: ObjectUtil.mergeArray([], true, where, filter.data),
-      order: ObjectUtil.copy(sort.data)
+      order: ObjectUtil.copy(sort.data),
+      limit: ""
     };
-
+    if (limit.data[0]) {
+      analysisDTO.limit = limit.data[0].limit
+      analysisDTO.order = ObjectUtil.copy(limit.data)
+    }
     return analysisDTO;
   }
 
@@ -96,7 +101,8 @@ export default class ParamsConverter {
       join: joinRelations,
       fields: [fieldDTO],
       where: [],
-      order: []
+      order: [],
+      limit: ""
     };
   }
 }

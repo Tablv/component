@@ -8,6 +8,7 @@ import { BackgroundType } from "glaway-bi-model/enums/DashboardSet";
 import { FILTER_DEFAULT_VALUE } from "glaway-bi-model/view/Filter";
 import { SORT_DEFAULT_VALUE } from "glaway-bi-model/view/Sort";
 import { WARN_DEFAULT_VALUE } from "glaway-bi-model/view/Warn";
+import { LIMIT_DEFAULT_VALUE } from "glaway-bi-model/view/Limit";
 import ChartConfig from "./ChartConfig";
 
 /**
@@ -53,6 +54,10 @@ export const generalDataTemplate: any = {
       type: SortType.result,
       data: [],
       custom: []
+    },
+    limit: {
+      id: LIMIT_DEFAULT_VALUE,
+      data: []
     },
     warn: {
       id: WARN_DEFAULT_VALUE,

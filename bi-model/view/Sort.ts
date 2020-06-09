@@ -61,6 +61,7 @@ export interface SortConfig {
    * 自定义顺序
    */
   custom: CustomOrder | null;
+
 }
 
 /**

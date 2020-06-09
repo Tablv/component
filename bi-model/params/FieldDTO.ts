@@ -38,6 +38,13 @@ export default interface FieldDTO {
   alias: string;
 
   /**
+   * - 视图别名
+   */
+  vcolumn: string;
+
+  showColumnName: string;
+
+  /**
    * 方法
    */
   func: Array<string>;
@@ -69,6 +76,8 @@ export class FieldDTOBuilder {
       tableName: tableInfo.tableName,
       columnName: tableInfo.columnName,
       alias: tableInfo.alias,
+      vcolumn: tableInfo.vcolumn,
+      showColumnName: tableInfo.alias || tableInfo.columnName || tableInfo.vcolumn,
       tableAlias: tableInfo.tableAlias,
       func: [],
       group: 0

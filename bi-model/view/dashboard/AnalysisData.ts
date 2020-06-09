@@ -7,6 +7,7 @@ import OrderDTO from "glaway-bi-model/params/OrderDTO";
 import Filter from "glaway-bi-model/view/dashboard/utility/Filter";
 import Sort from "glaway-bi-model/view/dashboard/utility/Sort";
 import Warn from "glaway-bi-model/view/dashboard/utility/Warn";
+import Limit from "glaway-bi-model/view/dashboard/utility/Limit";
 
 /**
  * 分析数据
@@ -66,6 +67,11 @@ export default interface AnalysisData {
    * 排序
    */
   sort: Sort;
+
+  /**
+   * 排名
+   */
+  limit: Limit;
 
   /**
    * 预警
