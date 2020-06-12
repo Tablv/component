@@ -9,7 +9,12 @@ import PieConfig from "./Pie";
 const templates = {
   echarts: {
     sampleStyle: {
-      rpie: ObjectUtil.copy(PieConfig.templates.echarts.sampleStyle.pie)
+      rpie: Object.assign({}, PieConfig.templates.echarts.sampleStyle.pie, {
+        radiusConfig: {
+          inside: 45,
+          outside: 90
+        }
+      })
     }
   }
 };

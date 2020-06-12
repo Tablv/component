@@ -35,7 +35,7 @@ export default class ChartComponent extends Vue implements ChartUIService {
   dashboard!: Dashboard;
 
   @Prop()
-  anslysisdata!: AnalysisResults;
+  analysisdata!: AnalysisResults;
 
   // 联动数据
   @Prop({
@@ -46,11 +46,11 @@ export default class ChartComponent extends Vue implements ChartUIService {
   reactWhere!: ReactWhere;
 
   get thisAnalysisData(): AnalysisResults {
-    return this.anslysisdata;
+    return this.analysisdata;
   }
 
-  set thisAnalysisData(anslysisdata: AnalysisResults) {
-    this.$emit("update:anslysisdata", anslysisdata);
+  set thisAnalysisData(analysisdata: AnalysisResults) {
+    this.$emit("update:analysisdata", analysisdata);
   }
 
   get thisDashboard() {

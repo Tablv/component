@@ -18,6 +18,28 @@ const templates = {
         centerConfig: {
           xAxias: "50%",
           yAxias: "50%"
+        },
+        radiusConfig: {
+          inside: 0,
+          outside: 60
+        },
+        grid: {
+          top: {
+            value: 50,
+            unit: "%"
+          },
+          left: {
+            value: 50,
+            unit: "%"
+          },
+          right: {
+            value: 50,
+            unit: "%"
+          },
+          bttom: {
+            value: 50,
+            unit: "%"
+          }
         }
       }
     }

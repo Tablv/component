@@ -20,7 +20,6 @@ export default class RPieHandler extends PieHandler {
     let series: Array<echarts.EChartOption.Series> = [];
     series = (super.getSeries() as Array<echarts.EChartOption.SeriesPie>).map(
       seriesData => {
-        seriesData.radius = ["45%", "70%"];
         return seriesData;
       }
     );

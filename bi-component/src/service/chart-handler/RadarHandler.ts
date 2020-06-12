@@ -65,10 +65,13 @@ export default class RadarHandler implements ChartHandler {
   getRadar(): echarts.EChartOption.SeriesRadar.DataObject {
     let radarData: any = {
       indicator: [],
-      center: Object.values(this.sampleStyle.centerConfig)
+      center: Object.values(this.sampleStyle.centerConfig),
+      radius: Object.values(this.sampleStyle.radiusConfig).map(
+        item => item + "%"
+      )
     };
     this.fieldNames.dimensions.forEach(dimensionName => {
-      this.result.forEach(data => {
+      this.result.forEach((data: any) => {
         const radarObj = {
           name: data[dimensionName]
         };

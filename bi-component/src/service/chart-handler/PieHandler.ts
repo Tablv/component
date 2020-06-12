@@ -58,7 +58,7 @@ export default class PieHandler implements ChartHandler {
       legendData: Array<string> = [];
 
     this.fieldNames.dimensions.forEach(dimensionName => {
-      this.result.forEach(data => {
+      this.result.forEach((data: any) => {
         const dimension = data[dimensionName] as string;
         legendData.push(dimension);
       });
@@ -78,7 +78,9 @@ export default class PieHandler implements ChartHandler {
       this.fieldNames.measures.forEach(measureName => {
         const seriesData = {
           type: "pie",
-          radius: "50%",
+          radius: Object.values(this.sampleStyle.radiusConfig).map(
+            item => item + "%"
+          ),
           center: Object.values(this.sampleStyle.centerConfig),
           label: EChartDataUtil.getPieSeriesLabel(this.sampleStyle),
           data: EChartDataUtil.getDataByAxisName(

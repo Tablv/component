@@ -80,6 +80,11 @@ export interface PieChartOption {
     xAxias: string;
     yAxias: string;
   };
+  radiusConfig: {
+    inside: string | number;
+    outside: string | number;
+    axisLineWidth: string | number;
+  }
 }
 
 /**

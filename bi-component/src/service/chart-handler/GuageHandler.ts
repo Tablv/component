@@ -52,12 +52,21 @@ export default class GuageHandler implements ChartHandler {
    */
   public getSeries(): Array<echarts.EChartOption.Series> {
     let series: Array<echarts.EChartOption.Series> = [];
-
     this.fieldNames.measures.forEach(measures => {
       const seriesData = {
         type: "gauge",
         detail: { formatter: "{value}" },
-        data: this.result.map(item => ({
+        // 坐标轴线
+        axisLine: {
+          // 属性lineStyle控制线条样式
+          lineStyle: {
+            width: this.sampleStyle.radiusConfig.axisLineWidth
+          }
+        },
+
+        radius: this.sampleStyle.radiusConfig.outside,
+        center: Object.values(this.sampleStyle.centerConfig),
+        data: this.result.map((item: any) => ({
           name: measures,
           value: item[measures]
         }))

@@ -48,8 +48,8 @@ export default class ParamsConverter {
       limit: ""
     };
     if (limit.data[0]) {
-      analysisDTO.limit = limit.data[0].limit
-      analysisDTO.order = ObjectUtil.copy(limit.data)
+      analysisDTO.limit = limit.data[0].limit;
+      analysisDTO.order = ObjectUtil.copy(limit.data);
     }
     return analysisDTO;
   }

@@ -1,7 +1,7 @@
 import PieHandler from "./PieHandler";
 
 /**
- * 环图处理
+ * 指示器处理
  */
 export default class TargetPieHandler extends PieHandler {
   public getStyle(): echarts.EChartOption {
@@ -30,8 +30,11 @@ export default class TargetPieHandler extends PieHandler {
         labelLine: {
           show: false
         },
-        radius: ["45%", "70%"],
-        data: this.result.map(item => ({
+        radius: Object.values(this.sampleStyle.radiusConfig).map(
+          item => item + "%"
+        ),
+        center: Object.values(this.sampleStyle.centerConfig),
+        data: this.result.map((item: any) => ({
           name: measureName,
           value: item[measureName]
         }))

@@ -26,6 +26,25 @@ const templates = {
         decimals: {
           value: 0,
           unit: ""
+        },
+        grid: {
+          // 初始值需要与全局配置保持一致
+          top: {
+            value: 60,
+            unit: "px"
+          },
+          left: {
+            value: 50,
+            unit: "px"
+          },
+          right: {
+            value: 50,
+            unit: "px"
+          },
+          bottom: {
+            value: 30,
+            unit: "px"
+          }
         }
       }
     }
