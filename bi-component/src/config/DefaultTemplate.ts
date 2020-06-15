@@ -178,7 +178,8 @@ export default class DefaultTemplate {
     }
 
     // 合并数据
-    let generalData = generalDataTemplate,
+    let generalData = ObjectUtil.copy(generalDataTemplate),
+    // let generalData = generalDataTemplate,
       customData = customDataTemplates[chartType],
       defaultConfig: Dashboard = ObjectUtil.merge(generalData, customData);
     // 设置图表类型
@@ -186,7 +187,6 @@ export default class DefaultTemplate {
 
     // 保存缓存
     this.configCache.set(chartType, defaultConfig);
-
     return defaultConfig;
   }
 }
