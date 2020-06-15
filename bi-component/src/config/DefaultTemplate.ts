@@ -148,6 +148,11 @@ export const generalDataTemplate: any = {
     },
     series: []
   },
+  tasks: {
+    ratotionEnable: false,
+    ratotionNumb: 1,
+    ratotionId: null
+  },
   newCreated: true
 };
 
@@ -179,7 +184,7 @@ export default class DefaultTemplate {
 
     // 合并数据
     let generalData = ObjectUtil.copy(generalDataTemplate),
-    // let generalData = generalDataTemplate,
+      // let generalData = generalDataTemplate,
       customData = customDataTemplates[chartType],
       defaultConfig: Dashboard = ObjectUtil.merge(generalData, customData);
     // 设置图表类型

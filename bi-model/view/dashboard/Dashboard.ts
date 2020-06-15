@@ -3,6 +3,7 @@ import EChartsOption from "./EChartsOption";
 import StaticData from "./StaticData";
 import AnalysisData from "./AnalysisData";
 import EventsConfig from "./EventsConfig";
+import TaskConfig from "./TaskConfig";
 
 /**
  * 仪表盘 数据模型
@@ -39,6 +40,12 @@ export default interface Dashboard {
    * 事件
    */
   events: EventsConfig;
+
+  /**
+   * 轮播任务
+   */
+  tasks: TaskConfig;
+
 
   /**
    * 是否新创建

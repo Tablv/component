@@ -18,6 +18,7 @@ export default interface EventsConfig {
    * 触发事件选项
    */
   eventOptions: EventOptions;
+
 }
 
 /**
