@@ -18,4 +18,9 @@ export default interface ReactWhere {
    * 条件过滤
    */
   where: WhereDTO | null;
+
+  /**
+   * 是否轮播
+   */
+  isRotationNumb: boolean;
 }
