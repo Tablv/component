@@ -37,5 +37,8 @@ export default interface ChartUIService {
    */
   renderChart(result?: AnalysisResults): void;
 
-  getDashBoard(): void;
+  /**
+   * 重置图表透明度
+   */
+  resetOpacity(): void;
 }

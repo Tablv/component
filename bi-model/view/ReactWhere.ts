@@ -1,4 +1,5 @@
 import WhereDTO from "glaway-bi-model/params/WhereDTO";
+import TaskConfig from "glaway-bi-model/view/dashboard/TaskConfig";
 
 /**
  * 联动查询
@@ -20,7 +21,17 @@ export default interface ReactWhere {
   where: WhereDTO | null;
 
   /**
-   * 是否轮播
+   * 选中的条件数据下标
    */
-  isRotationNumb: boolean;
+  selectedIndex: string | null;
+
+  /**
+   * 上次选中的联动主体id
+   */
+  oldDashboardId: string | null;
+
+  /**
+   * 开启的轮播任务
+   */
+  rotationTask: TaskConfig;
 }

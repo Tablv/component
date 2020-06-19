@@ -1,4 +1,4 @@
-export default interface TashConfig {
+export default interface TaskConfig {
    /**
    * 轮播事件-开启标志
    */
@@ -10,7 +10,5 @@ export default interface TashConfig {
   ratotionNumb: string | number;
 
   // 轮播事件id
-  ratotionId: string | number;
-
-
+  ratotionId: number;
 } 

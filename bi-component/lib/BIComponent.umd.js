@@ -126466,12 +126466,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6de82ffa-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=01e4efed&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"75ffbadd-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=05c6ba52&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"chart-wrapper"},[_c('div',{ref:"echartsContainer",staticClass:"chart-container"})])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=01e4efed&
+// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=05c6ba52&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.function.name.js
 var es_function_name = __webpack_require__("b0c0");
@@ -127481,6 +127481,9 @@ var es_array_for_each = __webpack_require__("4160");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.promise.js
 var es_promise = __webpack_require__("e6cf");
 
+// EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom-collections.for-each.js
+var web_dom_collections_for_each = __webpack_require__("159b");
+
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
 var es_array_concat = __webpack_require__("99af");
 
@@ -127489,9 +127492,6 @@ var es_array_reduce = __webpack_require__("13d5");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.string.trim.js
 var es_string_trim = __webpack_require__("498a");
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom-collections.for-each.js
-var web_dom_collections_for_each = __webpack_require__("159b");
 
 // EXTERNAL MODULE: ./node_modules/glaway-bi-util/node_modules/lodash/lodash.js
 var lodash = __webpack_require__("e0d37");
@@ -128233,7 +128233,10 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
     value: function getDataByFieldName(fieldName, result, decimals) {
       var fieldArray = [];
       fieldArray = result.map(function (data) {
-        return decimals ? Number(data[fieldName]).toFixed(decimals.value) : data[fieldName];
+        var value = decimals ? Number(data[fieldName]).toFixed(decimals.value) : data[fieldName];
+        return {
+          value: value
+        };
       });
       return fieldArray;
     }
@@ -128250,7 +128253,9 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
       return result.map(function (item) {
         var dec = (decimals === null || decimals === void 0 ? void 0 : decimals.value) || 0;
         var value = Number((item[fieldName] / item["sum"] * 100).toFixed(dec));
-        return value;
+        return {
+          value: value
+        };
       });
     }
     /**
@@ -128919,6 +128924,7 @@ var PieHandler_PieHandler = /*#__PURE__*/function () {
             radius: Object.values(_this2.sampleStyle.radiusConfig).map(function (item) {
               return item + "%";
             }),
+            itemStyle: {},
             center: Object.values(_this2.sampleStyle.centerConfig),
             label: EChartDataUtil_EChartServiceUtil.getPieSeriesLabel(_this2.sampleStyle),
             data: EChartDataUtil_EChartServiceUtil.getDataByAxisName(dimensionName, measureName, _this2.result)
@@ -130869,48 +130875,6 @@ var RosePieConfig = {
   config: RosePie_config
 };
 /* harmony default export */ var RosePie = (RosePieConfig);
-// CONCATENATED MODULE: ./src/config/chart-config/SunPie.ts
-
-
-
-/**
- * 初始化模板
- */
-
-var SunPie_templates = {
-  echarts: {
-    sampleStyle: {
-      sunpie: ObjectUtil_ObjectUtil.copy(Pie.templates.echarts.sampleStyle.pie)
-    }
-  }
-};
-/**
- * 菜单选项
- */
-
-var SunPie_menuOptions = ObjectUtil_ObjectUtil.copy(Pie.menuOptions);
-/**
- * 创建菜单配置
- */
-
-var SunPie_createMenuConfig = {
-  iconClass: "gw-iconfsux_tubiao_xuritu",
-  title: "旭日图",
-  createType: ChartType.sunpie,
-  enable: true
-};
-/**
- * 配置项
- */
-
-var SunPie_config = ObjectUtil_ObjectUtil.copy(Pie.config);
-var SunPieConfig = {
-  templates: SunPie_templates,
-  menuOptions: SunPie_menuOptions,
-  createMenuConfig: SunPie_createMenuConfig,
-  config: SunPie_config
-};
-/* harmony default export */ var SunPie = (SunPieConfig);
 // CONCATENATED MODULE: ./src/config/chart-config/Radar.ts
 
 
@@ -131158,7 +131122,6 @@ var TargetPieConfig = {
 
 
 
-
 var ChartConfig_ChartConfig = /*#__PURE__*/function () {
   function ChartConfig() {
     _classCallCheck(this, ChartConfig);
@@ -131300,7 +131263,7 @@ ChartConfig_ChartConfig.chartConfigMap = {
   /**
    * 旭日图
    */
-  sunpie: SunPie,
+  // sunpie: SunPieConfig,
 
   /**
    * 雷达图
@@ -131446,8 +131409,11 @@ var generalDataTemplate = {
     },
     animation: false,
     title: {
+      show: true,
       text: "图表",
       left: "left",
+      right: 0,
+      padding: [5, 5, 5, 5],
       textStyle: {
         color: "#000",
         fontFamily: "Microsoft YaHei",
@@ -131471,11 +131437,14 @@ var generalDataTemplate = {
     tooltip: {
       show: false
     },
+    brush: {
+      throttleType: "debounce"
+    },
     series: []
   },
   tasks: {
     ratotionEnable: false,
-    ratotionNumb: 1,
+    ratotionNumb: 5,
     ratotionId: null
   },
   newCreated: true
@@ -131533,6 +131502,7 @@ var DefaultTemplate_DefaultTemplate = /*#__PURE__*/function () {
 
 DefaultTemplate_DefaultTemplate.configCache = new Map();
 // CONCATENATED MODULE: ./src/service/EChartsService.ts
+
 
 
 
@@ -131703,14 +131673,17 @@ var triggerMethods = ["click", "dblclick", "mousedown", "mousemove", "mouseup", 
 
 function bindEvents(chartInstance, thisEvents, triggerMethodCallback, thisContext) {
   // 传入，则先取消绑定事件
-  triggerMethods.forEach(function (method) {
-    chartInstance.off(method);
-  });
+  offBindEvents(chartInstance);
   var nowTrigger = thisEvents.triggerMethod;
 
   if (nowTrigger && triggerMethodCallback) {
-    chartInstance.on(nowTrigger, triggerMethodCallback.bind(thisContext));
+    chartInstance.on(nowTrigger, triggerMethodCallback.bind(thisContext, chartInstance));
   }
+}
+function offBindEvents(chartInstance) {
+  triggerMethods.forEach(function (method) {
+    chartInstance.off(method);
+  });
 }
 /**
  * 绘制图表
@@ -131719,17 +131692,91 @@ function bindEvents(chartInstance, thisEvents, triggerMethodCallback, thisContex
  * @param thisDashboard 当前仪表盘
  */
 
-function EChartsService_renderChart(chartInstace, thisDashboard, result) {
+function EChartsService_renderChart(chartInstace, thisDashboard, result, selectIndex) {
   try {
     var chartType = thisDashboard.visualData.type,
         defaultConfig = ObjectUtil_ObjectUtil.copy(DefaultTemplate_DefaultTemplate.getDefaultConfig(chartType));
     thisDashboard = ObjectUtil_ObjectUtil.merge(defaultConfig, thisDashboard);
-    var echartsOption = EChartsService_EChartsService.mergEChartstyle(thisDashboard, result);
-    EChartsUtil_EChartsUtil.setOption(chartInstace, echartsOption);
+    var echartsOption = EChartsService_EChartsService.mergEChartstyle(thisDashboard, result); // 保持选中状态
+
+    selectIndex ? handleOpacity(chartInstace, {
+      dataIndex: selectIndex
+    }, echartsOption) : EChartsService_resetOpacity(chartInstace, echartsOption);
     return Promise.resolve(thisDashboard);
   } catch (err) {
     return Promise.reject(err);
   }
+}
+/**
+ * 重置图表透明度
+ *
+ * @param chartInstance 图表实例
+ * @param echartsOption 图表配置
+ */
+
+function EChartsService_resetOpacity(chartInstance, echartsOption) {
+  var _option$series;
+
+  var option = echartsOption || ObjectUtil_ObjectUtil.copy(chartInstance.getOption());
+  if (!option) return;
+  (_option$series = option.series) === null || _option$series === void 0 ? void 0 : _option$series.forEach(function (serieData) {
+    serieData.itemStyle = {
+      opacity: "1"
+    };
+    serieData.data.forEach(function (itemData) {
+      delete itemData.itemStyle;
+    });
+  });
+  EChartsUtil_EChartsUtil.setOption(chartInstance, option);
+}
+/**
+ * 处理透明度问题
+ *
+ * @param chartInstance 图表实例
+ * @param echartsParams 点击参数
+ * @param echartsOption 图表配置
+ */
+
+function handleOpacity(chartInstance, // 约束 必须有 dataIndex
+echartsParams, echartsOption) {
+  var _option$series2;
+
+  // 1, 0.4 可以后期选择抛出去，作为参数传递
+  var selectedStyle = {
+    opacity: "1"
+  };
+  var unSelectStyle = {
+    opacity: "0.4"
+  };
+  var option = echartsOption || ObjectUtil_ObjectUtil.copy(chartInstance.getOption());
+  var result = {
+    // 是否重置
+    reset: false,
+    // 选中的数据小标
+    dataIndex: "".concat(echartsParams.dataIndex) || null
+  };
+  (_option$series2 = option.series) === null || _option$series2 === void 0 ? void 0 : _option$series2.forEach(function (serieData) {
+    var _serieData$data$echar;
+
+    serieData.itemStyle = unSelectStyle;
+    serieData.data.forEach(function (itemData, index) {
+      if (index !== echartsParams.dataIndex) {
+        delete itemData.itemStyle;
+      }
+    });
+
+    if ((_serieData$data$echar = serieData.data[echartsParams.dataIndex]) === null || _serieData$data$echar === void 0 ? void 0 : _serieData$data$echar.itemStyle) {
+      // 取消了过滤条件
+      delete serieData.data[echartsParams.dataIndex].itemStyle;
+      serieData.itemStyle = selectedStyle;
+      result.reset = true;
+      result.dataIndex = null;
+    } else {
+      serieData.data[echartsParams.dataIndex].itemStyle = selectedStyle;
+    }
+  });
+  EChartsUtil_EChartsUtil.setOption(chartInstance, option);
+  return result;
 }
 /**
  * 绘制 JSON 静态图表
@@ -131778,9 +131825,24 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
       /**
        * 联动
        */
-      react: function react(echartsParams) {
-        _this.setReact({
-          dashboardId: _this.dashboard.id,
+      react: function react(chartInstance, echartsParams) {
+        // 点击后 实现select效果
+        var _handleOpacity = handleOpacity(chartInstance, echartsParams),
+            reset = _handleOpacity.reset,
+            dataIndex = _handleOpacity.dataIndex; // 判断是否需要重置
+
+
+        if (reset) {
+          _this.resetReact();
+
+          return;
+        }
+
+        var reactWhere = {
+          selectedIndex: dataIndex,
+          oldDashboardId: _this.reactWhere.dashboardId,
+          rotationTask: _this.thisDashboard.tasks,
+          dashboardId: _this.thisDashboard.id,
           datasetId: _this.thisAnalysis.datasetId,
           where: {
             id: UUID_UUID.generate(),
@@ -131791,7 +131853,9 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
               value: echartsParams.name
             }]
           }
-        });
+        };
+
+        _this.setReact(reactWhere);
       },
 
       /**
@@ -131812,7 +131876,11 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
     // 设置联动
     value: function setReact(reactWhere) {
       return reactWhere;
-    }
+    } // 设置联动
+
+  }, {
+    key: "resetReact",
+    value: function resetReact() {}
   }, {
     key: "onError",
     value: function onError(errorPart, error) {
@@ -131882,18 +131950,16 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
     key: "bindChartEvents",
     value: function bindChartEvents(clearEvent, thisEvents) {
       // 事件选项
-      var triggerCallback = this.getEventMethod(thisEvents); // 绑定事件
+      var triggerCallback = this.getEventMethod(thisEvents);
+      offBindEvents(this.$data.echartsInstance); // 绑定事件
 
       triggerCallback && this.$data.echartsInstance && bindEvents(this.$data.echartsInstance, // 实例
       thisEvents, // 事件配置
       triggerCallback, // 回调方法
       this // 回调上下文
       );
-    }
-  }, {
-    key: "getDashBoard",
-    value: function getDashBoard() {
-      console.error(this.dashboard);
+
+      EChartsService_resetOpacity(this.$data.echartsInstance);
     }
     /**
      * 绘制图表
@@ -131905,7 +131971,7 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
       var _this2 = this;
 
       // JSON 配置
-      var JSONConfig = this.dashboard.staticData.json;
+      var JSONConfig = this.thisDashboard.staticData.json;
 
       if (!this.$data.echartsInstance) {
         this.initChart();
@@ -131923,13 +131989,30 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
         });
       } else {
         result = result || this.thisAnalysisData;
+        var selectedIndex = null;
 
-        EChartsService_renderChart(this.$data.echartsInstance, this.thisDashboard, result).then(function (result) {
+        if (this.thisDashboard.id === this.reactWhere.dashboardId) {
+          selectedIndex = this.reactWhere.selectedIndex;
+        } // this.thisDashboard.id === this.reactWhere.dashboardId
+        //   ? this.reactWhere.selectedIndex
+        //   : null;
+
+
+        EChartsService_renderChart(this.$data.echartsInstance, this.thisDashboard, result, selectedIndex).then(function (result) {
           _this2.thisDashboard = result;
         }).catch(function (err) {
           console.error("rendererr", err);
         });
       }
+    }
+    /**
+     * 重置图表透明度
+     */
+
+  }, {
+    key: "resetOpacity",
+    value: function resetOpacity() {
+      EChartsService_resetOpacity(this.$data.echartsInstance);
     }
     /**
      * 获取事件回调方法
@@ -131959,7 +132042,7 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
   }, {
     key: "thisAnalysis",
     get: function get() {
-      return this.dashboard.analysis;
+      return this.thisDashboard.analysis;
     }
   }]);
 
@@ -131977,6 +132060,8 @@ __decorate([Prop({
 })], ChartComponentvue_type_script_lang_ts_ChartComponent.prototype, "reactWhere", void 0);
 
 __decorate([Emit("setReact")], ChartComponentvue_type_script_lang_ts_ChartComponent.prototype, "setReact", null);
+
+__decorate([Emit("resetReact")], ChartComponentvue_type_script_lang_ts_ChartComponent.prototype, "resetReact", null);
 
 __decorate([Emit("error")], ChartComponentvue_type_script_lang_ts_ChartComponent.prototype, "onError", null);
 

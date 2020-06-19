@@ -121,8 +121,11 @@ export const generalDataTemplate: any = {
     },
     animation: false,
     title: {
+      show: true,
       text: "图表",
       left: "left",
+      right: 0,
+      padding: [5, 5, 5, 5],
       textStyle: {
         color: "#000",
         fontFamily: "Microsoft YaHei",
@@ -146,11 +149,14 @@ export const generalDataTemplate: any = {
     tooltip: {
       show: false
     },
+    brush: {
+      throttleType: "debounce"
+    },
     series: []
   },
   tasks: {
     ratotionEnable: false,
-    ratotionNumb: 1,
+    ratotionNumb: 5,
     ratotionId: null
   },
   newCreated: true

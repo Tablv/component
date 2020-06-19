@@ -81,6 +81,7 @@ export default class PieHandler implements ChartHandler {
           radius: Object.values(this.sampleStyle.radiusConfig).map(
             item => item + "%"
           ),
+          itemStyle: {},
           center: Object.values(this.sampleStyle.centerConfig),
           label: EChartDataUtil.getPieSeriesLabel(this.sampleStyle),
           data: EChartDataUtil.getDataByAxisName(

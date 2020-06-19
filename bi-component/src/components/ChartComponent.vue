@@ -23,6 +23,9 @@ import {
 } from "glaway-bi-model/types/AnalysisResults";
 import EChartsService, {
   bindEvents,
+  offBindEvents,
+  handleOpacity,
+  resetOpacity,
   renderChart,
   renderChartByJSON
 } from "glaway-bi-component/src/service/EChartsService";
@@ -67,6 +70,10 @@ export default class ChartComponent extends Vue implements ChartUIService {
     return reactWhere;
   }
 
+  // 设置联动
+  @Emit("resetReact")
+  resetReact() {}
+
   @Emit("error")
   onError(errorPart: string, error: Error) {
     return {
@@ -74,7 +81,6 @@ export default class ChartComponent extends Vue implements ChartUIService {
       error
     };
   }
-
   // 图表实例
   // echartsInstance: echarts.ECharts | null = null;
 
@@ -82,7 +88,7 @@ export default class ChartComponent extends Vue implements ChartUIService {
    * Getter
    */
   get thisAnalysis(): AnalysisData {
-    return this.dashboard.analysis;
+    return this.thisDashboard.analysis;
   }
 
   /**
@@ -130,6 +136,9 @@ export default class ChartComponent extends Vue implements ChartUIService {
   public bindChartEvents(clearEvent: boolean, thisEvents: EventsConfig): void {
     // 事件选项
     let triggerCallback = this.getEventMethod(thisEvents);
+
+    offBindEvents(this.$data.echartsInstance);
+
     // 绑定事件
     triggerCallback &&
       this.$data.echartsInstance &&
@@ -139,10 +148,8 @@ export default class ChartComponent extends Vue implements ChartUIService {
         triggerCallback, // 回调方法
         this // 回调上下文
       );
-  }
 
-  public getDashBoard() {
-    console.error(this.dashboard);
+    resetOpacity(this.$data.echartsInstance);
   }
 
   /**
@@ -150,7 +157,7 @@ export default class ChartComponent extends Vue implements ChartUIService {
    */
   public renderChart(result?: AnalysisResults, dashboard?: Dashboard): void {
     // JSON 配置
-    const JSONConfig = this.dashboard.staticData.json;
+    const JSONConfig = this.thisDashboard.staticData.json;
 
     if (!this.$data.echartsInstance) {
       this.initChart();
@@ -170,7 +177,20 @@ export default class ChartComponent extends Vue implements ChartUIService {
       );
     } else {
       result = result || this.thisAnalysisData;
-      renderChart(this.$data.echartsInstance, this.thisDashboard, result)
+
+      let selectedIndex = null;
+      if (this.thisDashboard.id === this.reactWhere.dashboardId) {
+        selectedIndex = this.reactWhere.selectedIndex;
+      }
+      // this.thisDashboard.id === this.reactWhere.dashboardId
+      //   ? this.reactWhere.selectedIndex
+      //   : null;
+      renderChart(
+        this.$data.echartsInstance,
+        this.thisDashboard,
+        result,
+        selectedIndex
+      )
         .then(result => {
           this.thisDashboard = result;
         })
@@ -178,6 +198,13 @@ export default class ChartComponent extends Vue implements ChartUIService {
           console.error("rendererr", err);
         });
     }
+  }
+
+  /**
+   * 重置图表透明度
+   */
+  public resetOpacity(): void {
+    resetOpacity(this.$data.echartsInstance);
   }
 
   /**
@@ -194,9 +221,21 @@ export default class ChartComponent extends Vue implements ChartUIService {
     /**
      * 联动
      */
-    react: (echartsParams: any) => {
-      this.setReact({
-        dashboardId: this.dashboard.id,
+    react: (chartInstance: any, echartsParams: any) => {
+      // 点击后 实现select效果
+      const { reset, dataIndex } = handleOpacity(chartInstance, echartsParams);
+
+      // 判断是否需要重置
+      if (reset) {
+        this.resetReact();
+        return;
+      }
+
+      const reactWhere: ReactWhere = {
+        selectedIndex: dataIndex,
+        oldDashboardId: this.reactWhere.dashboardId,
+        rotationTask: this.thisDashboard.tasks,
+        dashboardId: this.thisDashboard.id,
         datasetId: this.thisAnalysis.datasetId,
         where: {
           id: UUID.generate(),
@@ -209,7 +248,9 @@ export default class ChartComponent extends Vue implements ChartUIService {
             }
           ]
         }
-      });
+      };
+
+      this.setReact(reactWhere);
     },
 
     /**

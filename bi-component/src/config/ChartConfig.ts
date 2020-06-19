@@ -95,7 +95,7 @@ export default class ChartConfig {
     /**
      * 旭日图
      */
-    sunpie: SunPieConfig,
+    // sunpie: SunPieConfig,
 
     /**
      * 雷达图

@@ -161,7 +161,7 @@ export function reactUpdate(
   reactWhere: ReactWhere,
   callback: Function
 ): void {
-  let notCurrent = thisDashboard.id !== reactWhere.dashboardId,
+  const notCurrent = thisDashboard.id !== reactWhere.dashboardId,
     isReact = thisDashboard.analysis.isReact,
     isCurrentDataset =
       thisDashboard.analysis.datasetId === reactWhere.datasetId;
@@ -198,14 +198,20 @@ export function bindEvents(
   thisContext: ChartUIService
 ): void {
   // 传入，则先取消绑定事件
+  offBindEvents(chartInstance);
+  const nowTrigger = thisEvents.triggerMethod;
+  if (nowTrigger && triggerMethodCallback) {
+    chartInstance.on(
+      nowTrigger,
+      triggerMethodCallback.bind(thisContext, chartInstance)
+    );
+  }
+}
+
+export function offBindEvents(chartInstance: echarts.ECharts) {
   triggerMethods.forEach(method => {
     chartInstance.off(method);
   });
-
-  const nowTrigger = thisEvents.triggerMethod;
-  if (nowTrigger && triggerMethodCallback) {
-    chartInstance.on(nowTrigger, triggerMethodCallback.bind(thisContext));
-  }
 }
 
 /**
@@ -217,7 +223,8 @@ export function bindEvents(
 export function renderChart(
   chartInstace: echarts.ECharts,
   thisDashboard: Dashboard,
-  result: AnalysisResults
+  result: AnalysisResults,
+  selectIndex: string | null
 ): Promise<Dashboard> {
   try {
     let chartType = thisDashboard.visualData.type,
@@ -228,11 +235,86 @@ export function renderChart(
 
     let echartsOption = EChartsService.mergEChartstyle(thisDashboard, result);
 
-    EChartsUtil.setOption(chartInstace, echartsOption);
+    // 保持选中状态
+    selectIndex
+      ? handleOpacity(chartInstace, { dataIndex: selectIndex }, echartsOption)
+      : resetOpacity(chartInstace, echartsOption);
+
     return Promise.resolve(thisDashboard);
   } catch (err) {
     return Promise.reject(err);
   }
+}
+
+/**
+ * 重置图表透明度
+ *
+ * @param chartInstance 图表实例
+ * @param echartsOption 图表配置
+ */
+export function resetOpacity(
+  chartInstance: echarts.ECharts,
+  echartsOption?: echarts.EChartOption
+): void {
+  const option = echartsOption || ObjectUtil.copy(chartInstance.getOption());
+  if (!option) return;
+  option.series?.forEach((serieData: any) => {
+    serieData.itemStyle = {
+      opacity: "1"
+    };
+    serieData.data.forEach((itemData: any) => {
+      delete itemData.itemStyle;
+    });
+  });
+  EChartsUtil.setOption(chartInstance, option);
+}
+
+/**
+ * 处理透明度问题
+ *
+ * @param chartInstance 图表实例
+ * @param echartsParams 点击参数
+ * @param echartsOption 图表配置
+ */
+export function handleOpacity(
+  chartInstance: echarts.ECharts,
+  // 约束 必须有 dataIndex
+  echartsParams: { dataIndex: string },
+  echartsOption?: echarts.EChartOption
+): { reset: boolean; dataIndex: string | null } {
+  // 1, 0.4 可以后期选择抛出去，作为参数传递
+  const selectedStyle = { opacity: "1" };
+  const unSelectStyle = { opacity: "0.4" };
+
+  const option = echartsOption || ObjectUtil.copy(chartInstance.getOption());
+  const result = {
+    // 是否重置
+    reset: false,
+    // 选中的数据小标
+    dataIndex: `${echartsParams.dataIndex}` || null
+  };
+
+  option.series?.forEach((serieData: any) => {
+    serieData.itemStyle = unSelectStyle;
+    serieData.data.forEach((itemData: any, index: any) => {
+      if (index !== echartsParams.dataIndex) {
+        delete itemData.itemStyle;
+      }
+    });
+    if (serieData.data[echartsParams.dataIndex]?.itemStyle) {
+      // 取消了过滤条件
+      delete serieData.data[echartsParams.dataIndex].itemStyle;
+      serieData.itemStyle = selectedStyle;
+      result.reset = true;
+      result.dataIndex = null;
+    } else {
+      serieData.data[echartsParams.dataIndex].itemStyle = selectedStyle;
+    }
+  });
+
+  EChartsUtil.setOption(chartInstance, option);
+
+  return result;
 }
 
 /**

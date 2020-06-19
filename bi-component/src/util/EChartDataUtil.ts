@@ -16,13 +16,16 @@ export default class EChartServiceUtil {
     fieldName: string,
     result: AnalysisResults,
     decimals?: any
-  ): Array<string | number> {
-    let fieldArray: Array<string | number> = [];
+  ): echarts.EChartOption.SeriesBar["data"] {
+    let fieldArray: echarts.EChartOption.SeriesBar["data"] = [];
 
     fieldArray = result.map((data: any) => {
-      return decimals
+      const value = decimals
         ? Number(data[fieldName]).toFixed(decimals.value)
         : data[fieldName];
+      return {
+        value
+      };
     });
 
     return fieldArray;
@@ -38,13 +41,15 @@ export default class EChartServiceUtil {
     fieldName: string,
     result: AnalysisResults,
     decimals?: any
-  ): Array<string | number> {
+  ): echarts.EChartOption.SeriesBar["data"] {
     return result.map((item: any) => {
       const dec = decimals?.value || 0;
       const value = Number(
         ((item[fieldName] / item["sum"]) * 100).toFixed(dec)
       );
-      return value;
+      return {
+        value
+      };
     });
   }
 
