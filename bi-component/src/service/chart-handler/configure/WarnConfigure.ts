@@ -89,7 +89,6 @@ function itemStyleConfigure(
   const colorHandler = function(params: any) {
     // 是否符合预警
     const overThreshold = isOverThreshold(warnConfig, params);
-
     if (overThreshold) {
       // 超过预警 返回预警颜色
       return warnConfig.color;
@@ -169,7 +168,7 @@ function isOverThreshold(
   warnConfig: AnalysisData["warn"],
   componentParams: any
 ) {
-  const yAxisVal = componentParams.data,
+  const yAxisVal = componentParams.value,
     conditions = warnConfig.value.filter(
       data => data.seriesName === componentParams.seriesName
     );
@@ -199,6 +198,7 @@ function warnComparator(
     console.error(`找不到比较方法: ${symbol}`);
     return false;
   }
+  const result = handle(value, threshold);
 
-  return handle(value, threshold);
+  return result;
 }

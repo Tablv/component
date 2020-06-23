@@ -24,6 +24,9 @@ export interface WarnDatapack {
    */
   dashboardId: string;
 
+  /**
+   * 预警配置
+   */
   config: WarnDatapackConfig;
 }
 

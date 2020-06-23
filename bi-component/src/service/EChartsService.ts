@@ -33,8 +33,7 @@ export default class EChartsService {
     dashboard: Dashboard
   ): EChartsOption {
     // 获取当前的style对象
-    if (ObjectUtil.isEmpty(resultData)) {
-      console.error("分析结果返回值为空");
+    if (ObjectUtil.isEmpty(resultData) || !resultData.length) {
       return new Object() as EChartsOption;
     }
 
@@ -232,7 +231,6 @@ export function renderChart(
         DefaultTemplate.getDefaultConfig(chartType)
       );
     thisDashboard = ObjectUtil.merge(defaultConfig, thisDashboard);
-
     let echartsOption = EChartsService.mergEChartstyle(thisDashboard, result);
 
     // 保持选中状态
@@ -259,9 +257,9 @@ export function resetOpacity(
   const option = echartsOption || ObjectUtil.copy(chartInstance.getOption());
   if (!option) return;
   option.series?.forEach((serieData: any) => {
-    serieData.itemStyle = {
+    serieData.itemStyle = Object.assign({}, serieData.itemStyle, {
       opacity: "1"
-    };
+    });
     serieData.data.forEach((itemData: any) => {
       delete itemData.itemStyle;
     });
@@ -293,9 +291,8 @@ export function handleOpacity(
     // 选中的数据小标
     dataIndex: `${echartsParams.dataIndex}` || null
   };
-
   option.series?.forEach((serieData: any) => {
-    serieData.itemStyle = unSelectStyle;
+    serieData.itemStyle = Object.assign({}, serieData.itemStyle, unSelectStyle);
     serieData.data.forEach((itemData: any, index: any) => {
       if (index !== echartsParams.dataIndex) {
         delete itemData.itemStyle;
@@ -304,11 +301,21 @@ export function handleOpacity(
     if (serieData.data[echartsParams.dataIndex]?.itemStyle) {
       // 取消了过滤条件
       delete serieData.data[echartsParams.dataIndex].itemStyle;
-      serieData.itemStyle = selectedStyle;
+      serieData.itemStyle = Object.assign(
+        {},
+        serieData.itemStyle,
+        selectedStyle
+      );
       result.reset = true;
       result.dataIndex = null;
+    } else if (serieData.data[echartsParams.dataIndex]) {
+      serieData.data[echartsParams.dataIndex].itemStyle = Object.assign(
+        {},
+        serieData.itemStyle,
+        selectedStyle
+      );
     } else {
-      serieData.data[echartsParams.dataIndex].itemStyle = selectedStyle;
+      // 其他过滤操作执行，不做处理
     }
   });
 

@@ -149,9 +149,6 @@ export const generalDataTemplate: any = {
     tooltip: {
       show: false
     },
-    brush: {
-      throttleType: "debounce"
-    },
     series: []
   },
   tasks: {

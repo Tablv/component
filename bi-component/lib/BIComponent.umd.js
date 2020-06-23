@@ -126466,7 +126466,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"75ffbadd-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=05c6ba52&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"8effc538-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=05c6ba52&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"chart-wrapper"},[_c('div',{ref:"echartsContainer",staticClass:"chart-container"})])}
 var staticRenderFns = []
 
@@ -127478,6 +127478,9 @@ var UUID_UUID = /*#__PURE__*/function () {
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.for-each.js
 var es_array_for_each = __webpack_require__("4160");
 
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.object.assign.js
+var es_object_assign = __webpack_require__("cca6");
+
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.promise.js
 var es_promise = __webpack_require__("e6cf");
 
@@ -128080,7 +128083,7 @@ function tooltipConfigure(warnConfig, echartsOption) {
 
 
 function WarnConfigure_isOverThreshold(warnConfig, componentParams) {
-  var yAxisVal = componentParams.data,
+  var yAxisVal = componentParams.value,
       conditions = warnConfig.value.filter(function (data) {
     return data.seriesName === componentParams.seriesName;
   }); // 判断值是否符合预警标准
@@ -128107,7 +128110,8 @@ function warnComparator(value, symbol, threshold) {
     return false;
   }
 
-  return handle(value, threshold);
+  var result = handle(value, threshold);
+  return result;
 }
 // CONCATENATED MODULE: ./node_modules/glaway-bi-model/view/Warn.ts
 
@@ -128142,6 +128146,7 @@ var Warn_WarnBuilder = /*#__PURE__*/function () {
       return {
         id: datapackId,
         name: "预警 " + serialNo,
+        enable: false,
         dashboardId: dashboardId,
         config: {
           warnColor: "#FF0000",
@@ -129973,6 +129978,7 @@ var Filter_FilterBuilder = /*#__PURE__*/function () {
       return {
         id: datapackId,
         name: "过滤器 " + serialNo,
+        enable: false,
         dashboardId: dashboardId,
         config: [this.buildFilterConfig(datapackId)]
       };
@@ -130078,6 +130084,7 @@ var Sort_SortBuilder = /*#__PURE__*/function () {
       return {
         id: datapackId,
         name: "排序 " + serialNo,
+        enable: false,
         dashboardId: dashboardId,
         config: this.buildSortConfig(datapackId, currentMeasures)
       };
@@ -130223,6 +130230,7 @@ var Limit_LimitBuilder = /*#__PURE__*/function () {
       return {
         id: datapackId,
         name: "排名 " + serialNo,
+        enable: false,
         dashboardId: dashboardId,
         config: this.buildLimitConfig(datapackId, currentMeasures, limitNumber)
       };
@@ -130782,9 +130790,6 @@ var PieConfig = {
   config: Pie_config
 };
 /* harmony default export */ var Pie = (PieConfig);
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.object.assign.js
-var es_object_assign = __webpack_require__("cca6");
-
 // CONCATENATED MODULE: ./src/config/chart-config/RPie.ts
 
 
@@ -131437,9 +131442,6 @@ var generalDataTemplate = {
     tooltip: {
       show: false
     },
-    brush: {
-      throttleType: "debounce"
-    },
     series: []
   },
   tasks: {
@@ -131514,6 +131516,7 @@ DefaultTemplate_DefaultTemplate.configCache = new Map();
 
 
 
+
 /**
  * ECharts 业务层
  */
@@ -131535,8 +131538,7 @@ var EChartsService_EChartsService = /*#__PURE__*/function () {
      */
     value: function getResultStyle(resultData, dashboard) {
       // 获取当前的style对象
-      if (ObjectUtil_ObjectUtil.isEmpty(resultData)) {
-        console.error("分析结果返回值为空");
+      if (ObjectUtil_ObjectUtil.isEmpty(resultData) || !resultData.length) {
         return new Object();
       }
 
@@ -131720,9 +131722,9 @@ function EChartsService_resetOpacity(chartInstance, echartsOption) {
   var option = echartsOption || ObjectUtil_ObjectUtil.copy(chartInstance.getOption());
   if (!option) return;
   (_option$series = option.series) === null || _option$series === void 0 ? void 0 : _option$series.forEach(function (serieData) {
-    serieData.itemStyle = {
+    serieData.itemStyle = Object.assign({}, serieData.itemStyle, {
       opacity: "1"
-    };
+    });
     serieData.data.forEach(function (itemData) {
       delete itemData.itemStyle;
     });
@@ -131758,7 +131760,7 @@ echartsParams, echartsOption) {
   (_option$series2 = option.series) === null || _option$series2 === void 0 ? void 0 : _option$series2.forEach(function (serieData) {
     var _serieData$data$echar;
 
-    serieData.itemStyle = unSelectStyle;
+    serieData.itemStyle = Object.assign({}, serieData.itemStyle, unSelectStyle);
     serieData.data.forEach(function (itemData, index) {
       if (index !== echartsParams.dataIndex) {
         delete itemData.itemStyle;
@@ -131768,11 +131770,12 @@ echartsParams, echartsOption) {
     if ((_serieData$data$echar = serieData.data[echartsParams.dataIndex]) === null || _serieData$data$echar === void 0 ? void 0 : _serieData$data$echar.itemStyle) {
       // 取消了过滤条件
       delete serieData.data[echartsParams.dataIndex].itemStyle;
-      serieData.itemStyle = selectedStyle;
+      serieData.itemStyle = Object.assign({}, serieData.itemStyle, selectedStyle);
       result.reset = true;
       result.dataIndex = null;
-    } else {
-      serieData.data[echartsParams.dataIndex].itemStyle = selectedStyle;
+    } else if (serieData.data[echartsParams.dataIndex]) {
+      serieData.data[echartsParams.dataIndex].itemStyle = Object.assign({}, serieData.itemStyle, selectedStyle);
+    } else {// 其他过滤操作执行，不做处理
     }
   });
   EChartsUtil_EChartsUtil.setOption(chartInstance, option);
