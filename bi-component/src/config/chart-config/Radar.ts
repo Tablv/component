@@ -42,7 +42,52 @@ const createMenuConfig = {
 /**
  * 配置项
  */
-const config = ObjectUtil.copy(PieConfig.config);
+const config = Object.assign(ObjectUtil.copy(PieConfig.config), {
+  changeLimit: [{
+    // 维度
+    dimensions: [
+      {
+        symbol: ">",
+        value: 0
+      },
+      {
+        symbol: "<",
+        value: 2
+      }
+    ],
+    // 度量
+    measures: [
+      {
+        symbol: ">",
+        value: 0
+      },
+      {
+        symbol: "<",
+        value: 2
+      }
+    ]
+  },
+  {
+    // 维度
+    dimensions: [
+      {
+        symbol: ">=",
+        value: 0
+      },
+      {
+        symbol: "<",
+        value: 1
+      }
+    ],
+    // 度量
+    measures: [
+      {
+        symbol: ">",
+        value: 3
+      }
+    ]
+  }]
+});
 
 const RadarConfig: ChartConfigItem = {
   templates,

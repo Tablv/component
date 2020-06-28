@@ -44,7 +44,26 @@ const createMenuConfig = {
  */
 const config = {
   warnable: true,
-  changeLimit: []
+  changeLimit: [{
+    // 维度
+    dimensions: [
+      {
+        symbol: ">",
+        value: 0
+      },
+      {
+        symbol: "<=",
+        value: 2
+      }
+    ],
+    // 度量
+    measures: [
+      {
+        symbol: ">=",
+        value: 1
+      }
+    ]
+  }]
 };
 
 const LineConfig: ChartConfigItem = {

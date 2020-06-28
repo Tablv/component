@@ -41,7 +41,33 @@ const createMenuConfig = {
 /**
  * 配置项
  */
-const config = ObjectUtil.copy(PieConfig.config);
+const config = {
+  warnable: true,
+  changeLimit: [{
+    // 维度
+    dimensions: [
+      {
+        symbol: ">=",
+        value: 0
+      },
+      {
+        symbol: "<",
+        value: 1
+      }
+    ],
+    // 度量
+    measures: [
+      {
+        symbol: ">",
+        value: 0
+      },
+      {
+        symbol: "<",
+        value: 2
+      }
+    ]
+  }]
+};
 
 const TargetPieConfig: ChartConfigItem = {
   templates,

@@ -2,6 +2,7 @@ import { ChartType } from "glaway-bi-model/enums/ChartType";
 import { ChartConfigItem } from "../ChartConfig";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import PieConfig from "./Pie";
+import TargetPieConfig from "./TargetPie";
 
 /**
  * 初始化模板
@@ -38,7 +39,7 @@ const createMenuConfig = {
 /**
  * 配置项
  */
-const config = ObjectUtil.copy(PieConfig.config);
+const config = ObjectUtil.copy(TargetPieConfig.config);
 
 const GuageConfig: ChartConfigItem = {
   templates,

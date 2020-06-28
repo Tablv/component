@@ -130466,7 +130466,21 @@ var createMenuConfig = {
 
 var config = {
   warnable: true,
-  changeLimit: []
+  changeLimit: [{
+    // 维度
+    dimensions: [{
+      symbol: ">=",
+      value: 0
+    }, {
+      symbol: "<=",
+      value: 2
+    }],
+    // 度量
+    measures: [{
+      symbol: ">",
+      value: 0
+    }]
+  }]
 };
 var BarConfig = {
   templates: templates,
@@ -130689,7 +130703,21 @@ var Line_createMenuConfig = {
 
 var Line_config = {
   warnable: true,
-  changeLimit: []
+  changeLimit: [{
+    // 维度
+    dimensions: [{
+      symbol: ">",
+      value: 0
+    }, {
+      symbol: "<=",
+      value: 2
+    }],
+    // 度量
+    measures: [{
+      symbol: ">=",
+      value: 1
+    }]
+  }]
 };
 var LineConfig = {
   templates: Line_templates,
@@ -130781,7 +130809,38 @@ var Pie_createMenuConfig = {
 
 var Pie_config = {
   warnable: false,
-  changeLimit: []
+  changeLimit: [{
+    // 维度
+    dimensions: [{
+      symbol: ">",
+      value: 0
+    }, {
+      symbol: "<",
+      value: 2
+    }],
+    // 度量
+    measures: [{
+      symbol: ">",
+      value: 0
+    }, {
+      symbol: "<",
+      value: 2
+    }]
+  }, {
+    // 维度
+    dimensions: [{
+      symbol: ">=",
+      value: 0
+    }, {
+      symbol: "<",
+      value: 1
+    }],
+    // 度量
+    measures: [{
+      symbol: ">",
+      value: 0
+    }]
+  }]
 };
 var PieConfig = {
   templates: Pie_templates,
@@ -130884,6 +130943,7 @@ var RosePieConfig = {
 
 
 
+
 /**
  * 初始化模板
  */
@@ -130927,7 +130987,40 @@ var Radar_createMenuConfig = {
  * 配置项
  */
 
-var Radar_config = ObjectUtil_ObjectUtil.copy(Pie.config);
+var Radar_config = Object.assign(ObjectUtil_ObjectUtil.copy(Pie.config), {
+  changeLimit: [{
+    // 维度
+    dimensions: [{
+      symbol: ">",
+      value: 0
+    }, {
+      symbol: "<",
+      value: 2
+    }],
+    // 度量
+    measures: [{
+      symbol: ">",
+      value: 0
+    }, {
+      symbol: "<",
+      value: 2
+    }]
+  }, {
+    // 维度
+    dimensions: [{
+      symbol: ">=",
+      value: 0
+    }, {
+      symbol: "<",
+      value: 1
+    }],
+    // 度量
+    measures: [{
+      symbol: ">",
+      value: 3
+    }]
+  }]
+});
 var RadarConfig = {
   templates: Radar_templates,
   menuOptions: Radar_menuOptions,
@@ -131007,55 +131100,6 @@ var HBarPercentageConfig = {
   config: HBarPercentage_config
 };
 /* harmony default export */ var HBarPercentage = (HBarPercentageConfig);
-// CONCATENATED MODULE: ./src/config/chart-config/Gauge.ts
-
-
-
-
-/**
- * 初始化模板
- */
-
-var Gauge_templates = {
-  echarts: {
-    sampleStyle: {
-      guage: Object.assign({}, Pie.templates.echarts.sampleStyle.pie, {
-        radiusConfig: {
-          axisLineWidth: 2,
-          inside: 0,
-          outside: 90
-        }
-      })
-    }
-  }
-};
-/**
- * 菜单选项
- */
-
-var Gauge_menuOptions = ObjectUtil_ObjectUtil.copy(Pie.menuOptions);
-/**
- * 创建菜单配置
- */
-
-var Gauge_createMenuConfig = {
-  iconClass: "gw-iconfsux_tubiao_yibiaopan",
-  title: "仪表盘",
-  createType: ChartType.guage,
-  enable: true
-};
-/**
- * 配置项
- */
-
-var Gauge_config = ObjectUtil_ObjectUtil.copy(Pie.config);
-var GuageConfig = {
-  templates: Gauge_templates,
-  menuOptions: Gauge_menuOptions,
-  createMenuConfig: Gauge_createMenuConfig,
-  config: Gauge_config
-};
-/* harmony default export */ var Gauge = (GuageConfig);
 // CONCATENATED MODULE: ./src/config/chart-config/TargetPie.ts
 
 
@@ -131096,7 +131140,27 @@ var TargetPie_createMenuConfig = {
  * 配置项
  */
 
-var TargetPie_config = ObjectUtil_ObjectUtil.copy(Pie.config);
+var TargetPie_config = {
+  warnable: true,
+  changeLimit: [{
+    // 维度
+    dimensions: [{
+      symbol: ">=",
+      value: 0
+    }, {
+      symbol: "<",
+      value: 1
+    }],
+    // 度量
+    measures: [{
+      symbol: ">",
+      value: 0
+    }, {
+      symbol: "<",
+      value: 2
+    }]
+  }]
+};
 var TargetPieConfig = {
   templates: TargetPie_templates,
   menuOptions: TargetPie_menuOptions,
@@ -131104,6 +131168,56 @@ var TargetPieConfig = {
   config: TargetPie_config
 };
 /* harmony default export */ var TargetPie = (TargetPieConfig);
+// CONCATENATED MODULE: ./src/config/chart-config/Gauge.ts
+
+
+
+
+
+/**
+ * 初始化模板
+ */
+
+var Gauge_templates = {
+  echarts: {
+    sampleStyle: {
+      guage: Object.assign({}, Pie.templates.echarts.sampleStyle.pie, {
+        radiusConfig: {
+          axisLineWidth: 2,
+          inside: 0,
+          outside: 90
+        }
+      })
+    }
+  }
+};
+/**
+ * 菜单选项
+ */
+
+var Gauge_menuOptions = ObjectUtil_ObjectUtil.copy(Pie.menuOptions);
+/**
+ * 创建菜单配置
+ */
+
+var Gauge_createMenuConfig = {
+  iconClass: "gw-iconfsux_tubiao_yibiaopan",
+  title: "仪表盘",
+  createType: ChartType.guage,
+  enable: true
+};
+/**
+ * 配置项
+ */
+
+var Gauge_config = ObjectUtil_ObjectUtil.copy(TargetPie.config);
+var GuageConfig = {
+  templates: Gauge_templates,
+  menuOptions: Gauge_menuOptions,
+  createMenuConfig: Gauge_createMenuConfig,
+  config: Gauge_config
+};
+/* harmony default export */ var Gauge = (GuageConfig);
 // CONCATENATED MODULE: ./src/config/ChartConfig.ts
 
 
