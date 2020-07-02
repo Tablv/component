@@ -5,6 +5,7 @@ import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import EChartsService from "../EChartsService";
 import { ChartHandler } from "../../interfaces/ChartHandler";
 import { PieChartOption } from "glaway-bi-model/view/dashboard//chart/ChartOption";
+import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
 
 /**
  * 仪表盘处理
@@ -52,27 +53,56 @@ export default class GuageHandler implements ChartHandler {
    */
   public getSeries(): Array<echarts.EChartOption.Series> {
     let series: Array<echarts.EChartOption.Series> = [];
-    this.fieldNames.measures.forEach(measures => {
-      const seriesData = {
-        type: "gauge",
-        detail: { formatter: "{value}" },
-        // 坐标轴线
-        axisLine: {
-          // 属性lineStyle控制线条样式
-          lineStyle: {
-            width: this.sampleStyle.radiusConfig.axisLineWidth
-          }
-        },
 
-        radius: this.sampleStyle.radiusConfig.outside,
-        center: Object.values(this.sampleStyle.centerConfig),
-        data: this.result.map((item: any) => ({
+    // 指示器这里 实际值 = 度量
+    // 实际值必须唯一，
+    const measures = this.fieldNames.measures[0];
+    const actual = EChartDataUtil.getReduceSum(this.result, measures);
+    // 对比值 = 维度 唯一
+    const dimensions = this.fieldNames.dimensions[0];
+    const comparison = EChartDataUtil.getReduceSum(this.result, dimensions);
+
+    const seriesData = {
+      type: "gauge",
+      detail: {
+        formatter: (value: number) => {
+          const result = value - comparison;
+          return [
+            `{measuresStyle|${value}\n}`,
+            `{percentageStyle|${result}(${(
+              (result / (comparison || 1)) *
+              100
+            ).toFixed(2)}%)}`
+          ].join("");
+        },
+        rich: {
+          measuresStyle: {
+            lineHeight: 25,
+            fontSize: 20
+          },
+          percentageStyle: {
+            fontSize: 16
+          }
+        }
+      },
+      // 坐标轴线
+      axisLine: {
+        // 属性lineStyle控制线条样式
+        lineStyle: {
+          width: this.sampleStyle.radiusConfig.axisLineWidth
+        }
+      },
+      radius: this.sampleStyle.radiusConfig.outside,
+      center: Object.values(this.sampleStyle.centerConfig),
+      max: comparison || 100,
+      data: [
+        {
           name: measures,
-          value: item[measures]
-        }))
-      } as echarts.EChartOption.Series;
-      series.push(seriesData);
-    });
+          value: actual
+        }
+      ]
+    } as any;
+    series.push(seriesData);
 
     return series;
   }

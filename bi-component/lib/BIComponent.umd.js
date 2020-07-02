@@ -126466,12 +126466,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"8effc538-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=05c6ba52&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"8effc538-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=32882812&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"chart-wrapper"},[_c('div',{ref:"echartsContainer",staticClass:"chart-container"})])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=05c6ba52&
+// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=32882812&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.function.name.js
 var es_function_name = __webpack_require__("b0c0");
@@ -128220,6 +128220,7 @@ var es_number_to_fixed = __webpack_require__("b680");
 
 
 
+
 var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
   function EChartServiceUtil() {
     _classCallCheck(this, EChartServiceUtil);
@@ -128282,6 +128283,38 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
         };
         return dataObject;
       });
+    }
+    /**
+     * 进针对度量进行，获取分析结果中的数据
+     *
+     * @param measureNameList 度量列表
+     * @param result 分析结果
+     */
+
+  }, {
+    key: "getNameByMeasure",
+    value: function getNameByMeasure(measureNameList, result) {
+      return measureNameList.map(function (measureName) {
+        var dataObject = {
+          name: measureName,
+          value: EChartServiceUtil.getReduceSum(result, measureName)
+        };
+        return dataObject;
+      });
+    }
+    /**
+     * 对一个对象数组进行某个字段求和
+     *
+     * @param result 求和数组
+     * @param measureName 求和字段
+     */
+
+  }, {
+    key: "getReduceSum",
+    value: function getReduceSum(result, measureName) {
+      return result.reduce(function (total, item) {
+        return total + parseInt(item[measureName]) || 0;
+      }, 0) || 0;
     }
     /**
      * 通过字段名，获取结果集内的数据数组
@@ -128425,19 +128458,38 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
     value: function getXAxis() {
       var _this = this;
 
-      var xAxis = []; // 遍历生成X轴
+      var xAxis = []; // 维度是0
 
-      this.fieldNames.dimensions.forEach(function (dimensionName) {
+      var dimensions = this.fieldNames.dimensions;
+      var measures = this.fieldNames.measures;
+
+      if (!dimensions.length) {
+        //  维度不存在 x轴拿度量
+        var axisXData = {
+          name: "",
+          type: "category",
+          axisLabel: {
+            interval: this.sampleStyle.axisLabel.interval || 0,
+            rotate: this.sampleStyle.axisLabel.rotate || 0
+          },
+          // data: measures as any
+          data: []
+        };
+        xAxis.unshift(axisXData);
+      } // 遍历生成X轴
+
+
+      dimensions.forEach(function (dimensionName) {
         var axisXData = {
           name: dimensionName,
           type: "category",
-          data: EChartDataUtil_EChartServiceUtil.getDataByFieldName(dimensionName, _this.result),
           axisLabel: {
             interval: _this.sampleStyle.axisLabel.interval || 0,
             rotate: _this.sampleStyle.axisLabel.rotate || 0
-          }
+          },
+          data: EChartDataUtil_EChartServiceUtil.getDataByFieldName(dimensionName, _this.result)
         };
-        xAxis.push(axisXData);
+        xAxis.unshift(axisXData);
       });
       return xAxis;
     }
@@ -128462,7 +128514,28 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
     value: function getSeries() {
       var _this2 = this;
 
-      var series = [];
+      var series = []; // const dimensions = this.fieldNames.dimensions;
+      // if (!dimensions.length) {
+      //   this.fieldNames.measures.forEach(measureName => {
+      //     const seriesData = {
+      //       name: measureName,
+      //       type: "bar",
+      //       data: this.result.map((data: any) => {
+      //         const value = this.sampleStyle.decimals
+      //           ? Number(data[fieldName]).toFixed(this.sampleStyle.decimals.value)
+      //           : data[fieldName];
+      //         return {
+      //           value
+      //         };
+      //       }),
+      //       barWidth: EChartDataUtil.getBarWidth(this.sampleStyle),
+      //       label: EChartDataUtil.getBarSeriesLabel(this.sampleStyle)
+      //     };
+      //     series.push(seriesData);
+      //   });
+      //   return series;
+      // }
+
       this.fieldNames.measures.forEach(function (measureName) {
         var seriesData = {
           name: measureName,
@@ -128853,8 +128926,6 @@ var es_object_values = __webpack_require__("07ac");
 
 
 
-
-
 /**
  * 饼图处理
  */
@@ -128899,17 +128970,12 @@ var PieHandler_PieHandler = /*#__PURE__*/function () {
   }, {
     key: "getLegend",
     value: function getLegend() {
-      var _this = this;
+      var legend = {}; // dimension 存在元素 走 一维度一度量
 
-      var legend = {},
-          legendData = [];
-      this.fieldNames.dimensions.forEach(function (dimensionName) {
-        _this.result.forEach(function (data) {
-          var dimension = data[dimensionName];
-          legendData.push(dimension);
-        });
-      });
-      legend.data = legendData;
+      var dimensionName = this.fieldNames.dimensions[0];
+      legend.data = dimensionName ? this.result.map(function (data) {
+        return data[dimensionName];
+      }) : this.fieldNames.measures;
       return legend;
     }
     /**
@@ -128919,24 +128985,24 @@ var PieHandler_PieHandler = /*#__PURE__*/function () {
   }, {
     key: "getSeries",
     value: function getSeries() {
-      var _this2 = this;
+      var series = []; // dimension 存在元素 走 一维度一度量
 
-      var series = [];
-      this.fieldNames.dimensions.forEach(function (dimensionName) {
-        _this2.fieldNames.measures.forEach(function (measureName) {
-          var seriesData = {
-            type: "pie",
-            radius: Object.values(_this2.sampleStyle.radiusConfig).map(function (item) {
-              return item + "%";
-            }),
-            itemStyle: {},
-            center: Object.values(_this2.sampleStyle.centerConfig),
-            label: EChartDataUtil_EChartServiceUtil.getPieSeriesLabel(_this2.sampleStyle),
-            data: EChartDataUtil_EChartServiceUtil.getDataByAxisName(dimensionName, measureName, _this2.result)
-          };
-          series.push(seriesData);
-        });
-      });
+      var dimensionName = this.fieldNames.dimensions[0];
+      var measuresList = this.fieldNames.measures; // series
+
+      var seriesData = {
+        type: "pie",
+        radius: Object.values(this.sampleStyle.radiusConfig).map(function (item) {
+          return item + "%";
+        }),
+        itemStyle: {},
+        center: Object.values(this.sampleStyle.centerConfig),
+        label: EChartDataUtil_EChartServiceUtil.getPieSeriesLabel(this.sampleStyle),
+        data: []
+      }; // 度量必须唯一，不然要提示前端禁用失败
+
+      seriesData.data = dimensionName ? EChartDataUtil_EChartServiceUtil.getDataByAxisName(dimensionName, measuresList[0], this.result) : EChartDataUtil_EChartServiceUtil.getNameByMeasure(measuresList, this.result);
+      series.push(seriesData);
       return series;
     }
   }]);
@@ -129382,6 +129448,7 @@ var LineHandler_LineHandler = /*#__PURE__*/function () {
 
 
 
+
 /**
  * 仪表盘处理
  */
@@ -129424,33 +129491,47 @@ var GuageHandler_GuageHandler = /*#__PURE__*/function () {
   }, {
     key: "getSeries",
     value: function getSeries() {
-      var _this = this;
+      var series = []; // 指示器这里 实际值 = 度量
+      // 实际值必须唯一，
 
-      var series = [];
-      this.fieldNames.measures.forEach(function (measures) {
-        var seriesData = {
-          type: "gauge",
-          detail: {
-            formatter: "{value}"
+      var measures = this.fieldNames.measures[0];
+      var actual = EChartDataUtil_EChartServiceUtil.getReduceSum(this.result, measures); // 对比值 = 维度 唯一
+
+      var dimensions = this.fieldNames.dimensions[0];
+      var comparison = EChartDataUtil_EChartServiceUtil.getReduceSum(this.result, dimensions);
+      var seriesData = {
+        type: "gauge",
+        detail: {
+          formatter: function formatter(value) {
+            var result = value - comparison;
+            return ["{measuresStyle|".concat(value, "\n}"), "{percentageStyle|".concat(result, "(").concat((result / (comparison || 1) * 100).toFixed(2), "%)}")].join("");
           },
-          // 坐标轴线
-          axisLine: {
-            // 属性lineStyle控制线条样式
-            lineStyle: {
-              width: _this.sampleStyle.radiusConfig.axisLineWidth
+          rich: {
+            measuresStyle: {
+              lineHeight: 25,
+              fontSize: 20
+            },
+            percentageStyle: {
+              fontSize: 16
             }
-          },
-          radius: _this.sampleStyle.radiusConfig.outside,
-          center: Object.values(_this.sampleStyle.centerConfig),
-          data: _this.result.map(function (item) {
-            return {
-              name: measures,
-              value: item[measures]
-            };
-          })
-        };
-        series.push(seriesData);
-      });
+          }
+        },
+        // 坐标轴线
+        axisLine: {
+          // 属性lineStyle控制线条样式
+          lineStyle: {
+            width: this.sampleStyle.radiusConfig.axisLineWidth
+          }
+        },
+        radius: this.sampleStyle.radiusConfig.outside,
+        center: Object.values(this.sampleStyle.centerConfig),
+        max: comparison || 100,
+        data: [{
+          name: measures,
+          value: actual
+        }]
+      };
+      series.push(seriesData);
       return series;
     } // 提示信息
 
@@ -130677,6 +130758,25 @@ var Line_templates = {
           color: "#000",
           fontSize: 12,
           fontFamily: "Microsoft YaHei"
+        },
+        grid: {
+          // 初始值需要与全局配置保持一致
+          top: {
+            value: 60,
+            unit: "px"
+          },
+          left: {
+            value: 50,
+            unit: "px"
+          },
+          right: {
+            value: 50,
+            unit: "px"
+          },
+          bottom: {
+            value: 30,
+            unit: "px"
+          }
         }
       }
     }
@@ -131141,7 +131241,7 @@ var TargetPie_createMenuConfig = {
  */
 
 var TargetPie_config = {
-  warnable: true,
+  warnable: false,
   changeLimit: [{
     // 维度
     dimensions: [{
@@ -131963,8 +132063,8 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
           datasetId: _this.thisAnalysis.datasetId,
           where: {
             id: UUID_UUID.generate(),
-            tableAlias: _this.thisAnalysis.dimensions[0].tableAlias,
-            columnName: _this.thisAnalysis.dimensions[0].columnName,
+            tableAlias: _this.thisAnalysis.measures[0].tableAlias,
+            columnName: _this.thisAnalysis.measures[0].columnName,
             w: [{
               type: 1,
               value: echartsParams.name

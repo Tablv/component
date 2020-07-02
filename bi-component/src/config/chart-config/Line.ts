@@ -18,6 +18,25 @@ const templates = {
           color: "#000",
           fontSize: 12,
           fontFamily: "Microsoft YaHei"
+        },
+        grid: {
+          // 初始值需要与全局配置保持一致
+          top: {
+            value: 60,
+            unit: "px"
+          },
+          left: {
+            value: 50,
+            unit: "px"
+          },
+          right: {
+            value: 50,
+            unit: "px"
+          },
+          bottom: {
+            value: 30,
+            unit: "px"
+          }
         }
       }
     }
@@ -44,26 +63,28 @@ const createMenuConfig = {
  */
 const config = {
   warnable: true,
-  changeLimit: [{
-    // 维度
-    dimensions: [
-      {
-        symbol: ">",
-        value: 0
-      },
-      {
-        symbol: "<=",
-        value: 2
-      }
-    ],
-    // 度量
-    measures: [
-      {
-        symbol: ">=",
-        value: 1
-      }
-    ]
-  }]
+  changeLimit: [
+    {
+      // 维度
+      dimensions: [
+        {
+          symbol: ">",
+          value: 0
+        },
+        {
+          symbol: "<=",
+          value: 2
+        }
+      ],
+      // 度量
+      measures: [
+        {
+          symbol: ">=",
+          value: 1
+        }
+      ]
+    }
+  ]
 };
 
 const LineConfig: ChartConfigItem = {

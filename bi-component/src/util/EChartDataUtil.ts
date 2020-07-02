@@ -77,6 +77,39 @@ export default class EChartServiceUtil {
   }
 
   /**
+   * 进针对度量进行，获取分析结果中的数据
+   *
+   * @param measureNameList 度量列表
+   * @param result 分析结果
+   */
+  public static getNameByMeasure(
+    measureNameList: Array<string>,
+    result: AnalysisResults
+  ): echarts.EChartOption.SeriesBar["data"] {
+    return measureNameList.map(measureName => {
+      const dataObject: echarts.EChartOption.SeriesPie.DataObject = {
+        name: measureName as string,
+        value: EChartServiceUtil.getReduceSum(result, measureName)
+      };
+      return dataObject;
+    });
+  }
+
+  /**
+   * 对一个对象数组进行某个字段求和
+   *
+   * @param result 求和数组
+   * @param measureName 求和字段
+   */
+  public static getReduceSum(result: Array<any>, measureName: string): number {
+    return (
+      result.reduce((total: any, item: any) => {
+        return total + parseInt(item[measureName]) || 0;
+      }, 0) || 0
+    );
+  }
+
+  /**
    * 通过字段名，获取结果集内的数据数组
    * 雷达图
    * @param measureName 度量字段名

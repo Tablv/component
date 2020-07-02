@@ -68,20 +68,41 @@ export default class BarHandler implements ChartHandler {
    */
   public getXAxis(): Array<echarts.EChartOption.XAxis> {
     let xAxis: Array<echarts.EChartOption.XAxis> = [];
+    // 维度是0
+    const dimensions = this.fieldNames.dimensions;
+    const measures = this.fieldNames.measures;
 
-    // 遍历生成X轴
-    this.fieldNames.dimensions.forEach(dimensionName => {
-      const axisXData = {
-        name: dimensionName,
+    if (!dimensions.length) {
+      //  维度不存在 x轴拿度量
+      const axisXData: echarts.EChartOption.XAxis = {
+        name: "",
         type: "category",
-        data: EChartDataUtil.getDataByFieldName(dimensionName, this.result),
         axisLabel: {
           interval: this.sampleStyle.axisLabel.interval || 0,
           rotate: this.sampleStyle.axisLabel.rotate || 0
-        }
-      } as echarts.EChartOption.XAxis;
-      xAxis.push(axisXData);
+        },
+        // data: measures as any
+        data: []
+      };
+      xAxis.unshift(axisXData);
+    }
+    // 遍历生成X轴
+    dimensions.forEach(dimensionName => {
+      const axisXData: echarts.EChartOption.XAxis = {
+        name: dimensionName,
+        type: "category",
+        axisLabel: {
+          interval: this.sampleStyle.axisLabel.interval || 0,
+          rotate: this.sampleStyle.axisLabel.rotate || 0
+        },
+        data: EChartDataUtil.getDataByFieldName(
+          dimensionName,
+          this.result
+        ) as any
+      };
+      xAxis.unshift(axisXData);
     });
+
     return xAxis;
   }
 
@@ -102,6 +123,28 @@ export default class BarHandler implements ChartHandler {
    */
   public getSeries(): Array<echarts.EChartOption.Series> {
     let series: Array<echarts.EChartOption.Series> = [];
+
+    // const dimensions = this.fieldNames.dimensions;
+    // if (!dimensions.length) {
+    //   this.fieldNames.measures.forEach(measureName => {
+    //     const seriesData = {
+    //       name: measureName,
+    //       type: "bar",
+    //       data: this.result.map((data: any) => {
+    //         const value = this.sampleStyle.decimals
+    //           ? Number(data[fieldName]).toFixed(this.sampleStyle.decimals.value)
+    //           : data[fieldName];
+    //         return {
+    //           value
+    //         };
+    //       }),
+    //       barWidth: EChartDataUtil.getBarWidth(this.sampleStyle),
+    //       label: EChartDataUtil.getBarSeriesLabel(this.sampleStyle)
+    //     };
+    //     series.push(seriesData);
+    //   });
+    //   return series;
+    // }
 
     this.fieldNames.measures.forEach(measureName => {
       const seriesData = {

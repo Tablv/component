@@ -239,12 +239,12 @@ export default class ChartComponent extends Vue implements ChartUIService {
         datasetId: this.thisAnalysis.datasetId,
         where: {
           id: UUID.generate(),
-          tableAlias: this.thisAnalysis.dimensions[0].tableAlias,
-          columnName: this.thisAnalysis.dimensions[0].columnName,
+          tableAlias: this.thisAnalysis.measures[0].tableAlias,
+          columnName: this.thisAnalysis.measures[0].columnName,
           w: [
             {
               type: 1,
-              value: echartsParams.name
+              value: echartsParams.data.value
             }
           ]
         }

@@ -76,50 +76,52 @@ const createMenuConfig = {
  */
 const config = {
   warnable: false,
-  changeLimit: [{
-    // 维度
-    dimensions: [
-      {
-        symbol: ">",
-        value: 0
-      },
-      {
-        symbol: "<",
-        value: 2
-      }
-    ],
-    // 度量
-    measures: [
-      {
-        symbol: ">",
-        value: 0
-      },
-      {
-        symbol: "<",
-        value: 2
-      }
-    ]
-  },
-  {
-    // 维度
-    dimensions: [
-      {
-        symbol: ">=",
-        value: 0
-      },
-      {
-        symbol: "<",
-        value: 1
-      }
-    ],
-    // 度量
-    measures: [
-      {
-        symbol: ">",
-        value: 0
-      }
-    ]
-  }]
+  changeLimit: [
+    {
+      // 维度
+      dimensions: [
+        {
+          symbol: ">",
+          value: 0
+        },
+        {
+          symbol: "<",
+          value: 2
+        }
+      ],
+      // 度量
+      measures: [
+        {
+          symbol: ">",
+          value: 0
+        },
+        {
+          symbol: "<",
+          value: 2
+        }
+      ]
+    },
+    {
+      // 维度
+      dimensions: [
+        {
+          symbol: ">=",
+          value: 0
+        },
+        {
+          symbol: "<",
+          value: 1
+        }
+      ],
+      // 度量
+      measures: [
+        {
+          symbol: ">",
+          value: 0
+        }
+      ]
+    }
+  ]
 };
 
 const PieConfig: ChartConfigItem = {

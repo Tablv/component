@@ -54,17 +54,14 @@ export default class PieHandler implements ChartHandler {
    * @param fieldNames 分析结果划分数据
    */
   public getLegend(): echarts.EChartOption.Legend {
-    let legend: echarts.EChartOption.Legend = {},
-      legendData: Array<string> = [];
+    let legend: echarts.EChartOption.Legend = {};
 
-    this.fieldNames.dimensions.forEach(dimensionName => {
-      this.result.forEach((data: any) => {
-        const dimension = data[dimensionName] as string;
-        legendData.push(dimension);
-      });
-    });
+    // dimension 存在元素 走 一维度一度量
+    const dimensionName = this.fieldNames.dimensions[0];
 
-    legend.data = legendData;
+    legend.data = dimensionName
+      ? this.result.map((data: any) => data[dimensionName] as string)
+      : this.fieldNames.measures;
 
     return legend;
   }
@@ -74,25 +71,32 @@ export default class PieHandler implements ChartHandler {
    */
   public getSeries(): Array<echarts.EChartOption.Series> {
     let series: Array<echarts.EChartOption.Series> = [];
-    this.fieldNames.dimensions.forEach(dimensionName => {
-      this.fieldNames.measures.forEach(measureName => {
-        const seriesData = {
-          type: "pie",
-          radius: Object.values(this.sampleStyle.radiusConfig).map(
-            item => item + "%"
-          ),
-          itemStyle: {},
-          center: Object.values(this.sampleStyle.centerConfig),
-          label: EChartDataUtil.getPieSeriesLabel(this.sampleStyle),
-          data: EChartDataUtil.getDataByAxisName(
-            dimensionName,
-            measureName,
-            this.result
-          )
-        } as echarts.EChartOption.Series;
-        series.push(seriesData);
-      });
-    });
+    // dimension 存在元素 走 一维度一度量
+    const dimensionName = this.fieldNames.dimensions[0];
+    const measuresList = this.fieldNames.measures;
+
+    // series
+    const seriesData = {
+      type: "pie",
+      radius: Object.values(this.sampleStyle.radiusConfig).map(
+        item => item + "%"
+      ),
+      itemStyle: {},
+      center: Object.values(this.sampleStyle.centerConfig),
+      label: EChartDataUtil.getPieSeriesLabel(this.sampleStyle),
+      data: [] as echarts.EChartOption.SeriesBar["data"]
+    };
+
+    // 度量必须唯一，不然要提示前端禁用失败
+    seriesData.data = dimensionName
+      ? EChartDataUtil.getDataByAxisName(
+          dimensionName,
+          measuresList[0],
+          this.result
+        )
+      : EChartDataUtil.getNameByMeasure(measuresList, this.result);
+
+    series.push(seriesData);
 
     return series;
   }
