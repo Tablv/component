@@ -1,10 +1,11 @@
 import { ChartType } from "glaway-bi-model/enums/ChartType";
 import { EChartsSampleStyle } from "glaway-bi-model/view/dashboard/EChartsOption";
+import Draggable from "glaway-bi-model/view/Draggable";
 
 /**
  * 可视化数据
  */
-export default interface VisualData {
+export default interface VisualData extends Draggable {
   // 图表类型
   type: ChartType;
 
