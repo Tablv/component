@@ -1,5 +1,5 @@
 
-import TableVO from "glaway-bi-model/results/TableVO";
+import { TableRelation } from "glaway-bi-model/params/JoinRelation";
 import JoinRelation from "glaway-bi-model/params/JoinRelation";
 import FieldDTO from "glaway-bi-model/params/FieldDTO";
 import WhereDTO from "glaway-bi-model/params/WhereDTO";
@@ -31,12 +31,12 @@ export default interface AnalysisData {
   /**
    * 主表信息
    */
-  fromTable: TableVO | null;
+  fromTable?: TableRelation;
 
   /**
    * 视图名称
    */
-  viewName: string;
+  viewName?: string;
 
   /**
    * 表关联字段信息

@@ -5,7 +5,7 @@ import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import EChartsService from "../EChartsService";
 import { ChartHandler } from "glaway-bi-component/src/interfaces/ChartHandler";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
-import { PieChartOption } from "glaway-bi-model/view/dashboard//chart/ChartOption";
+import { PieChartOption } from "glaway-bi-model/view/dashboard/chart/ChartOption";
 
 /**
  * 饼图处理

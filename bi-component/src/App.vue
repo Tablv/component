@@ -123,7 +123,6 @@ export default class App extends Vue {
         }
       },
       analysis: {
-        resultStyle: {},
         isReact: false,
         joinRelation: [],
         sort: {
@@ -288,7 +287,6 @@ export default class App extends Vue {
         }
       },
       analysis: {
-        resultStyle: {},
         isReact: false,
         joinRelation: [],
         sort: {
@@ -445,7 +443,6 @@ export default class App extends Vue {
         }
       },
       analysis: {
-        resultStyle: {},
         isReact: false,
         joinRelation: [],
         sort: {
@@ -610,7 +607,6 @@ export default class App extends Vue {
         }
       },
       analysis: {
-        resultStyle: {},
         isReact: false,
         joinRelation: [],
         sort: {
@@ -784,7 +780,6 @@ export default class App extends Vue {
         }
       },
       analysis: {
-        resultStyle: {},
         sort: {
           data: [],
           custom: [],
@@ -958,7 +953,6 @@ export default class App extends Vue {
         }
       },
       analysis: {
-        resultStyle: {},
         sort: {
           data: [],
           custom: [],

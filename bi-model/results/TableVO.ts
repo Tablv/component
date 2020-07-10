@@ -37,3 +37,8 @@ export default interface TableVO {
   columns?: Array<TableInfoVO>;
 
 }
+
+export interface tableViewInfo {
+  tables: Array<TableVO>;
+  cube: { viewname: string };
+}

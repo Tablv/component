@@ -39,12 +39,12 @@ export const generalDataTemplate: any = {
     datasetId: null,
     dimensions: [],
     measures: [],
-    fromTable: null,
+    joinRelation: [],
     where: [],
     order: [],
     isReact: false,
-    joinRelation: [],
-    resultStyle: {},
+    fromTable: null,
+    viewName: "",
     filter: {
       id: FILTER_DEFAULT_VALUE,
       data: []
@@ -65,6 +65,10 @@ export const generalDataTemplate: any = {
       displayType: WarnDisplayType.NONE,
       value: []
     }
+  },
+  tableView: {
+    fromTable: null,
+    viewName: ""
   },
   events: {
     triggerMethod: "",

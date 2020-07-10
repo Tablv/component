@@ -1,5 +1,4 @@
 import TableInfoVO from "glaway-bi-model/results/TableInfoVO";
-import TableVO from "glaway-bi-model/results/TableVO";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
 import AnalysisDTO from "glaway-bi-model/params/AnalysisDTO";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
@@ -17,25 +16,10 @@ export default class ParamsConverter {
    * @param currentDashboard 当前仪表盘
    */
   public static getAnalysisDTO(currentDashboard: Dashboard): AnalysisDTO {
-    let viewNameList: string[] = [],
-      fromDTO: TableRelation = {
-        schema: "",
-        tableName: "",
-        alias: ""
-      };
-    if (currentDashboard.analysis.viewName) {
-      viewNameList = currentDashboard.analysis.viewName.split(".");
-      fromDTO = {
-        schema: viewNameList[0] + "." + viewNameList[1],
-        tableName: viewNameList[2],
-        alias: viewNameList[2]
-      };
-    }
     const {
       joinRelation,
       dimensions,
       measures,
-      viewName,
       where,
       filter,
       sort,
@@ -44,32 +28,21 @@ export default class ParamsConverter {
 
     const analysisDTO: AnalysisDTO = {
       dashboardId: currentDashboard.id,
-      from: fromDTO,
+      from: currentDashboard.analysis.fromTable,
       join: joinRelation,
-      viewName,
+      viewName: currentDashboard.analysis.viewName || "",
 
       // 追加维度、度量数据
-      fields: ObjectUtil.mergeArray([], true, dimensions, measures).map(
-        item => {
-          item.tableAlias = viewNameList[2] || "";
-          return item;
-        }
-      ),
+      fields: ObjectUtil.mergeArray([], true, dimensions, measures),
 
       // 追加过滤、排序、排名
-      where: ObjectUtil.mergeArray([], true, where, filter.data).map(item => {
-        item.tableAlias = viewNameList[2] || "";
-        return item;
-      }),
+      where: ObjectUtil.mergeArray([], true, where, filter.data),
       order: ObjectUtil.copy(sort.data),
       limit: ""
     };
     if (limit.data[0]) {
       analysisDTO.limit = limit.data[0].limit;
-      analysisDTO.order = ObjectUtil.copy(limit.data).map(item => {
-        item.tableAlias = viewNameList[2] || "";
-        return item;
-      });
+      analysisDTO.order = ObjectUtil.copy(limit.data);
     }
     return analysisDTO;
   }
@@ -101,34 +74,20 @@ export default class ParamsConverter {
    * tableInfo 转 analysisDTO
    */
   public static getQueryValuesDTO(
-    fromTable: TableVO,
+    fromTable: TableRelation,
     joinRelations: Array<JoinRelation>,
     tableInfo: TableInfoVO,
     currentDashboard: Dashboard
   ): AnalysisDTO {
-    let viewNameList: string[] = [],
-      fromDTO: TableRelation = {
-        schema: "",
-        tableName: "",
-        alias: ""
-      };
-    if (currentDashboard.analysis.viewName) {
-      viewNameList = currentDashboard.analysis.viewName.split(".");
-      fromDTO = {
-        schema: viewNameList[0] + "." + viewNameList[1],
-        tableName: viewNameList[2],
-        alias: viewNameList[2]
-      };
-    }
     let fieldDTO = FieldDTOBuilder.buildFieldDTO(tableInfo);
 
     // 字段追加去重
     fieldDTO.func = ["distinct"];
-    fieldDTO.tableAlias = viewNameList[2];
+    fieldDTO.tableAlias = fromTable.alias;
 
     return {
       dashboardId: "",
-      from: fromDTO,
+      from: fromTable,
       viewName: currentDashboard.analysis.viewName || "",
       join: joinRelations,
       fields: [fieldDTO],
