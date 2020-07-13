@@ -8,6 +8,7 @@ import { WARN_DEFAULT_VALUE } from "glaway-bi-model/view/Warn";
 import { ChartHandler } from "../../interfaces/ChartHandler";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
 import { BarChartOption } from "glaway-bi-model/view/dashboard/chart/ChartOption";
+import echarts from "echarts";
 
 /**
  * 柱图处理
@@ -69,8 +70,7 @@ export default class BarHandler implements ChartHandler {
   public getXAxis(): Array<echarts.EChartOption.XAxis> {
     let xAxis: Array<echarts.EChartOption.XAxis> = [];
     // 维度是0
-    const dimensions = this.fieldNames.dimensions;
-    const measures = this.fieldNames.measures;
+    const { dimensions, measures } = this.fieldNames;
 
     if (!dimensions.length) {
       //  维度不存在 x轴拿度量
@@ -81,8 +81,7 @@ export default class BarHandler implements ChartHandler {
           interval: this.sampleStyle.axisLabel.interval || 0,
           rotate: this.sampleStyle.axisLabel.rotate || 0
         },
-        // data: measures as any
-        data: []
+        data: measures.map(measure => ({ value: measure })) as any
       };
       xAxis.unshift(axisXData);
     }
@@ -124,42 +123,58 @@ export default class BarHandler implements ChartHandler {
   public getSeries(): Array<echarts.EChartOption.Series> {
     let series: Array<echarts.EChartOption.Series> = [];
 
-    // const dimensions = this.fieldNames.dimensions;
-    // if (!dimensions.length) {
-    //   this.fieldNames.measures.forEach(measureName => {
-    //     const seriesData = {
-    //       name: measureName,
-    //       type: "bar",
-    //       data: this.result.map((data: any) => {
-    //         const value = this.sampleStyle.decimals
-    //           ? Number(data[fieldName]).toFixed(this.sampleStyle.decimals.value)
-    //           : data[fieldName];
-    //         return {
-    //           value
-    //         };
-    //       }),
-    //       barWidth: EChartDataUtil.getBarWidth(this.sampleStyle),
-    //       label: EChartDataUtil.getBarSeriesLabel(this.sampleStyle)
-    //     };
-    //     series.push(seriesData);
-    //   });
-    //   return series;
-    // }
+    const { dimensions, measures } = this.fieldNames;
 
-    this.fieldNames.measures.forEach(measureName => {
-      const seriesData = {
-        name: measureName,
-        type: "bar",
-        data: EChartDataUtil.getDataByFieldName(
-          measureName,
-          this.result,
-          this.sampleStyle.decimals
-        ),
-        barWidth: EChartDataUtil.getBarWidth(this.sampleStyle),
-        label: EChartDataUtil.getBarSeriesLabel(this.sampleStyle)
-      };
-      series.push(seriesData);
-    });
+    if (!dimensions.length) {
+      this.fieldNames.measures.forEach((measureName, index) => {
+        const data = [];
+        data.length = measures.length;
+        const seriesData = {
+          name: measureName,
+          type: "bar",
+          stack: "one",
+          data: EChartDataUtil.getTestByFieldName(
+            index,
+            measureName,
+            this.result
+          ),
+          itemStyle: {
+            emphasis: {
+              barBorderRadius: 7
+            },
+            normal: {
+              barBorderRadius: 7
+            }
+          },
+          barWidth: EChartDataUtil.getBarWidth(this.sampleStyle),
+          label: EChartDataUtil.getBarSeriesLabel(this.sampleStyle)
+        };
+        series.push(seriesData);
+      });
+    } else {
+      this.fieldNames.measures.forEach(measureName => {
+        const seriesData = {
+          name: measureName,
+          type: "bar",
+          data: EChartDataUtil.getDataByFieldName(
+            measureName,
+            this.result,
+            this.sampleStyle.decimals
+          ),
+          itemStyle: {
+            emphasis: {
+              barBorderRadius: 7
+            },
+            normal: {
+              barBorderRadius: 7
+            }
+          },
+          barWidth: EChartDataUtil.getBarWidth(this.sampleStyle),
+          label: EChartDataUtil.getBarSeriesLabel(this.sampleStyle)
+        };
+        series.push(seriesData);
+      });
+    }
 
     return series;
   }

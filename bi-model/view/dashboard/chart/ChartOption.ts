@@ -9,6 +9,7 @@ export interface BarChartOption {
   label: {
     show: boolean;
     position: string; // 'top' 'left' 'right' 'bottom' 'inside'
+    isShowNumer: boolean;
     color: string;
     fontSize: number;
     fontFamily: string;
@@ -58,6 +59,7 @@ export interface LineChartOption {
   };
   label: {
     show: boolean;
+    isShowNumer: boolean;
     position: string;
     color: string;
     fontSize: number;
@@ -71,6 +73,7 @@ export interface LineChartOption {
 export interface PieChartOption {
   label: {
     show: boolean;
+    isShowNumer: boolean;
     position: string;
     color: string;
     fontSize: number;

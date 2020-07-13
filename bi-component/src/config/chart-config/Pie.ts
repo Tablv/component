@@ -13,7 +13,8 @@ const templates = {
           position: "top",
           color: "#000",
           fontSize: 12,
-          fontFamily: "Microsoft YaHei"
+          fontFamily: "Microsoft YaHei",
+          isShowNumer: false
         },
         centerConfig: {
           xAxias: "50%",

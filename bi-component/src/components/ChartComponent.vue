@@ -30,6 +30,7 @@ import EChartsService, {
   renderChartByJSON
 } from "glaway-bi-component/src/service/EChartsService";
 import EChartsUtil from "glaway-bi-component/src/util/EChartsUtil";
+import WhereDTO from "glaway-bi-model/params/WhereDTO";
 
 @Component
 export default class ChartComponent extends Vue implements ChartUIService {
@@ -178,13 +179,10 @@ export default class ChartComponent extends Vue implements ChartUIService {
     } else {
       result = result || this.thisAnalysisData;
 
-      let selectedIndex = null;
+      let selectedIndex = "";
       if (this.thisDashboard.id === this.reactWhere.dashboardId) {
-        selectedIndex = this.reactWhere.selectedIndex;
+        selectedIndex = this.reactWhere.selectedIndex as string;
       }
-      // this.thisDashboard.id === this.reactWhere.dashboardId
-      //   ? this.reactWhere.selectedIndex
-      //   : null;
       renderChart(
         this.$data.echartsInstance,
         this.thisDashboard,
@@ -223,7 +221,10 @@ export default class ChartComponent extends Vue implements ChartUIService {
      */
     react: (chartInstance: any, echartsParams: any) => {
       // 点击后 实现select效果
-      const { reset, dataIndex } = handleOpacity(chartInstance, echartsParams);
+      const { reset, dataIndex, seriesIndex } = handleOpacity(
+        chartInstance,
+        echartsParams
+      );
 
       // 判断是否需要重置
       if (reset) {
@@ -232,7 +233,7 @@ export default class ChartComponent extends Vue implements ChartUIService {
       }
 
       const reactWhere: ReactWhere = {
-        selectedIndex: dataIndex,
+        selectedIndex: [dataIndex, seriesIndex].join(","),
         oldDashboardId: this.reactWhere.dashboardId,
         rotationTask: this.thisDashboard.tasks,
         dashboardId: this.thisDashboard.id,
@@ -240,7 +241,7 @@ export default class ChartComponent extends Vue implements ChartUIService {
         where: {
           id: UUID.generate(),
           tableAlias: this.thisAnalysis.measures[0].tableAlias,
-          columnName: this.thisAnalysis.measures[0].columnName,
+          columnName: echartsParams.seriesName,
           w: [
             {
               type: 1,

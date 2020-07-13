@@ -16,6 +16,7 @@ import ChartUIService from "glaway-bi-component/src/interfaces/ChartUIService";
 import handleChart from "./handleChart";
 import ParamsConverter from "glaway-bi-component/src/util/ParamsConverter";
 import DefaultTemplate from "glaway-bi-component/src/config/DefaultTemplate";
+import echarts from "echarts";
 
 /**
  * ECharts 业务层
@@ -223,7 +224,7 @@ export function renderChart(
   chartInstace: echarts.ECharts,
   thisDashboard: Dashboard,
   result: AnalysisResults,
-  selectIndex: string | null
+  selectIndex: string
 ): Promise<Dashboard> {
   try {
     let chartType = thisDashboard.visualData.type,
@@ -233,9 +234,11 @@ export function renderChart(
     thisDashboard = ObjectUtil.merge(defaultConfig, thisDashboard);
     let echartsOption = EChartsService.mergEChartstyle(thisDashboard, result);
 
+    const [dataIndex, seriesIndex] = selectIndex.split(",");
+
     // 保持选中状态
-    selectIndex
-      ? handleOpacity(chartInstace, { dataIndex: selectIndex }, echartsOption)
+    dataIndex
+      ? handleOpacity(chartInstace, { dataIndex, seriesIndex }, echartsOption)
       : resetOpacity(chartInstace, echartsOption);
 
     return Promise.resolve(thisDashboard);
@@ -257,11 +260,18 @@ export function resetOpacity(
   const option = echartsOption || ObjectUtil.copy(chartInstance.getOption());
   if (!option) return;
   option.series?.forEach((serieData: any) => {
-    serieData.itemStyle = Object.assign({}, serieData.itemStyle, {
+    serieData.itemStyle = ObjectUtil.merge(serieData.itemStyle || {}, {
       opacity: "1"
-    });
-    serieData.data.forEach((itemData: any) => {
-      delete itemData.itemStyle;
+      // normal: {
+      //   color: new echarts.graphic.LinearGradient(
+      //     0, 1, 0, 0,
+      //     [
+      //         {offset: 0, color: '#000'},
+      //         {offset: 1, color: '#37BBF8'}
+
+      //     ]
+      //   )
+      // }
     });
   });
   EChartsUtil.setOption(chartInstance, option);
@@ -276,47 +286,49 @@ export function resetOpacity(
  */
 export function handleOpacity(
   chartInstance: echarts.ECharts,
-  // 约束 必须有 dataIndex
-  echartsParams: { dataIndex: string },
+  // 约束 必须有 dataIndex, seriesIndex
+  echartsParams: {
+    dataIndex: string;
+    seriesIndex: string;
+  },
   echartsOption?: echarts.EChartOption
-): { reset: boolean; dataIndex: string | null } {
+): { reset: boolean; dataIndex: string; seriesIndex: string } {
   // 1, 0.4 可以后期选择抛出去，作为参数传递
-  const selectedStyle = { opacity: "1" };
-  const unSelectStyle = { opacity: "0.4" };
-
+  const itemOpacity = { opacity: "1" };
   const option = echartsOption || ObjectUtil.copy(chartInstance.getOption());
   const result = {
     // 是否重置
     reset: false,
     // 选中的数据小标
-    dataIndex: `${echartsParams.dataIndex}` || null
+    dataIndex: `${echartsParams.dataIndex}`,
+    seriesIndex: `${echartsParams.seriesIndex}`
   };
-  option.series?.forEach((serieData: any) => {
-    serieData.itemStyle = Object.assign({}, serieData.itemStyle, unSelectStyle);
-    serieData.data.forEach((itemData: any, index: any) => {
-      if (index !== echartsParams.dataIndex) {
-        delete itemData.itemStyle;
-      }
+  const series: any = option.series;
+  const seriesData = series[result.seriesIndex];
+
+  if (seriesData.data[result.dataIndex]?.itemStyle?.opacity) {
+    delete seriesData.data[result.dataIndex].itemStyle.opacity;
+    result.reset = true;
+    result.dataIndex = "";
+    result.seriesIndex = "";
+  } else {
+    series?.forEach((serieData: any) => {
+      serieData.data.forEach((serieItem: any, index: number) => {
+        if (serieItem?.itemStyle) {
+          delete serieItem.itemStyle.opacity;
+        }
+      });
     });
-    if (serieData.data[echartsParams.dataIndex]?.itemStyle) {
-      // 取消了过滤条件
-      delete serieData.data[echartsParams.dataIndex].itemStyle;
-      serieData.itemStyle = Object.assign(
-        {},
-        serieData.itemStyle,
-        selectedStyle
-      );
-      result.reset = true;
-      result.dataIndex = null;
-    } else if (serieData.data[echartsParams.dataIndex]) {
-      serieData.data[echartsParams.dataIndex].itemStyle = Object.assign(
-        {},
-        serieData.itemStyle,
-        selectedStyle
-      );
-    } else {
-      // 其他过滤操作执行，不做处理
-    }
+    seriesData.data[result.dataIndex].itemStyle = { opacity: "1" };
+    itemOpacity.opacity = "0.4";
+  }
+
+  series?.forEach((serieData: any) => {
+    serieData.itemStyle = Object.assign(
+      {},
+      serieData.itemStyle || {},
+      itemOpacity
+    );
   });
 
   EChartsUtil.setOption(chartInstance, option);

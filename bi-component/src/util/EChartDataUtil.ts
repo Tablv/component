@@ -31,6 +31,18 @@ export default class EChartServiceUtil {
     return fieldArray;
   }
 
+  public static getTestByFieldName(
+    index: number,
+    fieldName: string,
+    result: AnalysisResults
+  ): Array<any> {
+    const dataresult: Array<any> = [];
+    dataresult.length = Object.keys(result).length;
+    dataresult[index] = { value: result[0][fieldName] };
+
+    return dataresult;
+  }
+
   /**
    * 通过字段名，获取结果集内的数据数组
    * 百分比堆积柱图
@@ -158,6 +170,7 @@ export default class EChartServiceUtil {
   public static getPieSeriesLabel(
     sampleStyle: PieChartOption
   ): echarts.EChartOption.SeriesPie["label"] {
+    const formatterTextType = sampleStyle.label.isShowNumer ? "c}" : "d}%";
     return sampleStyle
       ? {
           margin: "25%",
@@ -167,7 +180,7 @@ export default class EChartServiceUtil {
             color: sampleStyle.label.color,
             fontFamily: sampleStyle.label.fontFamily,
             fontSize: sampleStyle.label.fontSize,
-            formatter: "{b} - {d}%"
+            formatter: `{b} - {${formatterTextType}`
           }
         }
       : {
