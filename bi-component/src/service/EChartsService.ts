@@ -262,16 +262,6 @@ export function resetOpacity(
   option.series?.forEach((serieData: any) => {
     serieData.itemStyle = ObjectUtil.merge(serieData.itemStyle || {}, {
       opacity: "1"
-      // normal: {
-      //   color: new echarts.graphic.LinearGradient(
-      //     0, 1, 0, 0,
-      //     [
-      //         {offset: 0, color: '#000'},
-      //         {offset: 1, color: '#37BBF8'}
-
-      //     ]
-      //   )
-      // }
     });
   });
   EChartsUtil.setOption(chartInstance, option);
@@ -325,7 +315,6 @@ export function handleOpacity(
 
   series?.forEach((serieData: any) => {
     serieData.itemStyle = Object.assign(
-      {},
       serieData.itemStyle || {},
       itemOpacity
     );

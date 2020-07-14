@@ -10,7 +10,15 @@ export default class EChartsUtil {
    * @param echartContainer DOM 容器
    */
   public static init(echartContainer: HTMLElement): echarts.ECharts {
-    return echarts.init(echartContainer as HTMLDivElement);
+    const chartInterface = echarts.init(echartContainer as HTMLDivElement);
+    // chartInterface.on('dataZoom', function (params) {
+    //   if (!params.dataZoomId) {
+    //     return false;
+    //   }
+
+    //   console.log(params)
+    // })
+    return chartInterface;
   }
 
   /**

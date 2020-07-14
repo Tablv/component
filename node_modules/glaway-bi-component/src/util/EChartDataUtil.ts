@@ -34,11 +34,18 @@ export default class EChartServiceUtil {
   public static getTestByFieldName(
     index: number,
     fieldName: string,
-    result: AnalysisResults
-  ): Array<any> {
-    const dataresult: Array<any> = [];
+    result: AnalysisResults,
+    decimals?: any
+  ): echarts.EChartOption.SeriesBar["data"] {
+    const dataresult: echarts.EChartOption.SeriesBar["data"] = [];
+
     dataresult.length = Object.keys(result).length;
-    dataresult[index] = { value: result[0][fieldName] };
+
+    const value = decimals
+      ? Number(result[0][fieldName]).toFixed(decimals.value)
+      : result[0][fieldName];
+
+    (<any>dataresult)[index] = { value };
 
     return dataresult;
   }

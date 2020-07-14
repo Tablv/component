@@ -139,12 +139,7 @@ export default class BarHandler implements ChartHandler {
             this.result
           ),
           itemStyle: {
-            emphasis: {
-              barBorderRadius: this.sampleStyle.radius
-            },
-            normal: {
-              barBorderRadius: this.sampleStyle.radius
-            }
+            barBorderRadius: this.sampleStyle.radius
           },
           barWidth: EChartDataUtil.getBarWidth(this.sampleStyle),
           label: EChartDataUtil.getBarSeriesLabel(this.sampleStyle)
@@ -162,12 +157,7 @@ export default class BarHandler implements ChartHandler {
             this.sampleStyle.decimals
           ),
           itemStyle: {
-            emphasis: {
-              barBorderRadius: this.sampleStyle.radius
-            },
-            normal: {
-              barBorderRadius: this.sampleStyle.radius
-            }
+            barBorderRadius: this.sampleStyle.radius
           },
           barWidth: EChartDataUtil.getBarWidth(this.sampleStyle),
           label: EChartDataUtil.getBarSeriesLabel(this.sampleStyle)
