@@ -14,6 +14,7 @@ export interface BarChartOption {
     fontSize: number;
     fontFamily: string;
   };
+  radius: number;
   axisLabel: {
     interval: 0;
     rotate: 0;

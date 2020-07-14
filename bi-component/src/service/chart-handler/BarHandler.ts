@@ -140,10 +140,10 @@ export default class BarHandler implements ChartHandler {
           ),
           itemStyle: {
             emphasis: {
-              barBorderRadius: 7
+              barBorderRadius: this.sampleStyle.radius
             },
             normal: {
-              barBorderRadius: 7
+              barBorderRadius: this.sampleStyle.radius
             }
           },
           barWidth: EChartDataUtil.getBarWidth(this.sampleStyle),
@@ -163,10 +163,10 @@ export default class BarHandler implements ChartHandler {
           ),
           itemStyle: {
             emphasis: {
-              barBorderRadius: 7
+              barBorderRadius: this.sampleStyle.radius
             },
             normal: {
-              barBorderRadius: 7
+              barBorderRadius: this.sampleStyle.radius
             }
           },
           barWidth: EChartDataUtil.getBarWidth(this.sampleStyle),

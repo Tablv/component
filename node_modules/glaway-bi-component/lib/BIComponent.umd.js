@@ -8039,6 +8039,148 @@ module.exports = ''.repeat || function repeat(count) {
 
 /***/ }),
 
+/***/ "1276":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var fixRegExpWellKnownSymbolLogic = __webpack_require__("d784");
+var isRegExp = __webpack_require__("44e7");
+var anObject = __webpack_require__("825a");
+var requireObjectCoercible = __webpack_require__("1d80");
+var speciesConstructor = __webpack_require__("4840");
+var advanceStringIndex = __webpack_require__("8aa5");
+var toLength = __webpack_require__("50c4");
+var callRegExpExec = __webpack_require__("14c3");
+var regexpExec = __webpack_require__("9263");
+var fails = __webpack_require__("d039");
+
+var arrayPush = [].push;
+var min = Math.min;
+var MAX_UINT32 = 0xFFFFFFFF;
+
+// babel-minify transpiles RegExp('x', 'y') -> /x/y and it causes SyntaxError
+var SUPPORTS_Y = !fails(function () { return !RegExp(MAX_UINT32, 'y'); });
+
+// @@split logic
+fixRegExpWellKnownSymbolLogic('split', 2, function (SPLIT, nativeSplit, maybeCallNative) {
+  var internalSplit;
+  if (
+    'abbc'.split(/(b)*/)[1] == 'c' ||
+    'test'.split(/(?:)/, -1).length != 4 ||
+    'ab'.split(/(?:ab)*/).length != 2 ||
+    '.'.split(/(.?)(.?)/).length != 4 ||
+    '.'.split(/()()/).length > 1 ||
+    ''.split(/.?/).length
+  ) {
+    // based on es5-shim implementation, need to rework it
+    internalSplit = function (separator, limit) {
+      var string = String(requireObjectCoercible(this));
+      var lim = limit === undefined ? MAX_UINT32 : limit >>> 0;
+      if (lim === 0) return [];
+      if (separator === undefined) return [string];
+      // If `separator` is not a regex, use native split
+      if (!isRegExp(separator)) {
+        return nativeSplit.call(string, separator, lim);
+      }
+      var output = [];
+      var flags = (separator.ignoreCase ? 'i' : '') +
+                  (separator.multiline ? 'm' : '') +
+                  (separator.unicode ? 'u' : '') +
+                  (separator.sticky ? 'y' : '');
+      var lastLastIndex = 0;
+      // Make `global` and avoid `lastIndex` issues by working with a copy
+      var separatorCopy = new RegExp(separator.source, flags + 'g');
+      var match, lastIndex, lastLength;
+      while (match = regexpExec.call(separatorCopy, string)) {
+        lastIndex = separatorCopy.lastIndex;
+        if (lastIndex > lastLastIndex) {
+          output.push(string.slice(lastLastIndex, match.index));
+          if (match.length > 1 && match.index < string.length) arrayPush.apply(output, match.slice(1));
+          lastLength = match[0].length;
+          lastLastIndex = lastIndex;
+          if (output.length >= lim) break;
+        }
+        if (separatorCopy.lastIndex === match.index) separatorCopy.lastIndex++; // Avoid an infinite loop
+      }
+      if (lastLastIndex === string.length) {
+        if (lastLength || !separatorCopy.test('')) output.push('');
+      } else output.push(string.slice(lastLastIndex));
+      return output.length > lim ? output.slice(0, lim) : output;
+    };
+  // Chakra, V8
+  } else if ('0'.split(undefined, 0).length) {
+    internalSplit = function (separator, limit) {
+      return separator === undefined && limit === 0 ? [] : nativeSplit.call(this, separator, limit);
+    };
+  } else internalSplit = nativeSplit;
+
+  return [
+    // `String.prototype.split` method
+    // https://tc39.github.io/ecma262/#sec-string.prototype.split
+    function split(separator, limit) {
+      var O = requireObjectCoercible(this);
+      var splitter = separator == undefined ? undefined : separator[SPLIT];
+      return splitter !== undefined
+        ? splitter.call(separator, O, limit)
+        : internalSplit.call(String(O), separator, limit);
+    },
+    // `RegExp.prototype[@@split]` method
+    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@split
+    //
+    // NOTE: This cannot be properly polyfilled in engines that don't support
+    // the 'y' flag.
+    function (regexp, limit) {
+      var res = maybeCallNative(internalSplit, regexp, this, limit, internalSplit !== nativeSplit);
+      if (res.done) return res.value;
+
+      var rx = anObject(regexp);
+      var S = String(this);
+      var C = speciesConstructor(rx, RegExp);
+
+      var unicodeMatching = rx.unicode;
+      var flags = (rx.ignoreCase ? 'i' : '') +
+                  (rx.multiline ? 'm' : '') +
+                  (rx.unicode ? 'u' : '') +
+                  (SUPPORTS_Y ? 'y' : 'g');
+
+      // ^(? + rx + ) is needed, in combination with some S slicing, to
+      // simulate the 'y' flag.
+      var splitter = new C(SUPPORTS_Y ? rx : '^(?:' + rx.source + ')', flags);
+      var lim = limit === undefined ? MAX_UINT32 : limit >>> 0;
+      if (lim === 0) return [];
+      if (S.length === 0) return callRegExpExec(splitter, S) === null ? [S] : [];
+      var p = 0;
+      var q = 0;
+      var A = [];
+      while (q < S.length) {
+        splitter.lastIndex = SUPPORTS_Y ? q : 0;
+        var z = callRegExpExec(splitter, SUPPORTS_Y ? S : S.slice(q));
+        var e;
+        if (
+          z === null ||
+          (e = min(toLength(splitter.lastIndex + (SUPPORTS_Y ? 0 : q)), S.length)) === p
+        ) {
+          q = advanceStringIndex(S, q, unicodeMatching);
+        } else {
+          A.push(S.slice(p, q));
+          if (A.length === lim) return A;
+          for (var i = 1; i <= z.length - 1; i++) {
+            A.push(z[i]);
+            if (A.length === lim) return A;
+          }
+          q = p = e;
+        }
+      }
+      A.push(S.slice(p));
+      return A;
+    }
+  ];
+}, !SUPPORTS_Y);
+
+
+/***/ }),
+
 /***/ "133d":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8771,6 +8913,35 @@ var _default = echarts.extendChartView({
 });
 
 module.exports = _default;
+
+/***/ }),
+
+/***/ "14c3":
+/***/ (function(module, exports, __webpack_require__) {
+
+var classof = __webpack_require__("c6b6");
+var regexpExec = __webpack_require__("9263");
+
+// `RegExpExec` abstract operation
+// https://tc39.github.io/ecma262/#sec-regexpexec
+module.exports = function (R, S) {
+  var exec = R.exec;
+  if (typeof exec === 'function') {
+    var result = exec.call(R, S);
+    if (typeof result !== 'object') {
+      throw TypeError('RegExp exec method returned something other than an Object or null');
+    }
+    return result;
+  }
+
+  if (classof(R) !== 'RegExp') {
+    throw TypeError('RegExp#exec called on incompatible receiver');
+  }
+
+  return regexpExec.call(R, S);
+};
+
+
 
 /***/ }),
 
@@ -51102,6 +51273,25 @@ module.exports = function (a, b) {
 
 /***/ }),
 
+/***/ "44e7":
+/***/ (function(module, exports, __webpack_require__) {
+
+var isObject = __webpack_require__("861d");
+var classof = __webpack_require__("c6b6");
+var wellKnownSymbol = __webpack_require__("b622");
+
+var MATCH = wellKnownSymbol('match');
+
+// `IsRegExp` abstract operation
+// https://tc39.github.io/ecma262/#sec-isregexp
+module.exports = function (it) {
+  var isRegExp;
+  return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : classof(it) == 'RegExp');
+};
+
+
+/***/ }),
+
 /***/ "44fb":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -54934,6 +55124,56 @@ $({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT || !USES_TO_LENGT
     return $filter(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
   }
 });
+
+
+/***/ }),
+
+/***/ "4df4":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var bind = __webpack_require__("f8c2");
+var toObject = __webpack_require__("7b0b");
+var callWithSafeIterationClosing = __webpack_require__("9bdd");
+var isArrayIteratorMethod = __webpack_require__("e95a");
+var toLength = __webpack_require__("50c4");
+var createProperty = __webpack_require__("8418");
+var getIteratorMethod = __webpack_require__("35a1");
+
+// `Array.from` method implementation
+// https://tc39.github.io/ecma262/#sec-array.from
+module.exports = function from(arrayLike /* , mapfn = undefined, thisArg = undefined */) {
+  var O = toObject(arrayLike);
+  var C = typeof this == 'function' ? this : Array;
+  var argumentsLength = arguments.length;
+  var mapfn = argumentsLength > 1 ? arguments[1] : undefined;
+  var mapping = mapfn !== undefined;
+  var index = 0;
+  var iteratorMethod = getIteratorMethod(O);
+  var length, result, step, iterator, next;
+  if (mapping) mapfn = bind(mapfn, argumentsLength > 2 ? arguments[2] : undefined, 2);
+  // if the target is not iterable or it's an array with the default iterator - use a simple case
+  if (iteratorMethod != undefined && !(C == Array && isArrayIteratorMethod(iteratorMethod))) {
+    iterator = iteratorMethod.call(O);
+    next = iterator.next;
+    result = new C();
+    for (;!(step = next.call(iterator)).done; index++) {
+      createProperty(result, index, mapping
+        ? callWithSafeIterationClosing(iterator, mapfn, [step.value, index], true)
+        : step.value
+      );
+    }
+  } else {
+    length = toLength(O.length);
+    result = new C(length);
+    for (;length > index; index++) {
+      createProperty(result, index, mapping ? mapfn(O[index], index) : O[index]);
+    }
+  }
+  result.length = index;
+  return result;
+};
 
 
 /***/ }),
@@ -81635,6 +81875,22 @@ module.exports = _default;
 
 /***/ }),
 
+/***/ "8aa5":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var charAt = __webpack_require__("6547").charAt;
+
+// `AdvanceStringIndex` abstract operation
+// https://tc39.github.io/ecma262/#sec-advancestringindex
+module.exports = function (S, index, unicode) {
+  return index + (unicode ? charAt(S, index).length : 1);
+};
+
+
+/***/ }),
+
 /***/ "8b7f":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -83430,6 +83686,101 @@ exports.getAxisInfo = getAxisInfo;
 exports.dataFilter = dataFilter;
 exports.dimValueGetter = dimValueGetter;
 exports.numCalculate = numCalculate;
+
+/***/ }),
+
+/***/ "9263":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var regexpFlags = __webpack_require__("ad6d");
+var stickyHelpers = __webpack_require__("9f7f");
+
+var nativeExec = RegExp.prototype.exec;
+// This always refers to the native implementation, because the
+// String#replace polyfill uses ./fix-regexp-well-known-symbol-logic.js,
+// which loads this file before patching the method.
+var nativeReplace = String.prototype.replace;
+
+var patchedExec = nativeExec;
+
+var UPDATES_LAST_INDEX_WRONG = (function () {
+  var re1 = /a/;
+  var re2 = /b*/g;
+  nativeExec.call(re1, 'a');
+  nativeExec.call(re2, 'a');
+  return re1.lastIndex !== 0 || re2.lastIndex !== 0;
+})();
+
+var UNSUPPORTED_Y = stickyHelpers.UNSUPPORTED_Y || stickyHelpers.BROKEN_CARET;
+
+// nonparticipating capturing group, copied from es5-shim's String#split patch.
+var NPCG_INCLUDED = /()??/.exec('')[1] !== undefined;
+
+var PATCH = UPDATES_LAST_INDEX_WRONG || NPCG_INCLUDED || UNSUPPORTED_Y;
+
+if (PATCH) {
+  patchedExec = function exec(str) {
+    var re = this;
+    var lastIndex, reCopy, match, i;
+    var sticky = UNSUPPORTED_Y && re.sticky;
+    var flags = regexpFlags.call(re);
+    var source = re.source;
+    var charsAdded = 0;
+    var strCopy = str;
+
+    if (sticky) {
+      flags = flags.replace('y', '');
+      if (flags.indexOf('g') === -1) {
+        flags += 'g';
+      }
+
+      strCopy = String(str).slice(re.lastIndex);
+      // Support anchored sticky behavior.
+      if (re.lastIndex > 0 && (!re.multiline || re.multiline && str[re.lastIndex - 1] !== '\n')) {
+        source = '(?: ' + source + ')';
+        strCopy = ' ' + strCopy;
+        charsAdded++;
+      }
+      // ^(? + rx + ) is needed, in combination with some str slicing, to
+      // simulate the 'y' flag.
+      reCopy = new RegExp('^(?:' + source + ')', flags);
+    }
+
+    if (NPCG_INCLUDED) {
+      reCopy = new RegExp('^' + source + '$(?!\\s)', flags);
+    }
+    if (UPDATES_LAST_INDEX_WRONG) lastIndex = re.lastIndex;
+
+    match = nativeExec.call(sticky ? reCopy : re, strCopy);
+
+    if (sticky) {
+      if (match) {
+        match.input = match.input.slice(charsAdded);
+        match[0] = match[0].slice(charsAdded);
+        match.index = re.lastIndex;
+        re.lastIndex += match[0].length;
+      } else re.lastIndex = 0;
+    } else if (UPDATES_LAST_INDEX_WRONG && match) {
+      re.lastIndex = re.global ? match.index + match[0].length : lastIndex;
+    }
+    if (NPCG_INCLUDED && match && match.length > 1) {
+      // Fix browsers whose `exec` methods don't consistently return `undefined`
+      // for NPCG, like IE8. NOTE: This doesn' work for /(.?)?/
+      nativeReplace.call(match[0], reCopy, function () {
+        for (i = 1; i < arguments.length - 2; i++) {
+          if (arguments[i] === undefined) match[i] = undefined;
+        }
+      });
+    }
+
+    return match;
+  };
+}
+
+module.exports = patchedExec;
+
 
 /***/ }),
 
@@ -87371,6 +87722,37 @@ exports.containStroke = containStroke;
 
 /***/ }),
 
+/***/ "9f7f":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var fails = __webpack_require__("d039");
+
+// babel-minify transpiles RegExp('a', 'y') -> /a/y and it causes SyntaxError,
+// so we use an intermediate function.
+function RE(s, f) {
+  return RegExp(s, f);
+}
+
+exports.UNSUPPORTED_Y = fails(function () {
+  // babel-minify transpiles RegExp('a', 'y') -> /a/y and it causes SyntaxError
+  var re = RE('a', 'y');
+  re.lastIndex = 2;
+  return re.exec('abcd') != null;
+});
+
+exports.BROKEN_CARET = fails(function () {
+  // https://bugzilla.mozilla.org/show_bug.cgi?id=773687
+  var re = RE('^r', 'gy');
+  re.lastIndex = 2;
+  return re.exec('str') != null;
+});
+
+
+/***/ }),
+
 /***/ "9f82":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -89035,6 +89417,26 @@ echarts.registerAction({
 exports.take = take;
 exports.release = release;
 exports.isTaken = isTaken;
+
+/***/ }),
+
+/***/ "a630":
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__("23e7");
+var from = __webpack_require__("4df4");
+var checkCorrectnessOfIteration = __webpack_require__("1c7e");
+
+var INCORRECT_ITERATION = !checkCorrectnessOfIteration(function (iterable) {
+  Array.from(iterable);
+});
+
+// `Array.from` method
+// https://tc39.github.io/ecma262/#sec-array.from
+$({ target: 'Array', stat: true, forced: INCORRECT_ITERATION }, {
+  from: from
+});
+
 
 /***/ }),
 
@@ -92709,6 +93111,21 @@ module.exports = _default;
 
 /***/ }),
 
+/***/ "ac1f":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $ = __webpack_require__("23e7");
+var exec = __webpack_require__("9263");
+
+$({ target: 'RegExp', proto: true, forced: /./.exec !== exec }, {
+  exec: exec
+});
+
+
+/***/ }),
+
 /***/ "ad6d":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -96155,6 +96572,27 @@ module.exports = function (name) {
 var userAgent = __webpack_require__("b39a");
 
 module.exports = /(iphone|ipod|ipad).*applewebkit/i.test(userAgent);
+
+
+/***/ }),
+
+/***/ "b64b":
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__("23e7");
+var toObject = __webpack_require__("7b0b");
+var nativeKeys = __webpack_require__("df75");
+var fails = __webpack_require__("d039");
+
+var FAILS_ON_PRIMITIVES = fails(function () { nativeKeys(1); });
+
+// `Object.keys` method
+// https://tc39.github.io/ecma262/#sec-object.keys
+$({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES }, {
+  keys: function keys(it) {
+    return nativeKeys(toObject(it));
+  }
+});
 
 
 /***/ }),
@@ -107644,6 +108082,121 @@ echarts.registerAction(actionInfo, function (payload, ecModel) {
     seriesModel.setZoom && seriesModel.setZoom(res.zoom);
   });
 });
+
+/***/ }),
+
+/***/ "d784":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var redefine = __webpack_require__("6eeb");
+var fails = __webpack_require__("d039");
+var wellKnownSymbol = __webpack_require__("b622");
+var regexpExec = __webpack_require__("9263");
+var createNonEnumerableProperty = __webpack_require__("9112");
+
+var SPECIES = wellKnownSymbol('species');
+
+var REPLACE_SUPPORTS_NAMED_GROUPS = !fails(function () {
+  // #replace needs built-in support for named groups.
+  // #match works fine because it just return the exec results, even if it has
+  // a "grops" property.
+  var re = /./;
+  re.exec = function () {
+    var result = [];
+    result.groups = { a: '7' };
+    return result;
+  };
+  return ''.replace(re, '$<a>') !== '7';
+});
+
+// IE <= 11 replaces $0 with the whole match, as if it was $&
+// https://stackoverflow.com/questions/6024666/getting-ie-to-replace-a-regex-with-the-literal-string-0
+var REPLACE_KEEPS_$0 = (function () {
+  return 'a'.replace(/./, '$0') === '$0';
+})();
+
+// Chrome 51 has a buggy "split" implementation when RegExp#exec !== nativeExec
+// Weex JS has frozen built-in prototypes, so use try / catch wrapper
+var SPLIT_WORKS_WITH_OVERWRITTEN_EXEC = !fails(function () {
+  var re = /(?:)/;
+  var originalExec = re.exec;
+  re.exec = function () { return originalExec.apply(this, arguments); };
+  var result = 'ab'.split(re);
+  return result.length !== 2 || result[0] !== 'a' || result[1] !== 'b';
+});
+
+module.exports = function (KEY, length, exec, sham) {
+  var SYMBOL = wellKnownSymbol(KEY);
+
+  var DELEGATES_TO_SYMBOL = !fails(function () {
+    // String methods call symbol-named RegEp methods
+    var O = {};
+    O[SYMBOL] = function () { return 7; };
+    return ''[KEY](O) != 7;
+  });
+
+  var DELEGATES_TO_EXEC = DELEGATES_TO_SYMBOL && !fails(function () {
+    // Symbol-named RegExp methods call .exec
+    var execCalled = false;
+    var re = /a/;
+
+    if (KEY === 'split') {
+      // We can't use real regex here since it causes deoptimization
+      // and serious performance degradation in V8
+      // https://github.com/zloirock/core-js/issues/306
+      re = {};
+      // RegExp[@@split] doesn't call the regex's exec method, but first creates
+      // a new one. We need to return the patched regex when creating the new one.
+      re.constructor = {};
+      re.constructor[SPECIES] = function () { return re; };
+      re.flags = '';
+      re[SYMBOL] = /./[SYMBOL];
+    }
+
+    re.exec = function () { execCalled = true; return null; };
+
+    re[SYMBOL]('');
+    return !execCalled;
+  });
+
+  if (
+    !DELEGATES_TO_SYMBOL ||
+    !DELEGATES_TO_EXEC ||
+    (KEY === 'replace' && !(REPLACE_SUPPORTS_NAMED_GROUPS && REPLACE_KEEPS_$0)) ||
+    (KEY === 'split' && !SPLIT_WORKS_WITH_OVERWRITTEN_EXEC)
+  ) {
+    var nativeRegExpMethod = /./[SYMBOL];
+    var methods = exec(SYMBOL, ''[KEY], function (nativeMethod, regexp, str, arg2, forceStringMethod) {
+      if (regexp.exec === regexpExec) {
+        if (DELEGATES_TO_SYMBOL && !forceStringMethod) {
+          // The native String method already delegates to @@method (this
+          // polyfilled function), leasing to infinite recursion.
+          // We avoid it by directly calling the native @@method method.
+          return { done: true, value: nativeRegExpMethod.call(regexp, str, arg2) };
+        }
+        return { done: true, value: nativeMethod.call(str, regexp, arg2) };
+      }
+      return { done: false };
+    }, { REPLACE_KEEPS_$0: REPLACE_KEEPS_$0 });
+    var stringMethod = methods[0];
+    var regexMethod = methods[1];
+
+    redefine(String.prototype, KEY, stringMethod);
+    redefine(RegExp.prototype, SYMBOL, length == 2
+      // 21.2.5.8 RegExp.prototype[@@replace](string, replaceValue)
+      // 21.2.5.11 RegExp.prototype[@@split](string, limit)
+      ? function (string, arg) { return regexMethod.call(string, this, arg); }
+      // 21.2.5.6 RegExp.prototype[@@match](string)
+      // 21.2.5.9 RegExp.prototype[@@search](string)
+      : function (string) { return regexMethod.call(string, this); }
+    );
+  }
+
+  if (sham) createNonEnumerableProperty(RegExp.prototype[SYMBOL], 'sham', true);
+};
+
 
 /***/ }),
 
@@ -126004,12 +126557,15 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"083210de-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=689df830&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"24bd3354-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=4fcc0e5c&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"chart-wrapper"},[_c('div',{ref:"echartsContainer",staticClass:"chart-container"})])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=689df830&
+// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=4fcc0e5c&
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.join.js
+var es_array_join = __webpack_require__("a15b");
 
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/classCallCheck.js
 function _classCallCheck(instance, Constructor) {
@@ -126998,9 +127554,6 @@ function isPromise(obj) {
     return obj instanceof Promise || (obj && typeof obj.then === 'function');
 }
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.join.js
-var es_array_join = __webpack_require__("a15b");
-
 // CONCATENATED MODULE: ./node_modules/glaway-bi-util/UUID.ts
 
 
@@ -127044,9 +127597,100 @@ var es_object_assign = __webpack_require__("cca6");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.promise.js
 var es_promise = __webpack_require__("e6cf");
 
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.regexp.exec.js
+var es_regexp_exec = __webpack_require__("ac1f");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.string.split.js
+var es_string_split = __webpack_require__("1276");
+
 // EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom-collections.for-each.js
 var web_dom_collections_for_each = __webpack_require__("159b");
 
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js
+
+
+
+
+
+
+
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.from.js
+var es_array_from = __webpack_require__("a630");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.slice.js
+var es_array_slice = __webpack_require__("fb6a");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.function.name.js
+var es_function_name = __webpack_require__("b0c0");
+
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js
+
+
+
+
+
+
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js
+
+
+
+
+function _slicedToArray(arr, i) {
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+}
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
 var es_array_concat = __webpack_require__("99af");
 
@@ -127363,14 +128007,11 @@ function gridGenerator(dashboard) {
     right: gridRight.value + gridRight.unit
   };
 }
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.filter.js
-var es_array_filter = __webpack_require__("4de4");
-
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.map.js
 var es_array_map = __webpack_require__("d81d");
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.function.name.js
-var es_function_name = __webpack_require__("b0c0");
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.filter.js
+var es_array_filter = __webpack_require__("4de4");
 
 // CONCATENATED MODULE: ./node_modules/glaway-bi-model/enums/WarnType.ts
 /**
@@ -127775,7 +128416,11 @@ var es_number_constructor = __webpack_require__("a9e3");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.number.to-fixed.js
 var es_number_to_fixed = __webpack_require__("b680");
 
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.object.keys.js
+var es_object_keys = __webpack_require__("b64b");
+
 // CONCATENATED MODULE: ./src/util/EChartDataUtil.ts
+
 
 
 
@@ -127807,6 +128452,16 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
         };
       });
       return fieldArray;
+    }
+  }, {
+    key: "getTestByFieldName",
+    value: function getTestByFieldName(index, fieldName, result) {
+      var dataresult = [];
+      dataresult.length = Object.keys(result).length;
+      dataresult[index] = {
+        value: result[0][fieldName]
+      };
+      return dataresult;
     }
     /**
      * 通过字段名，获取结果集内的数据数组
@@ -127926,6 +128581,7 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
   }, {
     key: "getPieSeriesLabel",
     value: function getPieSeriesLabel(sampleStyle) {
+      var formatterTextType = sampleStyle.label.isShowNumer ? "c}" : "d}%";
       return sampleStyle ? {
         margin: "25%",
         normal: {
@@ -127934,7 +128590,7 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
           color: sampleStyle.label.color,
           fontFamily: sampleStyle.label.fontFamily,
           fontSize: sampleStyle.label.fontSize,
-          formatter: "{b} - {d}%"
+          formatter: "{b} - {".concat(formatterTextType)
         }
       } : {
         margin: "25%",
@@ -127951,6 +128607,7 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
 
 
 // CONCATENATED MODULE: ./src/service/chart-handler/BarHandler.ts
+
 
 
 
@@ -128022,8 +128679,9 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
 
       var xAxis = []; // 维度是0
 
-      var dimensions = this.fieldNames.dimensions;
-      var measures = this.fieldNames.measures;
+      var _this$fieldNames = this.fieldNames,
+          dimensions = _this$fieldNames.dimensions,
+          measures = _this$fieldNames.measures;
 
       if (!dimensions.length) {
         //  维度不存在 x轴拿度量
@@ -128034,8 +128692,11 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
             interval: this.sampleStyle.axisLabel.interval || 0,
             rotate: this.sampleStyle.axisLabel.rotate || 0
           },
-          // data: measures as any
-          data: []
+          data: measures.map(function (measure) {
+            return {
+              value: measure
+            };
+          })
         };
         xAxis.unshift(axisXData);
       } // 遍历生成X轴
@@ -128076,38 +128737,54 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
     value: function getSeries() {
       var _this2 = this;
 
-      var series = []; // const dimensions = this.fieldNames.dimensions;
-      // if (!dimensions.length) {
-      //   this.fieldNames.measures.forEach(measureName => {
-      //     const seriesData = {
-      //       name: measureName,
-      //       type: "bar",
-      //       data: this.result.map((data: any) => {
-      //         const value = this.sampleStyle.decimals
-      //           ? Number(data[fieldName]).toFixed(this.sampleStyle.decimals.value)
-      //           : data[fieldName];
-      //         return {
-      //           value
-      //         };
-      //       }),
-      //       barWidth: EChartDataUtil.getBarWidth(this.sampleStyle),
-      //       label: EChartDataUtil.getBarSeriesLabel(this.sampleStyle)
-      //     };
-      //     series.push(seriesData);
-      //   });
-      //   return series;
-      // }
+      var series = [];
+      var _this$fieldNames2 = this.fieldNames,
+          dimensions = _this$fieldNames2.dimensions,
+          measures = _this$fieldNames2.measures;
 
-      this.fieldNames.measures.forEach(function (measureName) {
-        var seriesData = {
-          name: measureName,
-          type: "bar",
-          data: EChartDataUtil_EChartServiceUtil.getDataByFieldName(measureName, _this2.result, _this2.sampleStyle.decimals),
-          barWidth: EChartDataUtil_EChartServiceUtil.getBarWidth(_this2.sampleStyle),
-          label: EChartDataUtil_EChartServiceUtil.getBarSeriesLabel(_this2.sampleStyle)
-        };
-        series.push(seriesData);
-      });
+      if (!dimensions.length) {
+        this.fieldNames.measures.forEach(function (measureName, index) {
+          var data = [];
+          data.length = measures.length;
+          var seriesData = {
+            name: measureName,
+            type: "bar",
+            stack: "one",
+            data: EChartDataUtil_EChartServiceUtil.getTestByFieldName(index, measureName, _this2.result),
+            itemStyle: {
+              emphasis: {
+                barBorderRadius: _this2.sampleStyle.radius
+              },
+              normal: {
+                barBorderRadius: _this2.sampleStyle.radius
+              }
+            },
+            barWidth: EChartDataUtil_EChartServiceUtil.getBarWidth(_this2.sampleStyle),
+            label: EChartDataUtil_EChartServiceUtil.getBarSeriesLabel(_this2.sampleStyle)
+          };
+          series.push(seriesData);
+        });
+      } else {
+        this.fieldNames.measures.forEach(function (measureName) {
+          var seriesData = {
+            name: measureName,
+            type: "bar",
+            data: EChartDataUtil_EChartServiceUtil.getDataByFieldName(measureName, _this2.result, _this2.sampleStyle.decimals),
+            itemStyle: {
+              emphasis: {
+                barBorderRadius: _this2.sampleStyle.radius
+              },
+              normal: {
+                barBorderRadius: _this2.sampleStyle.radius
+              }
+            },
+            barWidth: EChartDataUtil_EChartServiceUtil.getBarWidth(_this2.sampleStyle),
+            label: EChartDataUtil_EChartServiceUtil.getBarSeriesLabel(_this2.sampleStyle)
+          };
+          series.push(seriesData);
+        });
+      }
+
       return series;
     }
     /**
@@ -129976,7 +130653,8 @@ var templates = {
           position: "top",
           color: "#000",
           fontFamily: "Microsoft YaHei",
-          fontSize: 12
+          fontSize: 12,
+          isShowNumer: false
         },
         axisLabel: {
           interval: 0,
@@ -129986,6 +130664,7 @@ var templates = {
           value: 0,
           unit: ""
         },
+        radius: 0,
         grid: {
           // 初始值需要与全局配置保持一致
           top: {
@@ -130265,7 +130944,8 @@ var Line_templates = {
           position: "top",
           color: "#000",
           fontSize: 12,
-          fontFamily: "Microsoft YaHei"
+          fontFamily: "Microsoft YaHei",
+          isShowNumer: false
         },
         grid: {
           // 初始值需要与全局配置保持一致
@@ -130349,7 +131029,8 @@ var Pie_templates = {
           position: "top",
           color: "#000",
           fontSize: 12,
-          fontFamily: "Microsoft YaHei"
+          fontFamily: "Microsoft YaHei",
+          isShowNumer: false
         },
         centerConfig: {
           xAxias: "50%",
@@ -131067,6 +131748,8 @@ var generalDataTemplate = {
     where: [],
     order: [],
     isReact: false,
+    fromTable: null,
+    viewName: "",
     filter: {
       id: FILTER_DEFAULT_VALUE,
       data: []
@@ -131228,6 +131911,9 @@ var DefaultTemplate_DefaultTemplate = /*#__PURE__*/function () {
 
 DefaultTemplate_DefaultTemplate.configCache = new Map();
 // CONCATENATED MODULE: ./src/service/EChartsService.ts
+
+
+
 
 
 
@@ -131423,10 +132109,17 @@ function EChartsService_renderChart(chartInstace, thisDashboard, result, selectI
     var chartType = thisDashboard.visualData.type,
         defaultConfig = ObjectUtil_ObjectUtil.copy(DefaultTemplate_DefaultTemplate.getDefaultConfig(chartType));
     thisDashboard = ObjectUtil_ObjectUtil.merge(defaultConfig, thisDashboard);
-    var echartsOption = EChartsService_EChartsService.mergEChartstyle(thisDashboard, result); // 保持选中状态
+    var echartsOption = EChartsService_EChartsService.mergEChartstyle(thisDashboard, result);
 
-    selectIndex ? handleOpacity(chartInstace, {
-      dataIndex: selectIndex
+    var _selectIndex$split = selectIndex.split(","),
+        _selectIndex$split2 = _slicedToArray(_selectIndex$split, 2),
+        dataIndex = _selectIndex$split2[0],
+        seriesIndex = _selectIndex$split2[1]; // 保持选中状态
+
+
+    dataIndex ? handleOpacity(chartInstace, {
+      dataIndex: dataIndex,
+      seriesIndex: seriesIndex
     }, echartsOption) : EChartsService_resetOpacity(chartInstace, echartsOption);
     return Promise.resolve(thisDashboard);
   } catch (err) {
@@ -131446,11 +132139,17 @@ function EChartsService_resetOpacity(chartInstance, echartsOption) {
   var option = echartsOption || ObjectUtil_ObjectUtil.copy(chartInstance.getOption());
   if (!option) return;
   (_option$series = option.series) === null || _option$series === void 0 ? void 0 : _option$series.forEach(function (serieData) {
-    serieData.itemStyle = Object.assign({}, serieData.itemStyle, {
-      opacity: "1"
-    });
-    serieData.data.forEach(function (itemData) {
-      delete itemData.itemStyle;
+    serieData.itemStyle = ObjectUtil_ObjectUtil.merge(serieData.itemStyle || {}, {
+      opacity: "1" // normal: {
+      //   color: new echarts.graphic.LinearGradient(
+      //     0, 1, 0, 0,
+      //     [
+      //         {offset: 0, color: '#000'},
+      //         {offset: 1, color: '#37BBF8'}
+      //     ]
+      //   )
+      // }
+
     });
   });
   EChartsUtil_EChartsUtil.setOption(chartInstance, option);
@@ -131463,44 +132162,46 @@ function EChartsService_resetOpacity(chartInstance, echartsOption) {
  * @param echartsOption 图表配置
  */
 
-function handleOpacity(chartInstance, // 约束 必须有 dataIndex
+function handleOpacity(chartInstance, // 约束 必须有 dataIndex, seriesIndex
 echartsParams, echartsOption) {
-  var _option$series2;
+  var _seriesData$data$resu, _seriesData$data$resu2;
 
   // 1, 0.4 可以后期选择抛出去，作为参数传递
-  var selectedStyle = {
+  var itemOpacity = {
     opacity: "1"
-  };
-  var unSelectStyle = {
-    opacity: "0.4"
   };
   var option = echartsOption || ObjectUtil_ObjectUtil.copy(chartInstance.getOption());
   var result = {
     // 是否重置
     reset: false,
     // 选中的数据小标
-    dataIndex: "".concat(echartsParams.dataIndex) || null
+    dataIndex: "".concat(echartsParams.dataIndex),
+    seriesIndex: "".concat(echartsParams.seriesIndex)
   };
-  (_option$series2 = option.series) === null || _option$series2 === void 0 ? void 0 : _option$series2.forEach(function (serieData) {
-    var _serieData$data$echar;
+  var series = option.series;
+  var seriesData = series[result.seriesIndex];
 
-    serieData.itemStyle = Object.assign({}, serieData.itemStyle, unSelectStyle);
-    serieData.data.forEach(function (itemData, index) {
-      if (index !== echartsParams.dataIndex) {
-        delete itemData.itemStyle;
-      }
+  if ((_seriesData$data$resu = seriesData.data[result.dataIndex]) === null || _seriesData$data$resu === void 0 ? void 0 : (_seriesData$data$resu2 = _seriesData$data$resu.itemStyle) === null || _seriesData$data$resu2 === void 0 ? void 0 : _seriesData$data$resu2.opacity) {
+    delete seriesData.data[result.dataIndex].itemStyle.opacity;
+    result.reset = true;
+    result.dataIndex = "";
+    result.seriesIndex = "";
+  } else {
+    series === null || series === void 0 ? void 0 : series.forEach(function (serieData) {
+      serieData.data.forEach(function (serieItem, index) {
+        if (serieItem === null || serieItem === void 0 ? void 0 : serieItem.itemStyle) {
+          delete serieItem.itemStyle.opacity;
+        }
+      });
     });
+    seriesData.data[result.dataIndex].itemStyle = {
+      opacity: "1"
+    };
+    itemOpacity.opacity = "0.4";
+  }
 
-    if ((_serieData$data$echar = serieData.data[echartsParams.dataIndex]) === null || _serieData$data$echar === void 0 ? void 0 : _serieData$data$echar.itemStyle) {
-      // 取消了过滤条件
-      delete serieData.data[echartsParams.dataIndex].itemStyle;
-      serieData.itemStyle = Object.assign({}, serieData.itemStyle, selectedStyle);
-      result.reset = true;
-      result.dataIndex = null;
-    } else if (serieData.data[echartsParams.dataIndex]) {
-      serieData.data[echartsParams.dataIndex].itemStyle = Object.assign({}, serieData.itemStyle, selectedStyle);
-    } else {// 其他过滤操作执行，不做处理
-    }
+  series === null || series === void 0 ? void 0 : series.forEach(function (serieData) {
+    serieData.itemStyle = Object.assign({}, serieData.itemStyle || {}, itemOpacity);
   });
   EChartsUtil_EChartsUtil.setOption(chartInstance, option);
   return result;
@@ -131522,6 +132223,7 @@ function renderChartByJSON(chartInstance, jsonString) {
   });
 }
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--14-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/ts-loader??ref--14-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=script&lang=ts&
+
 
 
 
@@ -131555,7 +132257,8 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
         // 点击后 实现select效果
         var _handleOpacity = handleOpacity(chartInstance, echartsParams),
             reset = _handleOpacity.reset,
-            dataIndex = _handleOpacity.dataIndex; // 判断是否需要重置
+            dataIndex = _handleOpacity.dataIndex,
+            seriesIndex = _handleOpacity.seriesIndex; // 判断是否需要重置
 
 
         if (reset) {
@@ -131565,7 +132268,7 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
         }
 
         var reactWhere = {
-          selectedIndex: dataIndex,
+          selectedIndex: [dataIndex, seriesIndex].join(","),
           oldDashboardId: _this.reactWhere.dashboardId,
           rotationTask: _this.thisDashboard.tasks,
           dashboardId: _this.thisDashboard.id,
@@ -131573,7 +132276,7 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
           where: {
             id: UUID_UUID.generate(),
             tableAlias: _this.thisAnalysis.measures[0].tableAlias,
-            columnName: _this.thisAnalysis.measures[0].columnName,
+            columnName: echartsParams.seriesName,
             w: [{
               type: 1,
               value: echartsParams.data.value
@@ -131715,14 +132418,11 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
         });
       } else {
         result = result || this.thisAnalysisData;
-        var selectedIndex = null;
+        var selectedIndex = "";
 
         if (this.thisDashboard.id === this.reactWhere.dashboardId) {
           selectedIndex = this.reactWhere.selectedIndex;
-        } // this.thisDashboard.id === this.reactWhere.dashboardId
-        //   ? this.reactWhere.selectedIndex
-        //   : null;
-
+        }
 
         EChartsService_renderChart(this.$data.echartsInstance, this.thisDashboard, result, selectedIndex).then(function (result) {
           _this2.thisDashboard = result;
@@ -131944,6 +132644,59 @@ if (typeof window !== "undefined" && window.Vue) {
 
 /* harmony default export */ var entry_lib = __webpack_exports__["default"] = (package_0);
 
+
+
+/***/ }),
+
+/***/ "fb6a":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $ = __webpack_require__("23e7");
+var isObject = __webpack_require__("861d");
+var isArray = __webpack_require__("e8b5");
+var toAbsoluteIndex = __webpack_require__("23cb");
+var toLength = __webpack_require__("50c4");
+var toIndexedObject = __webpack_require__("fc6a");
+var createProperty = __webpack_require__("8418");
+var arrayMethodHasSpeciesSupport = __webpack_require__("1dde");
+var wellKnownSymbol = __webpack_require__("b622");
+
+var SPECIES = wellKnownSymbol('species');
+var nativeSlice = [].slice;
+var max = Math.max;
+
+// `Array.prototype.slice` method
+// https://tc39.github.io/ecma262/#sec-array.prototype.slice
+// fallback for not array-like ES3 strings and DOM objects
+$({ target: 'Array', proto: true, forced: !arrayMethodHasSpeciesSupport('slice') }, {
+  slice: function slice(start, end) {
+    var O = toIndexedObject(this);
+    var length = toLength(O.length);
+    var k = toAbsoluteIndex(start, length);
+    var fin = toAbsoluteIndex(end === undefined ? length : end, length);
+    // inline `ArraySpeciesCreate` for usage native `Array#slice` where it's possible
+    var Constructor, result, n;
+    if (isArray(O)) {
+      Constructor = O.constructor;
+      // cross-realm fallback
+      if (typeof Constructor == 'function' && (Constructor === Array || isArray(Constructor.prototype))) {
+        Constructor = undefined;
+      } else if (isObject(Constructor)) {
+        Constructor = Constructor[SPECIES];
+        if (Constructor === null) Constructor = undefined;
+      }
+      if (Constructor === Array || Constructor === undefined) {
+        return nativeSlice.call(O, k, fin);
+      }
+    }
+    result = new (Constructor === undefined ? Array : Constructor)(max(fin - k, 0));
+    for (n = 0; k < fin; k++, n++) if (k in O) createProperty(result, n, O[k]);
+    result.length = n;
+    return result;
+  }
+});
 
 
 /***/ }),
