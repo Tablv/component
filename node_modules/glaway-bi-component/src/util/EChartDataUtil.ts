@@ -24,6 +24,8 @@ export default class EChartServiceUtil {
         ? Number(data[fieldName]).toFixed(decimals.value)
         : data[fieldName];
       return {
+        name: fieldName,
+        originalValue: data[fieldName],
         value
       };
     });
@@ -45,7 +47,11 @@ export default class EChartServiceUtil {
       ? Number(result[0][fieldName]).toFixed(decimals.value)
       : result[0][fieldName];
 
-    (<any>dataresult)[index] = { value };
+    (<any>dataresult)[index] = {
+      name: fieldName,
+      originalValue: result[0][fieldName],
+      value
+    };
 
     return dataresult;
   }
@@ -67,6 +73,8 @@ export default class EChartServiceUtil {
         ((item[fieldName] / item["sum"]) * 100).toFixed(dec)
       );
       return {
+        name: fieldName,
+        originalValue: item[fieldName],
         value
       };
     });
@@ -88,8 +96,9 @@ export default class EChartServiceUtil {
     return result.map(data => {
       const dataObject: echarts.EChartOption.SeriesPie.DataObject = {
         name: data[dimensionName] as string,
+        originalValue: data[measureName] as number,
         value: data[measureName] as number
-      };
+      } as any;
 
       return dataObject;
     });
@@ -108,8 +117,9 @@ export default class EChartServiceUtil {
     return measureNameList.map(measureName => {
       const dataObject: echarts.EChartOption.SeriesPie.DataObject = {
         name: measureName as string,
-        value: EChartServiceUtil.getReduceSum(result, measureName)
-      };
+        value: EChartServiceUtil.getReduceSum(result, measureName),
+        originalValue: EChartServiceUtil.getReduceSum(result, measureName)
+      } as any;
       return dataObject;
     });
   }
@@ -140,8 +150,9 @@ export default class EChartServiceUtil {
   ): echarts.EChartOption.SeriesRadar.DataObject {
     return {
       name: measureName,
+      originalValue: result.map(data => data[measureName] as number),
       value: result.map(data => data[measureName] as number)
-    };
+    } as any;
   }
 
   /**

@@ -60,19 +60,20 @@ export default class GuageHandler implements ChartHandler {
     const actual = EChartDataUtil.getReduceSum(this.result, measures);
     // 对比值 = 维度 唯一
     const dimensions = this.fieldNames.dimensions[0];
-    const comparison = EChartDataUtil.getReduceSum(this.result, dimensions);
-
+    const comparison =
+      EChartDataUtil.getReduceSum(this.result, dimensions) || actual || 100;
     const seriesData = {
       type: "gauge",
       detail: {
         formatter: (value: number) => {
           const result = value - comparison;
           return [
-            `{measuresStyle|${value}\n}`,
-            `{percentageStyle|${result}(${(
-              (result / (comparison || 1)) *
-              100
-            ).toFixed(2)}%)}`
+            `{measuresStyle|${value}(${((value / comparison) * 100).toFixed(
+              2
+            )}%)\n}`,
+            `{percentageStyle|${result}(${((result / comparison) * 100).toFixed(
+              2
+            )}%)}`
           ].join("");
         },
         rich: {
@@ -92,12 +93,26 @@ export default class GuageHandler implements ChartHandler {
           width: this.sampleStyle.radiusConfig.axisLineWidth
         }
       },
+      axisLabel: {
+        show: this.sampleStyle.label.show,
+        color: this.sampleStyle.label.color,
+        fontFamily: this.sampleStyle.label.fontFamily,
+        fontSize: this.sampleStyle.label.fontSize,
+        formatter: (value: number) => {
+          if (!this.sampleStyle.label.isShowNumer) {
+            return ((value / comparison) * 100).toFixed(2) + "%";
+          } else {
+            return value;
+          }
+        }
+      },
       radius: this.sampleStyle.radiusConfig.outside,
       center: Object.values(this.sampleStyle.centerConfig),
       max: comparison || 100,
       data: [
         {
           name: measures,
+          originalValue: actual,
           value: actual
         }
       ]

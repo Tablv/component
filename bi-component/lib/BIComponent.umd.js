@@ -126557,15 +126557,18 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"24bd3354-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=88e28c82&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"24bd3354-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=2fa54f79&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"chart-wrapper"},[_c('div',{ref:"echartsContainer",staticClass:"chart-container"})])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=88e28c82&
+// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=2fa54f79&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.join.js
 var es_array_join = __webpack_require__("a15b");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.function.name.js
+var es_function_name = __webpack_require__("b0c0");
 
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/classCallCheck.js
 function _classCallCheck(instance, Constructor) {
@@ -127650,9 +127653,6 @@ var es_array_from = __webpack_require__("a630");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.slice.js
 var es_array_slice = __webpack_require__("fb6a");
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.function.name.js
-var es_function_name = __webpack_require__("b0c0");
-
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js
 function _arrayLikeToArray(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
@@ -128455,6 +128455,8 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
       fieldArray = result.map(function (data) {
         var value = decimals ? Number(data[fieldName]).toFixed(decimals.value) : data[fieldName];
         return {
+          name: fieldName,
+          originalValue: data[fieldName],
           value: value
         };
       });
@@ -128467,6 +128469,8 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
       dataresult.length = Object.keys(result).length;
       var value = decimals ? Number(result[0][fieldName]).toFixed(decimals.value) : result[0][fieldName];
       dataresult[index] = {
+        name: fieldName,
+        originalValue: result[0][fieldName],
         value: value
       };
       return dataresult;
@@ -128485,6 +128489,8 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
         var dec = (decimals === null || decimals === void 0 ? void 0 : decimals.value) || 0;
         var value = Number((item[fieldName] / item["sum"] * 100).toFixed(dec));
         return {
+          name: fieldName,
+          originalValue: item[fieldName],
           value: value
         };
       });
@@ -128504,6 +128510,7 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
       return result.map(function (data) {
         var dataObject = {
           name: data[dimensionName],
+          originalValue: data[measureName],
           value: data[measureName]
         };
         return dataObject;
@@ -128522,7 +128529,8 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
       return measureNameList.map(function (measureName) {
         var dataObject = {
           name: measureName,
-          value: EChartServiceUtil.getReduceSum(result, measureName)
+          value: EChartServiceUtil.getReduceSum(result, measureName),
+          originalValue: EChartServiceUtil.getReduceSum(result, measureName)
         };
         return dataObject;
       });
@@ -128553,6 +128561,9 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
     value: function getRadarDataByAxisName(measureName, result) {
       return {
         name: measureName,
+        originalValue: result.map(function (data) {
+          return data[measureName];
+        }),
         value: result.map(function (data) {
           return data[measureName];
         })
@@ -128691,29 +128702,37 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
       var _this$fieldNames = this.fieldNames,
           dimensions = _this$fieldNames.dimensions,
           measures = _this$fieldNames.measures;
-      var axisXData = {
-        name: "",
-        type: "category",
-        axisLabel: {
-          interval: this.sampleStyle.axisLabel.interval || 0,
-          rotate: this.sampleStyle.axisLabel.rotate || 0
-        }
-      };
 
       if (!dimensions.length) {
-        //  维度不存在 x轴拿度量
-        axisXData.data = measures.map(function (measure) {
-          return {
-            value: measure
-          };
-        });
-        xAxis.push(axisXData);
+        var axisXData = {
+          name: "",
+          type: "category",
+          axisLabel: {
+            interval: this.sampleStyle.axisLabel.interval || 0,
+            rotate: this.sampleStyle.axisLabel.rotate || 0
+          },
+          data: measures.map(function (measure) {
+            return {
+              value: measure
+            };
+          })
+        }; //  维度不存在 x轴拿度量
+
+        xAxis.unshift(axisXData);
       } // 遍历生成X轴
 
 
       dimensions.forEach(function (dimensionName) {
-        axisXData.data = EChartDataUtil_EChartServiceUtil.getDataByFieldName(dimensionName, _this.result);
-        xAxis.push(axisXData);
+        var axisXData = {
+          name: "",
+          type: "category",
+          axisLabel: {
+            interval: _this.sampleStyle.axisLabel.interval || 0,
+            rotate: _this.sampleStyle.axisLabel.rotate || 0
+          },
+          data: EChartDataUtil_EChartServiceUtil.getDataByFieldName(dimensionName, _this.result)
+        };
+        xAxis.unshift(axisXData);
       });
       return xAxis;
     }
@@ -129735,6 +129754,8 @@ var GuageHandler_GuageHandler = /*#__PURE__*/function () {
   }, {
     key: "getSeries",
     value: function getSeries() {
+      var _this = this;
+
       var series = []; // 指示器这里 实际值 = 度量
       // 实际值必须唯一，
 
@@ -129742,13 +129763,13 @@ var GuageHandler_GuageHandler = /*#__PURE__*/function () {
       var actual = EChartDataUtil_EChartServiceUtil.getReduceSum(this.result, measures); // 对比值 = 维度 唯一
 
       var dimensions = this.fieldNames.dimensions[0];
-      var comparison = EChartDataUtil_EChartServiceUtil.getReduceSum(this.result, dimensions);
+      var comparison = EChartDataUtil_EChartServiceUtil.getReduceSum(this.result, dimensions) || actual || 100;
       var seriesData = {
         type: "gauge",
         detail: {
           formatter: function formatter(value) {
             var result = value - comparison;
-            return ["{measuresStyle|".concat(value, "\n}"), "{percentageStyle|".concat(result, "(").concat((result / (comparison || 1) * 100).toFixed(2), "%)}")].join("");
+            return ["{measuresStyle|".concat(value, "(").concat((value / comparison * 100).toFixed(2), "%)\n}"), "{percentageStyle|".concat(result, "(").concat((result / comparison * 100).toFixed(2), "%)}")].join("");
           },
           rich: {
             measuresStyle: {
@@ -129767,11 +129788,25 @@ var GuageHandler_GuageHandler = /*#__PURE__*/function () {
             width: this.sampleStyle.radiusConfig.axisLineWidth
           }
         },
+        axisLabel: {
+          show: this.sampleStyle.label.show,
+          color: this.sampleStyle.label.color,
+          fontFamily: this.sampleStyle.label.fontFamily,
+          fontSize: this.sampleStyle.label.fontSize,
+          formatter: function formatter(value) {
+            if (!_this.sampleStyle.label.isShowNumer) {
+              return (value / comparison * 100).toFixed(2) + "%";
+            } else {
+              return value;
+            }
+          }
+        },
         radius: this.sampleStyle.radiusConfig.outside,
         center: Object.values(this.sampleStyle.centerConfig),
         max: comparison || 100,
         data: [{
           name: measures,
+          originalValue: actual,
           value: actual
         }]
       };
@@ -129825,7 +129860,67 @@ var TargetPieHandler_TargetPieHandler = /*#__PURE__*/function (_PieHandler) {
       var style = get_get(_getPrototypeOf(TargetPieHandler.prototype), "getStyle", this).call(this);
 
       style.series = this.getSeries();
+      style.angleAxis = this.getAngleAxis();
+      style.radiusAxis = this.getRadiusAxis();
+      style.polar = this.getPolar();
       return style;
+    }
+  }, {
+    key: "getAngleAxis",
+    value: function getAngleAxis() {
+      var dimensions = this.fieldNames.dimensions[0];
+      var measureName = this.fieldNames.measures[0];
+      var maxName = dimensions || measureName;
+      return {
+        max: this.result[0][maxName] || 100,
+        show: false
+      };
+    }
+  }, {
+    key: "getRadiusAxis",
+    value: function getRadiusAxis() {
+      var dimensions = this.fieldNames.dimensions[0];
+      var measureName = this.fieldNames.measures[0];
+      var measValue = this.result[0][measureName] || 0;
+      var dimevalue = this.result[0][dimensions] || measValue || 100;
+      var result = "".concat(Number(measValue) / Number(dimevalue) * 100, "%");
+
+      if (this.sampleStyle.label.isShowNumer) {
+        result = " ".concat(measValue, " / ").concat(dimevalue, " ");
+      }
+
+      return {
+        type: "category",
+        show: this.sampleStyle.label.show,
+        name: result,
+        nameLocation: "start",
+        nameTextStyle: {
+          align: "center",
+          verticalAlign: "middle",
+          color: this.sampleStyle.label.color,
+          fontFamily: this.sampleStyle.label.fontFamily,
+          fontSize: this.sampleStyle.label.fontSize
+        },
+        axisLabel: {
+          show: false
+        },
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        }
+      };
+    }
+  }, {
+    key: "getPolar",
+    value: function getPolar() {
+      return {
+        radius: Object.values(this.sampleStyle.radiusConfig).map(function (item) {
+          return item + "%";
+        }),
+        center: Object.values(this.sampleStyle.centerConfig)
+      };
     }
     /**
      * 获取Series数据
@@ -129834,36 +129929,21 @@ var TargetPieHandler_TargetPieHandler = /*#__PURE__*/function (_PieHandler) {
   }, {
     key: "getSeries",
     value: function getSeries() {
-      var _this = this;
-
       var series = [];
-      this.fieldNames.measures.forEach(function (measureName) {
-        var seriesData = {
-          type: "pie",
-          hoverAnimation: false,
-          avoidLabelOverlap: false,
-          clockwise: false,
-          label: {
-            show: true,
-            position: "center",
-            formatter: "{b}: {d}%"
-          },
-          labelLine: {
-            show: false
-          },
-          radius: Object.values(_this.sampleStyle.radiusConfig).map(function (item) {
-            return item + "%";
-          }),
-          center: Object.values(_this.sampleStyle.centerConfig),
-          data: _this.result.map(function (item) {
-            return {
-              name: measureName,
-              value: item[measureName]
-            };
-          })
-        };
-        series.push(seriesData);
-      });
+      var measureName = this.fieldNames.measures[0];
+      var seriesData = {
+        type: "bar",
+        roundCap: true,
+        barWidth: 10,
+        showBackground: true,
+        coordinateSystem: "polar",
+        name: measureName,
+        data: [{
+          name: measureName,
+          value: this.result[0][measureName]
+        }]
+      };
+      series.push(seriesData);
       return series;
     }
   }]);
@@ -132232,6 +132312,7 @@ function renderChartByJSON(chartInstance, jsonString) {
 
 
 
+
 var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function (_Vue) {
   _inherits(ChartComponent, _Vue);
 
@@ -132252,8 +132333,7 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
        * 联动
        */
       react: function react(chartInstance, echartsParams) {
-        debugger; // 点击后 实现select效果
-
+        // 点击后 实现select效果
         var _handleOpacity = handleOpacity(chartInstance, echartsParams),
             reset = _handleOpacity.reset,
             dataIndex = _handleOpacity.dataIndex,
@@ -132266,7 +132346,6 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
           return;
         }
 
-        debugger;
         var reactWhere = {
           selectedIndex: [dataIndex, seriesIndex].join(","),
           oldDashboardId: _this.reactWhere.dashboardId,
@@ -132276,10 +132355,10 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
           where: {
             id: UUID_UUID.generate(),
             tableAlias: _this.thisAnalysis.measures[0].tableAlias,
-            columnName: echartsParams.seriesName,
+            columnName: echartsParams.data.name,
             w: [{
               type: 1,
-              value: echartsParams.data.value
+              value: echartsParams.data.originalValue
             }]
           }
         };

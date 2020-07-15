@@ -240,11 +240,11 @@ export default class ChartComponent extends Vue implements ChartUIService {
         where: {
           id: UUID.generate(),
           tableAlias: this.thisAnalysis.measures[0].tableAlias,
-          columnName: echartsParams.seriesName,
+          columnName: echartsParams.data.name,
           w: [
             {
               type: 1,
-              value: echartsParams.data.value
+              value: echartsParams.data.originalValue
             }
           ]
         }

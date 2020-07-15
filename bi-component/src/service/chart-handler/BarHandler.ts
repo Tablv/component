@@ -71,27 +71,35 @@ export default class BarHandler implements ChartHandler {
     let xAxis: Array<echarts.EChartOption.XAxis> = [];
     // 维度是0
     const { dimensions, measures } = this.fieldNames;
-    const axisXData: echarts.EChartOption.XAxis = {
-      name: "",
-      type: "category",
-      axisLabel: {
-        interval: this.sampleStyle.axisLabel.interval || 0,
-        rotate: this.sampleStyle.axisLabel.rotate || 0
-      }
-    };
 
     if (!dimensions.length) {
+      const axisXData: echarts.EChartOption.XAxis = {
+        name: "",
+        type: "category",
+        axisLabel: {
+          interval: this.sampleStyle.axisLabel.interval || 0,
+          rotate: this.sampleStyle.axisLabel.rotate || 0
+        },
+        data: measures.map(measure => ({ value: measure })) as any
+      };
       //  维度不存在 x轴拿度量
-      axisXData.data = measures.map(measure => ({ value: measure })) as any;
-      xAxis.push(axisXData);
+      xAxis.unshift(axisXData);
     }
     // 遍历生成X轴
     dimensions.forEach(dimensionName => {
-      axisXData.data = EChartDataUtil.getDataByFieldName(
-        dimensionName,
-        this.result
-      ) as any;
-      xAxis.push(axisXData);
+      const axisXData: echarts.EChartOption.XAxis = {
+        name: "",
+        type: "category",
+        axisLabel: {
+          interval: this.sampleStyle.axisLabel.interval || 0,
+          rotate: this.sampleStyle.axisLabel.rotate || 0
+        },
+        data: EChartDataUtil.getDataByFieldName(
+          dimensionName,
+          this.result
+        ) as any
+      };
+      xAxis.unshift(axisXData);
     });
 
     return xAxis;
