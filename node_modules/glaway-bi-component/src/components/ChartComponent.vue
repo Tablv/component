@@ -220,6 +220,7 @@ export default class ChartComponent extends Vue implements ChartUIService {
      * 联动
      */
     react: (chartInstance: any, echartsParams: any) => {
+      debugger
       // 点击后 实现select效果
       const { reset, dataIndex, seriesIndex } = handleOpacity(
         chartInstance,
@@ -231,7 +232,7 @@ export default class ChartComponent extends Vue implements ChartUIService {
         this.resetReact();
         return;
       }
-
+      debugger
       const reactWhere: ReactWhere = {
         selectedIndex: [dataIndex, seriesIndex].join(","),
         oldDashboardId: this.reactWhere.dashboardId,

@@ -301,7 +301,7 @@ export function handleOpacity(
     result.reset = true;
     result.dataIndex = "";
     result.seriesIndex = "";
-  } else {
+  } else if (seriesData.data[result.dataIndex]) {
     series?.forEach((serieData: any) => {
       serieData.data.forEach((serieItem: any, index: number) => {
         if (serieItem?.itemStyle) {
@@ -311,13 +311,12 @@ export function handleOpacity(
     });
     seriesData.data[result.dataIndex].itemStyle = { opacity: "1" };
     itemOpacity.opacity = "0.4";
+  } else {
+    itemOpacity.opacity = "1";
   }
 
   series?.forEach((serieData: any) => {
-    serieData.itemStyle = Object.assign(
-      serieData.itemStyle || {},
-      itemOpacity
-    );
+    serieData.itemStyle = Object.assign(serieData.itemStyle || {}, itemOpacity);
   });
 
   EChartsUtil.setOption(chartInstance, option);

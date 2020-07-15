@@ -127902,7 +127902,14 @@ var EChartsUtil_EChartsUtil = /*#__PURE__*/function () {
      * @param echartContainer DOM 容器
      */
     value: function init(echartContainer) {
-      return echarts_default.a.init(echartContainer);
+      var chartInterface = echarts_default.a.init(echartContainer); // chartInterface.on('dataZoom', function (params) {
+      //   if (!params.dataZoomId) {
+      //     return false;
+      //   }
+      //   console.log(params)
+      // })
+
+      return chartInterface;
     }
     /**
      * 销毁 ECharts 实例
@@ -128446,11 +128453,12 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
     }
   }, {
     key: "getTestByFieldName",
-    value: function getTestByFieldName(index, fieldName, result) {
+    value: function getTestByFieldName(index, fieldName, result, decimals) {
       var dataresult = [];
       dataresult.length = Object.keys(result).length;
+      var value = decimals ? Number(result[0][fieldName]).toFixed(decimals.value) : result[0][fieldName];
       dataresult[index] = {
-        value: result[0][fieldName]
+        value: value
       };
       return dataresult;
     }
@@ -128743,12 +128751,7 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
             stack: "one",
             data: EChartDataUtil_EChartServiceUtil.getTestByFieldName(index, measureName, _this2.result),
             itemStyle: {
-              emphasis: {
-                barBorderRadius: _this2.sampleStyle.radius
-              },
-              normal: {
-                barBorderRadius: _this2.sampleStyle.radius
-              }
+              barBorderRadius: _this2.sampleStyle.radius
             },
             barWidth: EChartDataUtil_EChartServiceUtil.getBarWidth(_this2.sampleStyle),
             label: EChartDataUtil_EChartServiceUtil.getBarSeriesLabel(_this2.sampleStyle)
@@ -128762,12 +128765,7 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
             type: "bar",
             data: EChartDataUtil_EChartServiceUtil.getDataByFieldName(measureName, _this2.result, _this2.sampleStyle.decimals),
             itemStyle: {
-              emphasis: {
-                barBorderRadius: _this2.sampleStyle.radius
-              },
-              normal: {
-                barBorderRadius: _this2.sampleStyle.radius
-              }
+              barBorderRadius: _this2.sampleStyle.radius
             },
             barWidth: EChartDataUtil_EChartServiceUtil.getBarWidth(_this2.sampleStyle),
             label: EChartDataUtil_EChartServiceUtil.getBarSeriesLabel(_this2.sampleStyle)
@@ -132131,16 +132129,7 @@ function EChartsService_resetOpacity(chartInstance, echartsOption) {
   if (!option) return;
   (_option$series = option.series) === null || _option$series === void 0 ? void 0 : _option$series.forEach(function (serieData) {
     serieData.itemStyle = ObjectUtil_ObjectUtil.merge(serieData.itemStyle || {}, {
-      opacity: "1" // normal: {
-      //   color: new echarts.graphic.LinearGradient(
-      //     0, 1, 0, 0,
-      //     [
-      //         {offset: 0, color: '#000'},
-      //         {offset: 1, color: '#37BBF8'}
-      //     ]
-      //   )
-      // }
-
+      opacity: "1"
     });
   });
   EChartsUtil_EChartsUtil.setOption(chartInstance, option);
@@ -132192,7 +132181,7 @@ echartsParams, echartsOption) {
   }
 
   series === null || series === void 0 ? void 0 : series.forEach(function (serieData) {
-    serieData.itemStyle = Object.assign({}, serieData.itemStyle || {}, itemOpacity);
+    serieData.itemStyle = Object.assign(serieData.itemStyle || {}, itemOpacity);
   });
   EChartsUtil_EChartsUtil.setOption(chartInstance, option);
   return result;
