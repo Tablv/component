@@ -10,6 +10,7 @@ export interface BarChartOption {
     show: boolean;
     position: string; // 'top' 'left' 'right' 'bottom' 'inside'
     isShowNumer: boolean;
+    hidePosition?: boolean;
     color: string;
     fontSize: number;
     fontFamily: string;
@@ -58,9 +59,14 @@ export interface LineChartOption {
     value: number;
     unit: string | number;
   };
+  axisLabel: {
+    interval: 0;
+    rotate: 0;
+  };
   label: {
     show: boolean;
     isShowNumer: boolean;
+    hidePosition?: boolean;
     position: string;
     color: string;
     fontSize: number;
@@ -75,6 +81,7 @@ export interface PieChartOption {
   label: {
     show: boolean;
     isShowNumer: boolean;
+    hidePosition?: boolean;
     position: string;
     color: string;
     fontSize: number;
@@ -89,6 +96,10 @@ export interface PieChartOption {
     outside: string | number;
     axisLineWidth: string | number;
   }
+  decimals: {
+    value: number;
+    unit: string | number;
+  };
 }
 
 /**

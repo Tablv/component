@@ -95,6 +95,7 @@ export default class BarHandler implements ChartHandler {
           rotate: this.sampleStyle.axisLabel.rotate || 0
         },
         data: EChartDataUtil.getDataByFieldName(
+          dimensions,
           dimensionName,
           this.result
         ) as any
@@ -148,10 +149,12 @@ export default class BarHandler implements ChartHandler {
     seriesData: echarts.EChartOption.Series,
     measureName: string
   ): echarts.EChartOption.Series {
+    const dimensions = this.fieldNames.dimensions;
     const andSeriesData = {
       name: measureName,
       type: "bar",
       data: EChartDataUtil.getDataByFieldName(
+        dimensions,
         measureName,
         this.result,
         this.sampleStyle.decimals

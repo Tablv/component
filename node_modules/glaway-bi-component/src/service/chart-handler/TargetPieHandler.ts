@@ -13,7 +13,11 @@ export default class TargetPieHandler extends PieHandler {
 
     style.radiusAxis = this.getRadiusAxis();
 
+    style.legend = this.getLegend();
+
     style.polar = this.getPolar();
+
+    style.tooltip = this.getTooltips();
 
     return style;
   }
@@ -33,9 +37,13 @@ export default class TargetPieHandler extends PieHandler {
     const measureName = this.fieldNames.measures[0];
     const measValue = this.result[0][measureName] || 0;
     const dimevalue = this.result[0][dimensions] || measValue || 100;
-    let result = `${(Number(measValue) / Number(dimevalue)) * 100}%`;
+    let result = `${((Number(measValue) / Number(dimevalue)) * 100).toFixed(
+      this.sampleStyle.decimals.value
+    )}%`;
     if (this.sampleStyle.label.isShowNumer) {
-      result = ` ${measValue} / ${dimevalue} `;
+      result = ` ${Number(measValue).toFixed(
+        this.sampleStyle.decimals.value
+      )} / ${Number(dimevalue).toFixed(this.sampleStyle.decimals.value)} `;
     }
     return {
       type: "category",
@@ -79,7 +87,7 @@ export default class TargetPieHandler extends PieHandler {
     const seriesData = {
       type: "bar",
       roundCap: true,
-      barWidth: 10,
+      barWidth: this.sampleStyle.radiusConfig.axisLineWidth,
       showBackground: true,
       coordinateSystem: "polar",
       name: measureName,
@@ -92,5 +100,25 @@ export default class TargetPieHandler extends PieHandler {
     } as echarts.EChartOption.Series;
     series.push(seriesData);
     return series;
+  }
+
+  public getLegend(): any {
+    return {
+      data: this.fieldNames.measures
+    };
+  }
+
+  public getTooltips(): any {
+    const dimensions = this.fieldNames.dimensions[0];
+    const dimevalue = this.result[0][dimensions];
+    return {
+      formatter: (params: any) => {
+        return `
+          对比值: ${dimevalue}
+          \n
+          实际值: ${params.value}
+        `;
+      }
+    };
   }
 }

@@ -126548,15 +126548,18 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"24bd3354-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=2fa54f79&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"29cf468a-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=068e160a&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"chart-wrapper"},[_c('div',{ref:"echartsContainer",staticClass:"chart-container"})])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=2fa54f79&
+// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=068e160a&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.join.js
 var es_array_join = __webpack_require__("a15b");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.map.js
+var es_array_map = __webpack_require__("d81d");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.function.name.js
 var es_function_name = __webpack_require__("b0c0");
@@ -128005,9 +128008,6 @@ function gridGenerator(dashboard) {
     right: gridRight.value + gridRight.unit
   };
 }
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.map.js
-var es_array_map = __webpack_require__("d81d");
-
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.filter.js
 var es_array_filter = __webpack_require__("4de4");
 
@@ -128426,6 +128426,7 @@ var es_object_keys = __webpack_require__("b64b");
 
 
 
+
 var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
   function EChartServiceUtil() {
     _classCallCheck(this, EChartServiceUtil);
@@ -128441,11 +128442,21 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
      * @param fieldName 字段名
      * @param result 结果集
      */
-    value: function getDataByFieldName(fieldName, result, decimals) {
+    value: function getDataByFieldName(dimensions, fieldName, result, decimals) {
       var fieldArray = [];
       fieldArray = result.map(function (data) {
         var value = decimals ? Number(data[fieldName]).toFixed(decimals.value) : data[fieldName];
         return {
+          measure: {
+            name: fieldName,
+            value: data[fieldName]
+          },
+          dimensions: dimensions.map(function (dimensionName) {
+            return {
+              name: dimensionName,
+              value: data[dimensionName]
+            };
+          }),
           name: fieldName,
           originalValue: data[fieldName],
           value: value
@@ -128458,10 +128469,19 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
     value: function getTestByFieldName(index, fieldName, result, decimals) {
       var dataresult = [];
       dataresult.length = Object.keys(result).length;
-      var value = decimals ? Number(result[0][fieldName]).toFixed(decimals.value) : result[0][fieldName];
+      var resultValue = result[0][fieldName];
+      var value = decimals ? Number(resultValue).toFixed(decimals.value) : resultValue;
       dataresult[index] = {
+        measure: {
+          name: fieldName,
+          value: resultValue
+        },
+        dimensions: [{
+          name: fieldName,
+          value: resultValue
+        }],
         name: fieldName,
-        originalValue: result[0][fieldName],
+        originalValue: resultValue,
         value: value
       };
       return dataresult;
@@ -128475,11 +128495,21 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
 
   }, {
     key: "getPercentageArray",
-    value: function getPercentageArray(fieldName, result, decimals) {
+    value: function getPercentageArray(dimensions, fieldName, result, decimals) {
       return result.map(function (item) {
         var dec = (decimals === null || decimals === void 0 ? void 0 : decimals.value) || 0;
         var value = Number((item[fieldName] / item["sum"] * 100).toFixed(dec));
         return {
+          measure: {
+            name: fieldName,
+            value: item[fieldName]
+          },
+          dimensions: dimensions.map(function (dimensionName) {
+            return {
+              name: dimensionName,
+              value: item[dimensionName]
+            };
+          }),
           name: fieldName,
           originalValue: item[fieldName],
           value: value
@@ -128497,9 +128527,20 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
 
   }, {
     key: "getDataByAxisName",
-    value: function getDataByAxisName(dimensionName, measureName, result) {
+    value: function getDataByAxisName(dimensionName, measureName, result, decimals) {
       return result.map(function (data) {
+        // const value = decimals
+        //   ? Number(data[measureName]).toFixed(decimals.value)
+        //   : data[measureName];
         var dataObject = {
+          measure: {
+            name: measureName,
+            value: data[measureName]
+          },
+          dimensions: [{
+            name: dimensionName,
+            value: data[dimensionName]
+          }],
           name: data[dimensionName],
           originalValue: data[measureName],
           value: data[measureName]
@@ -128516,12 +128557,24 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
 
   }, {
     key: "getNameByMeasure",
-    value: function getNameByMeasure(measureNameList, result) {
+    value: function getNameByMeasure(measureNameList, result, decimals) {
       return measureNameList.map(function (measureName) {
+        var value = EChartServiceUtil.getReduceSum(result, measureName); // value = decimals
+        //   ? Number(value.toFixed(decimals.value))
+        //   : value;
+
         var dataObject = {
+          measure: {
+            name: measureName,
+            value: value
+          },
+          dimensions: [{
+            name: measureName,
+            value: value
+          }],
           name: measureName,
-          value: EChartServiceUtil.getReduceSum(result, measureName),
-          originalValue: EChartServiceUtil.getReduceSum(result, measureName)
+          value: value,
+          originalValue: value
         };
         return dataObject;
       });
@@ -128550,14 +128603,21 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
   }, {
     key: "getRadarDataByAxisName",
     value: function getRadarDataByAxisName(measureName, result) {
+      var value = result.map(function (data) {
+        return data[measureName];
+      });
       return {
+        measure: {
+          name: measureName,
+          value: value
+        },
+        dimensions: [{
+          name: measureName,
+          value: value
+        }],
         name: measureName,
-        originalValue: result.map(function (data) {
-          return data[measureName];
-        }),
-        value: result.map(function (data) {
-          return data[measureName];
-        })
+        originalValue: value,
+        value: value
       };
     }
     /**
@@ -128591,7 +128651,6 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
   }, {
     key: "getPieSeriesLabel",
     value: function getPieSeriesLabel(sampleStyle) {
-      var formatterTextType = sampleStyle.label.isShowNumer ? "c}" : "d}%";
       return sampleStyle ? {
         margin: "25%",
         normal: {
@@ -128600,7 +128659,13 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
           color: sampleStyle.label.color,
           fontFamily: sampleStyle.label.fontFamily,
           fontSize: sampleStyle.label.fontSize,
-          formatter: "{b} - {".concat(formatterTextType)
+          formatter: function formatter(params) {
+            if (sampleStyle.label.isShowNumer) {
+              return params.name + " - " + params.value.toFixed(sampleStyle.decimals.value);
+            } else {
+              return params.name + " - " + params.percent.toFixed(sampleStyle.decimals.value) + "%";
+            }
+          }
         }
       } : {
         margin: "25%",
@@ -128721,7 +128786,7 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
             interval: _this.sampleStyle.axisLabel.interval || 0,
             rotate: _this.sampleStyle.axisLabel.rotate || 0
           },
-          data: EChartDataUtil_EChartServiceUtil.getDataByFieldName(dimensionName, _this.result)
+          data: EChartDataUtil_EChartServiceUtil.getDataByFieldName(dimensions, dimensionName, _this.result)
         };
         xAxis.unshift(axisXData);
       });
@@ -128768,10 +128833,11 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
   }, {
     key: "getSeriesDimensions",
     value: function getSeriesDimensions(seriesData, measureName) {
+      var dimensions = this.fieldNames.dimensions;
       var andSeriesData = {
         name: measureName,
         type: "bar",
-        data: EChartDataUtil_EChartServiceUtil.getDataByFieldName(measureName, this.result, this.sampleStyle.decimals)
+        data: EChartDataUtil_EChartServiceUtil.getDataByFieldName(dimensions, measureName, this.result, this.sampleStyle.decimals)
       };
       return Object.assign(andSeriesData, seriesData);
     }
@@ -128968,12 +129034,13 @@ var BarPercentageHandler_BarPercentageHandler = /*#__PURE__*/function (_BarHandl
           return sum + Number(item[name]);
         }, 0);
       });
+      var dimensions = this.fieldNames.dimensions;
       this.fieldNames.measures.forEach(function (measureName) {
         var seriesData = {
           name: measureName,
           type: "bar",
           stack: "barPercentage",
-          data: EChartDataUtil_EChartServiceUtil.getPercentageArray(measureName, _this.result, _this.sampleStyle.decimals),
+          data: EChartDataUtil_EChartServiceUtil.getPercentageArray(dimensions, measureName, _this.result, _this.sampleStyle.decimals),
           barWidth: EChartDataUtil_EChartServiceUtil.getBarWidth(_this.sampleStyle),
           label: EChartDataUtil_EChartServiceUtil.getBarSeriesLabel(_this.sampleStyle)
         };
@@ -129150,12 +129217,13 @@ var HBarPercentageHandler_HBarPercentageHandler = /*#__PURE__*/function (_HBarSt
           return sum + Number(item[name]);
         }, 0);
       });
+      var dimensions = this.fieldNames.dimensions;
       this.fieldNames.measures.forEach(function (measureName) {
         var seriesData = {
           name: measureName,
           type: "bar",
           stack: "hbarPercentage",
-          data: EChartDataUtil_EChartServiceUtil.getPercentageArray(measureName, _this.result, _this.sampleStyle.decimals),
+          data: EChartDataUtil_EChartServiceUtil.getPercentageArray(dimensions, measureName, _this.result, _this.sampleStyle.decimals),
           barWidth: EChartDataUtil_EChartServiceUtil.getBarWidth(_this.sampleStyle),
           label: EChartDataUtil_EChartServiceUtil.getBarSeriesLabel(_this.sampleStyle)
         };
@@ -129255,7 +129323,7 @@ var PieHandler_PieHandler = /*#__PURE__*/function () {
         data: []
       }; // 度量必须唯一，不然要提示前端禁用失败
 
-      seriesData.data = dimensionName ? EChartDataUtil_EChartServiceUtil.getDataByAxisName(dimensionName, measuresList[0], this.result) : EChartDataUtil_EChartServiceUtil.getNameByMeasure(measuresList, this.result);
+      seriesData.data = dimensionName ? EChartDataUtil_EChartServiceUtil.getDataByAxisName(dimensionName, measuresList[0], this.result, this.sampleStyle.decimals) : EChartDataUtil_EChartServiceUtil.getNameByMeasure(measuresList, this.result, this.sampleStyle.decimals);
       series.push(seriesData);
       return series;
     }
@@ -129624,13 +129692,18 @@ var LineHandler_LineHandler = /*#__PURE__*/function () {
     value: function getXAxis() {
       var _this = this;
 
-      var xAxis = []; // 遍历生成X轴
+      var xAxis = [];
+      var dimensions = this.fieldNames.dimensions; // 遍历生成X轴
 
-      this.fieldNames.dimensions.forEach(function (dimensionName) {
+      dimensions.forEach(function (dimensionName) {
         var axisXData = {
           name: dimensionName,
           type: "category",
-          data: EChartDataUtil_EChartServiceUtil.getDataByFieldName(dimensionName, _this.result)
+          axisLabel: {
+            interval: _this.sampleStyle.axisLabel.interval || 0,
+            rotate: _this.sampleStyle.axisLabel.rotate || 0
+          },
+          data: EChartDataUtil_EChartServiceUtil.getDataByFieldName(dimensions, dimensionName, _this.result)
         };
         xAxis.push(axisXData);
       });
@@ -129658,7 +129731,10 @@ var LineHandler_LineHandler = /*#__PURE__*/function () {
       var _this2 = this;
 
       var series = [];
-      this.fieldNames.measures.forEach(function (measureName) {
+      var _this$fieldNames = this.fieldNames,
+          dimensions = _this$fieldNames.dimensions,
+          measures = _this$fieldNames.measures;
+      measures.forEach(function (measureName) {
         var seriesData = {
           name: measureName,
           type: "line",
@@ -129669,7 +129745,7 @@ var LineHandler_LineHandler = /*#__PURE__*/function () {
             fontSize: _this2.sampleStyle.label.fontSize,
             fontFamily: _this2.sampleStyle.label.fontFamily
           },
-          data: EChartDataUtil_EChartServiceUtil.getDataByFieldName(measureName, _this2.result)
+          data: EChartDataUtil_EChartServiceUtil.getDataByFieldName(dimensions, measureName, _this2.result, _this2.sampleStyle.decimals)
         };
         series.push(seriesData);
       });
@@ -129786,9 +129862,9 @@ var GuageHandler_GuageHandler = /*#__PURE__*/function () {
           fontSize: this.sampleStyle.label.fontSize,
           formatter: function formatter(value) {
             if (!_this.sampleStyle.label.isShowNumer) {
-              return (value / comparison * 100).toFixed(2) + "%";
+              return (value / comparison * 100).toFixed(_this.sampleStyle.decimals.value) + "%";
             } else {
-              return value;
+              return value.toFixed(_this.sampleStyle.decimals.value);
             }
           }
         },
@@ -129796,6 +129872,14 @@ var GuageHandler_GuageHandler = /*#__PURE__*/function () {
         center: Object.values(this.sampleStyle.centerConfig),
         max: comparison || 100,
         data: [{
+          measure: {
+            name: measures,
+            value: actual
+          },
+          dimensions: [{
+            name: measures,
+            value: actual
+          }],
           name: measures,
           originalValue: actual,
           value: actual
@@ -129830,6 +129914,7 @@ var GuageHandler_GuageHandler = /*#__PURE__*/function () {
 
 
 
+
 /**
  * 指示器处理
  */
@@ -129853,7 +129938,9 @@ var TargetPieHandler_TargetPieHandler = /*#__PURE__*/function (_PieHandler) {
       style.series = this.getSeries();
       style.angleAxis = this.getAngleAxis();
       style.radiusAxis = this.getRadiusAxis();
+      style.legend = this.getLegend();
       style.polar = this.getPolar();
+      style.tooltip = this.getTooltips();
       return style;
     }
   }, {
@@ -129874,10 +129961,10 @@ var TargetPieHandler_TargetPieHandler = /*#__PURE__*/function (_PieHandler) {
       var measureName = this.fieldNames.measures[0];
       var measValue = this.result[0][measureName] || 0;
       var dimevalue = this.result[0][dimensions] || measValue || 100;
-      var result = "".concat(Number(measValue) / Number(dimevalue) * 100, "%");
+      var result = "".concat((Number(measValue) / Number(dimevalue) * 100).toFixed(this.sampleStyle.decimals.value), "%");
 
       if (this.sampleStyle.label.isShowNumer) {
-        result = " ".concat(measValue, " / ").concat(dimevalue, " ");
+        result = " ".concat(Number(measValue).toFixed(this.sampleStyle.decimals.value), " / ").concat(Number(dimevalue).toFixed(this.sampleStyle.decimals.value), " ");
       }
 
       return {
@@ -129925,7 +130012,7 @@ var TargetPieHandler_TargetPieHandler = /*#__PURE__*/function (_PieHandler) {
       var seriesData = {
         type: "bar",
         roundCap: true,
-        barWidth: 10,
+        barWidth: this.sampleStyle.radiusConfig.axisLineWidth,
         showBackground: true,
         coordinateSystem: "polar",
         name: measureName,
@@ -129936,6 +130023,24 @@ var TargetPieHandler_TargetPieHandler = /*#__PURE__*/function (_PieHandler) {
       };
       series.push(seriesData);
       return series;
+    }
+  }, {
+    key: "getLegend",
+    value: function getLegend() {
+      return {
+        data: this.fieldNames.measures
+      };
+    }
+  }, {
+    key: "getTooltips",
+    value: function getTooltips() {
+      var dimensions = this.fieldNames.dimensions[0];
+      var dimevalue = this.result[0][dimensions];
+      return {
+        formatter: function formatter(params) {
+          return "\n          \u5BF9\u6BD4\u503C: ".concat(dimevalue, "\n          \n\n          \u5B9E\u9645\u503C: ").concat(params.value, "\n        ");
+        }
+      };
     }
   }]);
 
@@ -130063,6 +130168,8 @@ var FieldDTO_FieldDTOBuilder = /*#__PURE__*/function () {
 
 
 
+
+
 var ParamsConverter_ParamsConverter = /*#__PURE__*/function () {
   function ParamsConverter() {
     _classCallCheck(this, ParamsConverter);
@@ -130116,12 +130223,14 @@ var ParamsConverter_ParamsConverter = /*#__PURE__*/function () {
     key: "setReactWhere",
     value: function setReactWhere(wheres, reactWhere) {
       if (reactWhere.dashboardId && reactWhere.datasetId && reactWhere.where) {
-        // 联动判断
-        var reactColName = reactWhere.where.columnName; // 去除相同的where
+        reactWhere.where.forEach(function (item) {
+          // 联动判断
+          var reactColName = item === null || item === void 0 ? void 0 : item.columnName; // 去除相同的where
 
-        wheres = wheres.filter(function (where) {
-          return where.columnName !== reactColName;
-        }).concat(reactWhere.where);
+          wheres = wheres.filter(function (where) {
+            return where.columnName !== reactColName;
+          }).concat([item]);
+        });
       }
     }
     /**
@@ -131023,6 +131132,10 @@ var Line_templates = {
           fontFamily: "Microsoft YaHei",
           isShowNumer: false
         },
+        axisLabel: {
+          interval: 0,
+          rotate: 0
+        },
         grid: {
           // 初始值需要与全局配置保持一致
           top: {
@@ -131111,6 +131224,10 @@ var Pie_templates = {
         centerConfig: {
           xAxias: "50%",
           yAxias: "50%"
+        },
+        decimals: {
+          value: 2,
+          unit: ""
         },
         radiusConfig: {
           inside: 0,
@@ -131478,9 +131595,19 @@ var TargetPie_templates = {
   echarts: {
     sampleStyle: {
       targetpie: Object.assign({}, Pie.templates.echarts.sampleStyle.pie, {
+        label: {
+          show: false,
+          hidePosition: true,
+          position: "",
+          color: "#000",
+          fontSize: 12,
+          fontFamily: "Microsoft YaHei",
+          isShowNumer: false
+        },
         radiusConfig: {
-          inside: 65,
-          outside: 60
+          inside: 60,
+          outside: 60,
+          axisLineWidth: 10
         }
       })
     }
@@ -131547,6 +131674,15 @@ var Gauge_templates = {
   echarts: {
     sampleStyle: {
       guage: Object.assign({}, Pie.templates.echarts.sampleStyle.pie, {
+        label: {
+          show: false,
+          hidePosition: true,
+          position: "",
+          color: "#000",
+          fontSize: 12,
+          fontFamily: "Microsoft YaHei",
+          isShowNumer: false
+        },
         radiusConfig: {
           axisLineWidth: 2,
           inside: 0,
@@ -132304,6 +132440,7 @@ function renderChartByJSON(chartInstance, jsonString) {
 
 
 
+
 var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function (_Vue) {
   _inherits(ChartComponent, _Vue);
 
@@ -132343,15 +132480,17 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
           rotationTask: _this.thisDashboard.tasks,
           dashboardId: _this.thisDashboard.id,
           datasetId: _this.thisAnalysis.datasetId,
-          where: {
-            id: UUID_UUID.generate(),
-            tableAlias: _this.thisAnalysis.measures[0].tableAlias,
-            columnName: echartsParams.data.name,
-            w: [{
-              type: 1,
-              value: echartsParams.data.originalValue
-            }]
-          }
+          where: echartsParams.data.dimensions.map(function (whe) {
+            return {
+              id: UUID_UUID.generate(),
+              tableAlias: _this.thisAnalysis.measures[0].tableAlias,
+              columnName: whe.name,
+              w: [{
+                type: 1,
+                value: whe.value
+              }]
+            };
+          })
         };
 
         _this.setReact(reactWhere);

@@ -13,9 +13,19 @@ const templates = {
         {},
         PieConfig.templates.echarts.sampleStyle.pie,
         {
+          label: {
+            show: false,
+            hidePosition: true,
+            position: "",
+            color: "#000",
+            fontSize: 12,
+            fontFamily: "Microsoft YaHei",
+            isShowNumer: false
+          },
           radiusConfig: {
-            inside: 65,
-            outside: 60
+            inside: 60,
+            outside: 60,
+            axisLineWidth: 10
           }
         }
       )

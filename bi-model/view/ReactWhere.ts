@@ -18,7 +18,7 @@ export default interface ReactWhere {
   /**
    * 条件过滤
    */
-  where: WhereDTO | null;
+  where: Array<WhereDTO | null>;
 
   /**
    * 选中的条件数据下标

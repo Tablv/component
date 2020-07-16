@@ -11,6 +11,15 @@ const templates = {
   echarts: {
     sampleStyle: {
       guage: Object.assign({}, PieConfig.templates.echarts.sampleStyle.pie, {
+        label: {
+          show: false,
+          hidePosition: true,
+          position: "",
+          color: "#000",
+          fontSize: 12,
+          fontFamily: "Microsoft YaHei",
+          isShowNumer: false
+        },
         radiusConfig: {
           axisLineWidth: 2,
           inside: 0,

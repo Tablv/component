@@ -34,12 +34,14 @@ export default class BarPercentageHandler extends BarHandler {
         0
       );
     });
+    const dimensions = this.fieldNames.dimensions;
     this.fieldNames.measures.forEach(measureName => {
       const seriesData = {
         name: measureName,
         type: "bar",
         stack: "barPercentage",
         data: EChartDataUtil.getPercentageArray(
+          dimensions,
           measureName,
           this.result,
           this.sampleStyle.decimals

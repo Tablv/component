@@ -100,9 +100,13 @@ export default class GuageHandler implements ChartHandler {
         fontSize: this.sampleStyle.label.fontSize,
         formatter: (value: number) => {
           if (!this.sampleStyle.label.isShowNumer) {
-            return ((value / comparison) * 100).toFixed(2) + "%";
+            return (
+              ((value / comparison) * 100).toFixed(
+                this.sampleStyle.decimals.value
+              ) + "%"
+            );
           } else {
-            return value;
+            return value.toFixed(this.sampleStyle.decimals.value);
           }
         }
       },
@@ -111,6 +115,16 @@ export default class GuageHandler implements ChartHandler {
       max: comparison || 100,
       data: [
         {
+          measure: {
+            name: measures,
+            value: actual
+          },
+          dimensions: [
+            {
+              name: measures,
+              value: actual
+            }
+          ],
           name: measures,
           originalValue: actual,
           value: actual

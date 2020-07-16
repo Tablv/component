@@ -20,6 +20,10 @@ const templates = {
           xAxias: "50%",
           yAxias: "50%"
         },
+        decimals: {
+          value: 2,
+          unit: ""
+        },
         radiusConfig: {
           inside: 0,
           outside: 60

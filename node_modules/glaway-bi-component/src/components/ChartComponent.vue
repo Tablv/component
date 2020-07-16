@@ -237,19 +237,20 @@ export default class ChartComponent extends Vue implements ChartUIService {
         rotationTask: this.thisDashboard.tasks,
         dashboardId: this.thisDashboard.id,
         datasetId: this.thisAnalysis.datasetId,
-        where: {
-          id: UUID.generate(),
-          tableAlias: this.thisAnalysis.measures[0].tableAlias,
-          columnName: echartsParams.data.name,
-          w: [
-            {
-              type: 1,
-              value: echartsParams.data.originalValue
-            }
-          ]
-        }
+        where: echartsParams.data.dimensions.map((whe: any) => {
+          return {
+            id: UUID.generate(),
+            tableAlias: this.thisAnalysis.measures[0].tableAlias,
+            columnName: whe.name,
+            w: [
+              {
+                type: 1,
+                value: whe.value
+              }
+            ]
+          };
+        })
       };
-
       this.setReact(reactWhere);
     },
 

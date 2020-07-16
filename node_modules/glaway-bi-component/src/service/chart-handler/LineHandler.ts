@@ -69,13 +69,21 @@ export default class LineHandler implements ChartHandler {
    */
   public getXAxis(): Array<echarts.EChartOption.XAxis> {
     let xAxis: Array<echarts.EChartOption.XAxis> = [];
-
+    const dimensions = this.fieldNames.dimensions;
     // 遍历生成X轴
-    this.fieldNames.dimensions.forEach(dimensionName => {
+    dimensions.forEach(dimensionName => {
       const axisXData = {
         name: dimensionName,
         type: "category",
-        data: EChartDataUtil.getDataByFieldName(dimensionName, this.result)
+        axisLabel: {
+          interval: this.sampleStyle.axisLabel.interval || 0,
+          rotate: this.sampleStyle.axisLabel.rotate || 0
+        },
+        data: EChartDataUtil.getDataByFieldName(
+          dimensions,
+          dimensionName,
+          this.result
+        )
       } as echarts.EChartOption.XAxis;
       xAxis.push(axisXData);
     });
@@ -100,8 +108,8 @@ export default class LineHandler implements ChartHandler {
    */
   public getSeries(): Array<echarts.EChartOption.Series> {
     let series: Array<echarts.EChartOption.Series> = [];
-
-    this.fieldNames.measures.forEach(measureName => {
+    const { dimensions, measures } = this.fieldNames;
+    measures.forEach(measureName => {
       const seriesData = {
         name: measureName,
         type: "line",
@@ -112,7 +120,12 @@ export default class LineHandler implements ChartHandler {
           fontSize: this.sampleStyle.label.fontSize,
           fontFamily: this.sampleStyle.label.fontFamily
         },
-        data: EChartDataUtil.getDataByFieldName(measureName, this.result)
+        data: EChartDataUtil.getDataByFieldName(
+          dimensions,
+          measureName,
+          this.result,
+          this.sampleStyle.decimals
+        )
       };
       series.push(seriesData);
     });

@@ -13,6 +13,7 @@ export default class EChartServiceUtil {
    * @param result 结果集
    */
   public static getDataByFieldName(
+    dimensions: Array<string>,
     fieldName: string,
     result: AnalysisResults,
     decimals?: any
@@ -24,6 +25,16 @@ export default class EChartServiceUtil {
         ? Number(data[fieldName]).toFixed(decimals.value)
         : data[fieldName];
       return {
+        measure: {
+          name: fieldName,
+          value: data[fieldName]
+        },
+        dimensions: dimensions.map(dimensionName => {
+          return {
+            name: dimensionName,
+            value: data[dimensionName]
+          };
+        }),
         name: fieldName,
         originalValue: data[fieldName],
         value
@@ -43,13 +54,25 @@ export default class EChartServiceUtil {
 
     dataresult.length = Object.keys(result).length;
 
+    const resultValue = result[0][fieldName];
+
     const value = decimals
-      ? Number(result[0][fieldName]).toFixed(decimals.value)
-      : result[0][fieldName];
+      ? Number(resultValue).toFixed(decimals.value)
+      : resultValue;
 
     (<any>dataresult)[index] = {
+      measure: {
+        name: fieldName,
+        value: resultValue
+      },
+      dimensions: [
+        {
+          name: fieldName,
+          value: resultValue
+        }
+      ],
       name: fieldName,
-      originalValue: result[0][fieldName],
+      originalValue: resultValue,
       value
     };
 
@@ -63,6 +86,7 @@ export default class EChartServiceUtil {
    * @param result 结果集
    */
   public static getPercentageArray(
+    dimensions: Array<string>,
     fieldName: string,
     result: AnalysisResults,
     decimals?: any
@@ -73,6 +97,16 @@ export default class EChartServiceUtil {
         ((item[fieldName] / item["sum"]) * 100).toFixed(dec)
       );
       return {
+        measure: {
+          name: fieldName,
+          value: item[fieldName]
+        },
+        dimensions: dimensions.map(dimensionName => {
+          return {
+            name: dimensionName,
+            value: item[dimensionName]
+          };
+        }),
         name: fieldName,
         originalValue: item[fieldName],
         value
@@ -91,13 +125,27 @@ export default class EChartServiceUtil {
   public static getDataByAxisName(
     dimensionName: string,
     measureName: string,
-    result: AnalysisResults
+    result: AnalysisResults,
+    decimals?: any
   ): echarts.EChartOption.SeriesBar["data"] {
-    return result.map(data => {
+    return result.map((data: any) => {
+      // const value = decimals
+      //   ? Number(data[measureName]).toFixed(decimals.value)
+      //   : data[measureName];
       const dataObject: echarts.EChartOption.SeriesPie.DataObject = {
+        measure: {
+          name: measureName,
+          value: data[measureName]
+        },
+        dimensions: [
+          {
+            name: dimensionName,
+            value: data[dimensionName]
+          }
+        ],
         name: data[dimensionName] as string,
         originalValue: data[measureName] as number,
-        value: data[measureName] as number
+        value: data[measureName]
       } as any;
 
       return dataObject;
@@ -112,13 +160,28 @@ export default class EChartServiceUtil {
    */
   public static getNameByMeasure(
     measureNameList: Array<string>,
-    result: AnalysisResults
+    result: AnalysisResults,
+    decimals?: any
   ): echarts.EChartOption.SeriesBar["data"] {
     return measureNameList.map(measureName => {
+      let value = EChartServiceUtil.getReduceSum(result, measureName);
+      // value = decimals
+      //   ? Number(value.toFixed(decimals.value))
+      //   : value;
       const dataObject: echarts.EChartOption.SeriesPie.DataObject = {
+        measure: {
+          name: measureName,
+          value
+        },
+        dimensions: [
+          {
+            name: measureName,
+            value
+          }
+        ],
         name: measureName as string,
-        value: EChartServiceUtil.getReduceSum(result, measureName),
-        originalValue: EChartServiceUtil.getReduceSum(result, measureName)
+        value,
+        originalValue: value
       } as any;
       return dataObject;
     });
@@ -148,10 +211,21 @@ export default class EChartServiceUtil {
     measureName: string,
     result: AnalysisResults
   ): echarts.EChartOption.SeriesRadar.DataObject {
+    const value = result.map(data => data[measureName] as number);
     return {
+      measure: {
+        name: measureName,
+        value
+      },
+      dimensions: [
+        {
+          name: measureName,
+          value
+        }
+      ],
       name: measureName,
-      originalValue: result.map(data => data[measureName] as number),
-      value: result.map(data => data[measureName] as number)
+      originalValue: value,
+      value
     } as any;
   }
 
@@ -188,7 +262,6 @@ export default class EChartServiceUtil {
   public static getPieSeriesLabel(
     sampleStyle: PieChartOption
   ): echarts.EChartOption.SeriesPie["label"] {
-    const formatterTextType = sampleStyle.label.isShowNumer ? "c}" : "d}%";
     return sampleStyle
       ? {
           margin: "25%",
@@ -198,7 +271,22 @@ export default class EChartServiceUtil {
             color: sampleStyle.label.color,
             fontFamily: sampleStyle.label.fontFamily,
             fontSize: sampleStyle.label.fontSize,
-            formatter: `{b} - {${formatterTextType}`
+            formatter: (params: any) => {
+              if (sampleStyle.label.isShowNumer) {
+                return (
+                  params.name +
+                  " - " +
+                  params.value.toFixed(sampleStyle.decimals.value)
+                );
+              } else {
+                return (
+                  params.name +
+                  " - " +
+                  params.percent.toFixed(sampleStyle.decimals.value) +
+                  "%"
+                );
+              }
+            }
           }
         }
       : {

@@ -58,13 +58,15 @@ export default class ParamsConverter {
     reactWhere: ReactWhere
   ): void {
     if (reactWhere.dashboardId && reactWhere.datasetId && reactWhere.where) {
-      // 联动判断
-      const reactColName = reactWhere.where.columnName;
+      reactWhere.where.forEach(item => {
+        // 联动判断
+        const reactColName = item?.columnName;
 
-      // 去除相同的where
-      wheres = wheres
-        .filter(where => where.columnName !== reactColName)
-        .concat(reactWhere.where);
+        // 去除相同的where
+        wheres = wheres
+          .filter(where => where.columnName !== reactColName)
+          .concat([item as any]);
+      });
     }
   }
 

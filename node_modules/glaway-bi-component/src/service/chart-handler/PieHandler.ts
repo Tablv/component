@@ -92,9 +92,14 @@ export default class PieHandler implements ChartHandler {
       ? EChartDataUtil.getDataByAxisName(
           dimensionName,
           measuresList[0],
-          this.result
+          this.result,
+          this.sampleStyle.decimals
         )
-      : EChartDataUtil.getNameByMeasure(measuresList, this.result);
+      : EChartDataUtil.getNameByMeasure(
+          measuresList,
+          this.result,
+          this.sampleStyle.decimals
+        );
 
     series.push(seriesData);
 

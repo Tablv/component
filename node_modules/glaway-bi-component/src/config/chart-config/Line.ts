@@ -20,6 +20,10 @@ const templates = {
           fontFamily: "Microsoft YaHei",
           isShowNumer: false
         },
+        axisLabel: {
+          interval: 0,
+          rotate: 0
+        },
         grid: {
           // 初始值需要与全局配置保持一致
           top: {
