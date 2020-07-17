@@ -130,7 +130,27 @@ export interface TargetPieChartOption extends PieChartOption {}
 /**
  * 图表类型
  */
-export interface GaugeChartOption extends PieChartOption {}
+export interface GaugeChartOption extends PieChartOption {
+  splitNumber: number;
+  pointer: {
+    show: boolean;
+    length: number;
+    width: number;
+  };
+  splitLine: {
+    show: boolean;
+    length: number;
+    lineStyle: {       // 属性lineStyle控制线条样式
+      color: string;
+    };
+  },
+  axisTick: {
+    showt: boolean;
+    length: number;
+  };
+  endAngle: number;
+  startAngle: number;
+}
 
 /**
  * 图表类型
@@ -143,4 +163,5 @@ export interface BiaxialChartOption {}
 export interface ChartOption
   extends BarChartOption,
     PieChartOption,
+    GaugeChartOption,
     LineChartOption {}

@@ -24,6 +24,44 @@ export default class BarPercentageHandler extends BarHandler {
   }
 
   /**
+   * @name 获取Y轴数据
+   */
+  public getXAxis(): Array<echarts.EChartOption.XAxis> {
+    let xAxis: Array<echarts.EChartOption.XAxis> = [];
+    // 维度是0
+    const { dimensions } = this.fieldNames;
+    if (!dimensions.length) {
+      xAxis.unshift({
+        name: "",
+        type: "category",
+        axisLabel: {
+          interval: this.sampleStyle.axisLabel.interval || 0,
+          rotate: this.sampleStyle.axisLabel.rotate || 0
+        },
+        data: []
+      });
+    }
+    // 遍历生成X轴
+    dimensions.forEach(dimensionName => {
+      const axisXData: echarts.EChartOption.XAxis = {
+        name: "",
+        type: "category",
+        axisLabel: {
+          interval: this.sampleStyle.axisLabel.interval || 0,
+          rotate: this.sampleStyle.axisLabel.rotate || 0
+        },
+        data: EChartDataUtil.getDataByFieldName(
+          dimensions,
+          dimensionName,
+          this.result
+        ) as any
+      };
+      xAxis.unshift(axisXData);
+    });
+    return xAxis;
+  }
+
+  /**
    * 获取Series数据
    */
   public getSeries(): Array<echarts.EChartOption.Series> {
@@ -40,6 +78,9 @@ export default class BarPercentageHandler extends BarHandler {
         name: measureName,
         type: "bar",
         stack: "barPercentage",
+        itemStyle: {
+          barBorderRadius: this.sampleStyle.radius
+        },
         data: EChartDataUtil.getPercentageArray(
           dimensions,
           measureName,

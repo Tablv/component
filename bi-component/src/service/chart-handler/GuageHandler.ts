@@ -4,7 +4,10 @@ import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import EChartsService from "../EChartsService";
 import { ChartHandler } from "../../interfaces/ChartHandler";
-import { PieChartOption } from "glaway-bi-model/view/dashboard//chart/ChartOption";
+import {
+  PieChartOption,
+  GaugeChartOption
+} from "glaway-bi-model/view/dashboard//chart/ChartOption";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
 
 /**
@@ -26,7 +29,7 @@ export default class GuageHandler implements ChartHandler {
   constructor(
     public result: AnalysisResults,
     public dashboard: Dashboard,
-    public sampleStyle: PieChartOption
+    public sampleStyle: GaugeChartOption
   ) {
     this.fieldNames = EChartsService.splitFieldNames(
       this.result[0],
@@ -45,6 +48,8 @@ export default class GuageHandler implements ChartHandler {
     style.series = this.getSeries();
     style.tooltip = this.getTooltips();
 
+    style.legend = this.getLegend();
+
     return style;
   }
 
@@ -62,6 +67,8 @@ export default class GuageHandler implements ChartHandler {
     const dimensions = this.fieldNames.dimensions[0];
     const comparison =
       EChartDataUtil.getReduceSum(this.result, dimensions) || actual || 100;
+    this.sampleStyle.pointer.length = (this.sampleStyle.pointer.length +
+      "%") as any;
     const seriesData = {
       type: "gauge",
       detail: {
@@ -93,6 +100,12 @@ export default class GuageHandler implements ChartHandler {
           width: this.sampleStyle.radiusConfig.axisLineWidth
         }
       },
+      splitNumber: this.sampleStyle.splitNumber,
+      pointer: this.sampleStyle.pointer,
+      splitLine: this.sampleStyle.splitLine,
+      axisTick: this.sampleStyle.axisTick,
+      endAngle: this.sampleStyle.endAngle,
+      startAngle: this.sampleStyle.startAngle,
       axisLabel: {
         show: this.sampleStyle.label.show,
         color: this.sampleStyle.label.color,
@@ -140,6 +153,11 @@ export default class GuageHandler implements ChartHandler {
   getTooltips() {
     return {
       formatter: "{b} : {c}"
+    };
+  }
+  getLegend() {
+    return {
+      data: this.fieldNames.measures
     };
   }
 }

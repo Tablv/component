@@ -126557,7 +126557,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"29cf468a-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=068e160a&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"b005113c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=068e160a&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"chart-wrapper"},[_c('div',{ref:"echartsContainer",staticClass:"chart-container"})])}
 var staticRenderFns = []
 
@@ -129029,17 +129029,57 @@ var BarPercentageHandler_BarPercentageHandler = /*#__PURE__*/function (_BarHandl
       });
     }
     /**
+     * @name 获取Y轴数据
+     */
+
+  }, {
+    key: "getXAxis",
+    value: function getXAxis() {
+      var _this = this;
+
+      var xAxis = []; // 维度是0
+
+      var dimensions = this.fieldNames.dimensions;
+
+      if (!dimensions.length) {
+        xAxis.unshift({
+          name: "",
+          type: "category",
+          axisLabel: {
+            interval: this.sampleStyle.axisLabel.interval || 0,
+            rotate: this.sampleStyle.axisLabel.rotate || 0
+          },
+          data: []
+        });
+      } // 遍历生成X轴
+
+
+      dimensions.forEach(function (dimensionName) {
+        var axisXData = {
+          name: "",
+          type: "category",
+          axisLabel: {
+            interval: _this.sampleStyle.axisLabel.interval || 0,
+            rotate: _this.sampleStyle.axisLabel.rotate || 0
+          },
+          data: EChartDataUtil_EChartServiceUtil.getDataByFieldName(dimensions, dimensionName, _this.result)
+        };
+        xAxis.unshift(axisXData);
+      });
+      return xAxis;
+    }
+    /**
      * 获取Series数据
      */
 
   }, {
     key: "getSeries",
     value: function getSeries() {
-      var _this = this;
+      var _this2 = this;
 
       var series = [];
       this.result.forEach(function (item) {
-        item.sum = _this.fieldNames.measures.reduce(function (sum, name) {
+        item.sum = _this2.fieldNames.measures.reduce(function (sum, name) {
           return sum + Number(item[name]);
         }, 0);
       });
@@ -129049,9 +129089,12 @@ var BarPercentageHandler_BarPercentageHandler = /*#__PURE__*/function (_BarHandl
           name: measureName,
           type: "bar",
           stack: "barPercentage",
-          data: EChartDataUtil_EChartServiceUtil.getPercentageArray(dimensions, measureName, _this.result, _this.sampleStyle.decimals),
-          barWidth: EChartDataUtil_EChartServiceUtil.getBarWidth(_this.sampleStyle),
-          label: EChartDataUtil_EChartServiceUtil.getBarSeriesLabel(_this.sampleStyle)
+          itemStyle: {
+            barBorderRadius: _this2.sampleStyle.radius
+          },
+          data: EChartDataUtil_EChartServiceUtil.getPercentageArray(dimensions, measureName, _this2.result, _this2.sampleStyle.decimals),
+          barWidth: EChartDataUtil_EChartServiceUtil.getBarWidth(_this2.sampleStyle),
+          label: EChartDataUtil_EChartServiceUtil.getBarSeriesLabel(_this2.sampleStyle)
         };
         series.push(seriesData);
       });
@@ -129212,17 +129255,57 @@ var HBarPercentageHandler_HBarPercentageHandler = /*#__PURE__*/function (_HBarSt
       });
     }
     /**
+     * @name 获取Y轴数据
+     */
+
+  }, {
+    key: "getYAxis",
+    value: function getYAxis() {
+      var _this = this;
+
+      var yAxis = []; // 维度是0
+
+      var dimensions = this.fieldNames.dimensions;
+
+      if (!dimensions.length) {
+        yAxis.unshift({
+          name: "",
+          type: "category",
+          axisLabel: {
+            interval: this.sampleStyle.axisLabel.interval || 0,
+            rotate: this.sampleStyle.axisLabel.rotate || 0
+          },
+          data: []
+        });
+      } // 遍历生成X轴
+
+
+      dimensions.forEach(function (dimensionName) {
+        var axisXData = {
+          name: "",
+          type: "category",
+          axisLabel: {
+            interval: _this.sampleStyle.axisLabel.interval || 0,
+            rotate: _this.sampleStyle.axisLabel.rotate || 0
+          },
+          data: EChartDataUtil_EChartServiceUtil.getDataByFieldName(dimensions, dimensionName, _this.result)
+        };
+        yAxis.unshift(axisXData);
+      });
+      return yAxis;
+    }
+    /**
      * 获取Series数据
      */
 
   }, {
     key: "getSeries",
     value: function getSeries() {
-      var _this = this;
+      var _this2 = this;
 
       var series = [];
       this.result.forEach(function (item) {
-        item.sum = _this.fieldNames.measures.reduce(function (sum, name) {
+        item.sum = _this2.fieldNames.measures.reduce(function (sum, name) {
           return sum + Number(item[name]);
         }, 0);
       });
@@ -129232,9 +129315,12 @@ var HBarPercentageHandler_HBarPercentageHandler = /*#__PURE__*/function (_HBarSt
           name: measureName,
           type: "bar",
           stack: "hbarPercentage",
-          data: EChartDataUtil_EChartServiceUtil.getPercentageArray(dimensions, measureName, _this.result, _this.sampleStyle.decimals),
-          barWidth: EChartDataUtil_EChartServiceUtil.getBarWidth(_this.sampleStyle),
-          label: EChartDataUtil_EChartServiceUtil.getBarSeriesLabel(_this.sampleStyle)
+          itemStyle: {
+            barBorderRadius: _this2.sampleStyle.radius
+          },
+          data: EChartDataUtil_EChartServiceUtil.getPercentageArray(dimensions, measureName, _this2.result, _this2.sampleStyle.decimals),
+          barWidth: EChartDataUtil_EChartServiceUtil.getBarWidth(_this2.sampleStyle),
+          label: EChartDataUtil_EChartServiceUtil.getBarSeriesLabel(_this2.sampleStyle)
         };
         series.push(seriesData);
       });
@@ -129821,6 +129907,7 @@ var GuageHandler_GuageHandler = /*#__PURE__*/function () {
 
       style.series = this.getSeries();
       style.tooltip = this.getTooltips();
+      style.legend = this.getLegend();
       return style;
     }
     /**
@@ -129840,6 +129927,7 @@ var GuageHandler_GuageHandler = /*#__PURE__*/function () {
 
       var dimensions = this.fieldNames.dimensions[0];
       var comparison = EChartDataUtil_EChartServiceUtil.getReduceSum(this.result, dimensions) || actual || 100;
+      this.sampleStyle.pointer.length = this.sampleStyle.pointer.length + "%";
       var seriesData = {
         type: "gauge",
         detail: {
@@ -129864,6 +129952,12 @@ var GuageHandler_GuageHandler = /*#__PURE__*/function () {
             width: this.sampleStyle.radiusConfig.axisLineWidth
           }
         },
+        splitNumber: this.sampleStyle.splitNumber,
+        pointer: this.sampleStyle.pointer,
+        splitLine: this.sampleStyle.splitLine,
+        axisTick: this.sampleStyle.axisTick,
+        endAngle: this.sampleStyle.endAngle,
+        startAngle: this.sampleStyle.startAngle,
         axisLabel: {
           show: this.sampleStyle.label.show,
           color: this.sampleStyle.label.color,
@@ -129903,6 +129997,13 @@ var GuageHandler_GuageHandler = /*#__PURE__*/function () {
     value: function getTooltips() {
       return {
         formatter: "{b} : {c}"
+      };
+    }
+  }, {
+    key: "getLegend",
+    value: function getLegend() {
+      return {
+        data: this.fieldNames.measures
       };
     }
   }]);
@@ -131696,7 +131797,27 @@ var Gauge_templates = {
           axisLineWidth: 2,
           inside: 0,
           outside: 90
-        }
+        },
+        splitNumber: 5,
+        pointer: {
+          show: true,
+          length: 50,
+          width: 4
+        },
+        splitLine: {
+          show: true,
+          length: 6,
+          lineStyle: {
+            // 属性lineStyle控制线条样式
+            color: "auto"
+          }
+        },
+        axisTick: {
+          showt: true,
+          length: 2
+        },
+        endAngle: -45,
+        startAngle: 225
       })
     }
   }

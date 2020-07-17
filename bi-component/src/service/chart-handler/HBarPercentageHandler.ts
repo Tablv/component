@@ -25,6 +25,44 @@ export default class HBarPercentageHandler extends HBarStackHandler {
   }
 
   /**
+   * @name 获取Y轴数据
+   */
+  public getYAxis(): Array<echarts.EChartOption.YAxis> {
+    let yAxis: Array<echarts.EChartOption.YAxis> = [];
+    // 维度是0
+    const { dimensions } = this.fieldNames;
+    if (!dimensions.length) {
+      yAxis.unshift({
+        name: "",
+        type: "category",
+        axisLabel: {
+          interval: this.sampleStyle.axisLabel.interval || 0,
+          rotate: this.sampleStyle.axisLabel.rotate || 0
+        },
+        data: []
+      });
+    }
+    // 遍历生成X轴
+    dimensions.forEach(dimensionName => {
+      const axisXData: echarts.EChartOption.YAxis = {
+        name: "",
+        type: "category",
+        axisLabel: {
+          interval: this.sampleStyle.axisLabel.interval || 0,
+          rotate: this.sampleStyle.axisLabel.rotate || 0
+        },
+        data: EChartDataUtil.getDataByFieldName(
+          dimensions,
+          dimensionName,
+          this.result
+        ) as any
+      };
+      yAxis.unshift(axisXData);
+    });
+    return yAxis;
+  }
+
+  /**
    * 获取Series数据
    */
   public getSeries(): Array<echarts.EChartOption.Series> {
@@ -41,6 +79,9 @@ export default class HBarPercentageHandler extends HBarStackHandler {
         name: measureName,
         type: "bar",
         stack: "hbarPercentage",
+        itemStyle: {
+          barBorderRadius: this.sampleStyle.radius
+        },
         data: EChartDataUtil.getPercentageArray(
           dimensions,
           measureName,

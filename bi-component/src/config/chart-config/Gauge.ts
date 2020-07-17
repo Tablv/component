@@ -24,7 +24,27 @@ const templates = {
           axisLineWidth: 2,
           inside: 0,
           outside: 90
-        }
+        },
+        splitNumber: 5,
+        pointer: {
+          show: true,
+          length: 50,
+          width: 4
+        },
+        splitLine: {
+          show: true,
+          length: 6,
+          lineStyle: {
+            // 属性lineStyle控制线条样式
+            color: "auto"
+          }
+        },
+        axisTick: {
+          showt: true,
+          length: 2
+        },
+        endAngle: -45,
+        startAngle: 225
       })
     }
   }
