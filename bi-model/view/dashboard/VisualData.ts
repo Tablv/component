@@ -21,6 +21,8 @@ export default interface VisualData extends Draggable {
   // 高度
   height: number;
 
+  background?: string;
+
   // 各图表样例样式
   // (适用于各图表Handler取值，生成带有样式的数据用)
   sampleStyle: EChartsSampleStyle;
