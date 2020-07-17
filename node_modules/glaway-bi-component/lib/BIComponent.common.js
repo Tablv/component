@@ -131706,7 +131706,7 @@ var TargetPie_templates = {
           isShowNumer: false
         },
         radiusConfig: {
-          inside: 60,
+          inside: 0,
           outside: 60,
           axisLineWidth: 10
         }
