@@ -20,6 +20,7 @@ export const defaultDashboardSet: DashboardSet = {
   heightRatio: 9,
   canvasSetting: {
     background: {
+      show: true,
       type: BackgroundType.color,
       color: "#fff",
       url: ""

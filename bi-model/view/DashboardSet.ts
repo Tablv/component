@@ -24,6 +24,7 @@ export default interface DashboardSet {
    */
   canvasSetting: {
     background: {
+      show: boolean,
       type: BackgroundType;
       color: string; // color: HEX-Color-Value
       url: string; // url: IMG-URL

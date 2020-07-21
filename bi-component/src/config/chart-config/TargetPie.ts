@@ -59,11 +59,11 @@ const config = {
       dimensions: [
         {
           symbol: ">=",
-          value: 0
+          value: 1
         },
         {
           symbol: "<",
-          value: 1
+          value: 2
         }
       ],
       // 度量
