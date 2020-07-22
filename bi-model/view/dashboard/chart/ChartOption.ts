@@ -6,6 +6,14 @@ export interface BarChartOption {
     value: number;
     unit: string; // '%'  or  '' (px)
   };
+  axisGroup: {
+    xAxis: {
+      show: boolean
+    },
+    yAxis: {
+      show: boolean
+    }
+  },
   label: {
     show: boolean;
     position: string; // 'top' 'left' 'right' 'bottom' 'inside'

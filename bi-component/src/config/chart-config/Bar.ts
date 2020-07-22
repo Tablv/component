@@ -20,6 +20,14 @@ const templates = {
           fontSize: 12,
           isShowNumer: false
         },
+        axisGroup: {
+          xAxis: {
+            show: true
+          },
+          yAxis: {
+            show: true
+          }
+        },
         axisLabel: {
           interval: 0,
           rotate: 0

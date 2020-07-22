@@ -76,6 +76,7 @@ export default class BarHandler implements ChartHandler {
       const axisXData: echarts.EChartOption.XAxis = {
         name: "",
         type: "category",
+        show: this.sampleStyle.axisGroup.xAxis.show,
         axisLabel: {
           interval: this.sampleStyle.axisLabel.interval || 0,
           rotate: this.sampleStyle.axisLabel.rotate || 0
@@ -90,6 +91,7 @@ export default class BarHandler implements ChartHandler {
       const axisXData: echarts.EChartOption.XAxis = {
         name: "",
         type: "category",
+        show: this.sampleStyle.axisGroup.xAxis.show,
         axisLabel: {
           interval: this.sampleStyle.axisLabel.interval || 0,
           rotate: this.sampleStyle.axisLabel.rotate || 0
@@ -113,6 +115,7 @@ export default class BarHandler implements ChartHandler {
     return [
       {
         type: "value",
+        show: this.sampleStyle.axisGroup.yAxis.show,
         name: this.sampleStyle.decimals.unit
       }
     ] as Array<echarts.EChartOption.YAxis>;
