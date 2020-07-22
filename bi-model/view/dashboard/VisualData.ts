@@ -23,6 +23,14 @@ export default interface VisualData extends Draggable {
 
   background?: string;
 
+  borderWidth?: number;
+
+  borderStyle?: string;
+
+  borderColor?: string;
+
+  borderRadius?: number;
+
   // 各图表样例样式
   // (适用于各图表Handler取值，生成带有样式的数据用)
   sampleStyle: EChartsSampleStyle;

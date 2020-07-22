@@ -89,7 +89,12 @@ export const generalDataTemplate: any = {
   visualData: {
     grid: [10, 10],
     width: 400,
-    height: 300
+    height: 300,
+    background: "#fff",
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: '#d6d6d6',
+    borderRadius: 0
   },
   echarts: {
     sampleStyle: {
