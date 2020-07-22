@@ -92,8 +92,8 @@ export const generalDataTemplate: any = {
     height: 300,
     background: "#fff",
     borderWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: '#d6d6d6',
+    borderStyle: "dashed",
+    borderColor: "#d6d6d6",
     borderRadius: 0
   },
   echarts: {
