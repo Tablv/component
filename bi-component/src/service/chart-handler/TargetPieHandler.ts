@@ -40,7 +40,7 @@ export default class TargetPieHandler extends PieHandler {
     let result = `${((Number(measValue) / Number(dimevalue)) * 100).toFixed(
       this.sampleStyle.decimals.value
     )}%`;
-    if (this.sampleStyle.label.isShowNumer) {
+    if (this.sampleStyle.label.isShowNumber) {
       result = ` ${Number(measValue).toFixed(
         this.sampleStyle.decimals.value
       )} / ${Number(dimevalue).toFixed(this.sampleStyle.decimals.value)} `;

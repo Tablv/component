@@ -16,7 +16,6 @@
   "dependencies": {
     "core-js": "3.6.1",
     "echarts": "^4.7.0",
-    "glaway-bi-model": "0.0.5",
     "glaway-bi-util": "0.0.5",
     "lodash": "^4.17.15",
     "lru-cache": "^5.1.1",

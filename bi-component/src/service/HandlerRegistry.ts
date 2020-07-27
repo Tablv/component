@@ -1,4 +1,4 @@
-import { CharthandlerConstructor } from "../interfaces/ChartHandler";
+import { RegistryConstructor } from "../interfaces/ChartHandler";
 import BarHandler from "./chart-handler/BarHandler";
 import BarStackHandler from "./chart-handler/BarStackHandler";
 import BarPercentageHandler from "./chart-handler/BarPercentageHandler";
@@ -14,7 +14,9 @@ import LineHandler from "./chart-handler/LineHandler";
 import GuageHandler from "./chart-handler/GuageHandler";
 import TargetPieHandler from "./chart-handler/TargetPieHandler";
 
-const HANDLER_REGISTRY: { [key: string]: CharthandlerConstructor } = {
+
+
+const HANDLER_REGISTRY: RegistryConstructor = {
   /**
    * 柱图
    */

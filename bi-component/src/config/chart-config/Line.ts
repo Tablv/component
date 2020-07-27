@@ -18,7 +18,7 @@ const templates = {
           color: "#000",
           fontSize: 12,
           fontFamily: "Microsoft YaHei",
-          isShowNumer: false
+          isShowNumber: false
         },
         axisLabel: {
           interval: 0,

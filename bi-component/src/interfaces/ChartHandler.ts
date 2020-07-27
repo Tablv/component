@@ -1,16 +1,68 @@
 import { SplitedFieldNames } from "../service/EChartsService";
 import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
-import { ChartOption } from "glaway-bi-model/view/dashboard/chart/ChartOption";
+import { 
+  BarChartOption,
+  BarStackChartOption,
+  BarPercentageChartOption,
+  HBarChartOption,
+  HBarStackChartOption,
+  HBarPercentageChartOption,
+  LineChartOption,
+  PieChartOption,
+  RadarChartOption,
+  RosePieChartOption,
+  RPieChartOption,
+  SunPieChartOption,
+  TargetPieChartOption,
+  GaugeChartOption,
+  BiaxialChartOption
+} from "glaway-bi-model/view/dashboard/chart/ChartOption";
+
+export interface RegistryConstructor {
+  bar: CharthandlerConstructor<BarChartOption>;
+
+  barStack: CharthandlerConstructor<BarStackChartOption>;
+
+  barPercentage: CharthandlerConstructor<BarPercentageChartOption>;
+
+  hbar: CharthandlerConstructor<HBarChartOption>;
+  hbarStack: CharthandlerConstructor<HBarStackChartOption>;
+  hbarPercentage: CharthandlerConstructor<HBarPercentageChartOption>;
+
+  /**
+   * 饼图
+   */
+  pie: CharthandlerConstructor<PieChartOption>;
+  rpie: CharthandlerConstructor<RPieChartOption>;
+  rosepie: CharthandlerConstructor<RosePieChartOption>;
+  sunpie: CharthandlerConstructor<SunPieChartOption>;
+  targetpie: CharthandlerConstructor<TargetPieChartOption>;
+
+  /**
+   * 雷达图
+   */
+  radar: CharthandlerConstructor<RadarChartOption>;
+
+  /**
+   * 折线图
+   */
+  line: CharthandlerConstructor<LineChartOption>;
+
+  /**
+   * 仪表盘图
+   */
+  guage: CharthandlerConstructor<GaugeChartOption>;
+}
 
 /**
  * 图表通用处理 接口
  */
-export interface CharthandlerConstructor {
+interface CharthandlerConstructor<T> {
   new (
     result: AnalysisResults,
     dashboard: Dashboard,
-    sampleStyle: ChartOption
+    sampleStyle: T
   ): ChartHandler;
 }
 

@@ -18,7 +18,7 @@ const templates = {
           color: "#000",
           fontFamily: "Microsoft YaHei",
           fontSize: 12,
-          isShowNumer: false
+          isShowNumber: false
         },
         axisGroup: {
           xAxis: {

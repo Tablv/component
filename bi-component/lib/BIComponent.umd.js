@@ -126557,7 +126557,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"2bca08b0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=068e160a&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"c1564f2e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=068e160a&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"chart-wrapper"},[_c('div',{ref:"echartsContainer",staticClass:"chart-container"})])}
 var staticRenderFns = []
 
@@ -128772,6 +128772,7 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
         var axisXData = {
           name: "",
           type: "category",
+          show: this.sampleStyle.axisGroup.xAxis.show,
           axisLabel: {
             interval: this.sampleStyle.axisLabel.interval || 0,
             rotate: this.sampleStyle.axisLabel.rotate || 0
@@ -128791,6 +128792,7 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
         var axisXData = {
           name: "",
           type: "category",
+          show: _this.sampleStyle.axisGroup.xAxis.show,
           axisLabel: {
             interval: _this.sampleStyle.axisLabel.interval || 0,
             rotate: _this.sampleStyle.axisLabel.rotate || 0
@@ -128810,6 +128812,7 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
     value: function getYAxis() {
       return [{
         type: "value",
+        show: this.sampleStyle.axisGroup.yAxis.show,
         name: this.sampleStyle.decimals.unit
       }];
     }
@@ -130951,6 +130954,14 @@ var templates = {
           fontSize: 12,
           isShowNumer: false
         },
+        axisGroup: {
+          xAxis: {
+            show: true
+          },
+          yAxis: {
+            show: true
+          }
+        },
         axisLabel: {
           interval: 0,
           rotate: 0
@@ -132136,7 +132147,12 @@ var generalDataTemplate = {
   visualData: {
     grid: [10, 10],
     width: 400,
-    height: 300
+    height: 300,
+    background: "#fff",
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderColor: "#d6d6d6",
+    borderRadius: 0
   },
   echarts: {
     sampleStyle: {

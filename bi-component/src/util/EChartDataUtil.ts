@@ -272,7 +272,7 @@ export default class EChartServiceUtil {
             fontFamily: sampleStyle.label.fontFamily,
             fontSize: sampleStyle.label.fontSize,
             formatter: (params: any) => {
-              if (sampleStyle.label.isShowNumer) {
+              if (sampleStyle.label.isShowNumber) {
                 return (
                   params.name +
                   " - " +

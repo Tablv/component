@@ -20,7 +20,7 @@ const templates = {
             color: "#000",
             fontSize: 12,
             fontFamily: "Microsoft YaHei",
-            isShowNumer: false
+            isShowNumber: false
           },
           radiusConfig: {
             inside: 0,

@@ -112,7 +112,7 @@ export default class GuageHandler implements ChartHandler {
         fontFamily: this.sampleStyle.label.fontFamily,
         fontSize: this.sampleStyle.label.fontSize,
         formatter: (value: number) => {
-          if (!this.sampleStyle.label.isShowNumer) {
+          if (!this.sampleStyle.label.isShowNumber) {
             return (
               ((value / comparison) * 100).toFixed(
                 this.sampleStyle.decimals.value
