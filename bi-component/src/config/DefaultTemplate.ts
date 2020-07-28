@@ -18,6 +18,7 @@ export const defaultDashboardSet: DashboardSet = {
   terminalType: 0,
   widthRatio: 16,
   heightRatio: 9,
+  grid: [10, 10],
   canvasSetting: {
     background: {
       show: true,
@@ -87,14 +88,35 @@ export const generalDataTemplate: any = {
     }
   },
   visualData: {
-    grid: [10, 10],
     width: 400,
     height: 300,
-    background: "#fff",
-    borderWidth: 1,
-    borderStyle: "dashed",
-    borderColor: "#d6d6d6",
-    borderRadius: 0
+    background: {
+      enable: true,
+      props: {
+        type: BackgroundType.color,
+        color: "#fff",
+        url: ""
+      }
+    },
+    border: {
+      enable: false,
+      props: {
+        width: 1,
+        style: "solid",
+        color: "#000",
+        radius: 0
+      }
+    },
+    shadow: {
+      enable: false,
+      props: {
+        h: 0,
+        v: 0,
+        blur: 10,
+        spread: 0,
+        color: "#00000033"
+      }
+    }
   },
   echarts: {
     sampleStyle: {

@@ -1,7 +1,7 @@
 import { SplitedFieldNames } from "../service/EChartsService";
 import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
-import { 
+import {
   BarChartOption,
   BarStackChartOption,
   BarPercentageChartOption,
@@ -16,6 +16,7 @@ import {
   SunPieChartOption,
   TargetPieChartOption,
   GaugeChartOption,
+  FunnelChartOption,
   BiaxialChartOption
 } from "glaway-bi-model/view/dashboard/chart/ChartOption";
 
@@ -53,6 +54,13 @@ export interface RegistryConstructor {
    * 仪表盘图
    */
   guage: CharthandlerConstructor<GaugeChartOption>;
+
+  /**
+   * 漏斗图
+   */
+  funnel: CharthandlerConstructor<FunnelChartOption>;
+
+  biaxial: any;
 }
 
 /**

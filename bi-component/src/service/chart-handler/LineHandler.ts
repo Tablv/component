@@ -109,6 +109,7 @@ export default class LineHandler implements ChartHandler {
   public getSeries(): Array<echarts.EChartOption.Series> {
     let series: Array<echarts.EChartOption.Series> = [];
     const { dimensions, measures } = this.fieldNames;
+    const connectNulls = this.sampleStyle.connectNulls;
     measures.forEach(measureName => {
       const seriesData = {
         name: measureName,
@@ -120,11 +121,17 @@ export default class LineHandler implements ChartHandler {
           fontSize: this.sampleStyle.label.fontSize,
           fontFamily: this.sampleStyle.label.fontFamily
         },
-        data: EChartDataUtil.getDataByFieldName(
+        symbol: this.sampleStyle.symbol,
+        symbolSize: this.sampleStyle.symbolSize,
+        symbolRotate: this.sampleStyle.symbolRotate,
+        smooth: this.sampleStyle.smooth,
+        connectNulls: this.sampleStyle.connectNulls,
+        data: EChartDataUtil.getLineByFieldLineName(
           dimensions,
           measureName,
           this.result,
-          this.sampleStyle.decimals
+          this.sampleStyle.decimals,
+          connectNulls
         )
       };
       series.push(seriesData);

@@ -4,10 +4,7 @@ import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import EChartsService from "../EChartsService";
 import { ChartHandler } from "../../interfaces/ChartHandler";
-import {
-  PieChartOption,
-  GaugeChartOption
-} from "glaway-bi-model/view/dashboard//chart/ChartOption";
+import { GaugeChartOption } from "glaway-bi-model/view/dashboard//chart/ChartOption";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
 
 /**

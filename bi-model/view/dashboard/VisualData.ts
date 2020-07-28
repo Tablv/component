@@ -1,6 +1,7 @@
 import { ChartType } from "glaway-bi-model/enums/ChartType";
 import { EChartsSampleStyle } from "glaway-bi-model/view/dashboard/EChartsOption";
 import Draggable from "glaway-bi-model/view/Draggable";
+import { BackgroundType } from "glaway-bi-model/enums/DashboardSet";
 
 /**
  * 可视化数据
@@ -8,9 +9,6 @@ import Draggable from "glaway-bi-model/view/Draggable";
 export default interface VisualData extends Draggable {
   // 图表类型
   type: ChartType;
-
-  // 网格尺寸
-  grid: Array<number>;
 
   // 图表位置
   position: VisualLocation;
@@ -21,15 +19,44 @@ export default interface VisualData extends Draggable {
   // 高度
   height: number;
 
-  background?: string;
+  background: {
+    enable: boolean,
+    props: {
+      type: BackgroundType;
+      color: string; // color: HEX-Color-Value
+      url: string; // url: IMG-URL
+    }
+  };
 
-  borderWidth?: number;
+  border: {
+    enable: boolean;
+    props: {
+      width: number;
+      style: "dotted" | "solid" | "double" | "dashed";
+      color: string; // Hex
+      radius: number;
+    } | null;
+  };
 
-  borderStyle?: string;
+  shadow: {
+    enable: boolean;
+    props: {
+      // 水平阴影的位置
+      h: number;
+      
+      // 垂直阴影的位置
+      v: number;
+      
+      // 模糊距离
+      blur: number;
 
-  borderColor?: string;
+      // 阴影大小
+      spread: number;
 
-  borderRadius?: number;
+      // 阴影颜色
+      color: string; // Hex
+    } | null;
+  };
 
   // 各图表样例样式
   // (适用于各图表Handler取值，生成带有样式的数据用)

@@ -21,9 +21,12 @@ export default class EChartServiceUtil {
     let fieldArray: echarts.EChartOption.SeriesBar["data"] = [];
 
     fieldArray = result.map((data: any) => {
-      const value = decimals
-        ? Number(data[fieldName]).toFixed(decimals.value)
-        : data[fieldName];
+      let value = data[fieldName];
+      if (typeof value !== "object") {
+        value = decimals
+          ? Number(data[fieldName]).toFixed(decimals.value)
+          : data[fieldName];
+      }
       return {
         measure: {
           name: fieldName,
@@ -41,6 +44,27 @@ export default class EChartServiceUtil {
       };
     });
 
+    return fieldArray;
+  }
+
+  public static getLineByFieldLineName(
+    dimensions: Array<string>,
+    fieldName: string,
+    result: AnalysisResults,
+    decimals?: any,
+    connectNulls?: boolean | object
+  ): echarts.EChartOption.SeriesBar["data"] {
+    let fieldArray: echarts.EChartOption.SeriesBar["data"] = this.getDataByFieldName(
+      dimensions,
+      fieldName,
+      result,
+      decimals
+    );
+    if (fieldArray && typeof connectNulls === "object") {
+      fieldArray.forEach((item: any) => {
+        item.value = item.value || 0;
+      });
+    }
     return fieldArray;
   }
 

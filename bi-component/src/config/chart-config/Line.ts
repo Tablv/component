@@ -24,6 +24,16 @@ const templates = {
           interval: 0,
           rotate: 0
         },
+        symbol: "emptyCircle",
+        // 标记大小
+        symbolSize: 5,
+        // 标记旋转角度 (统一)
+        symbolRotate: 0,
+        // 是否连接空数据
+        connectNulls: false,
+        // 是否平缓曲线
+        smooth: false,
+
         grid: {
           // 初始值需要与全局配置保持一致
           top: {

@@ -19,6 +19,10 @@ export default interface DashboardSet {
    */
   heightRatio: number;
 
+  
+  // 网格尺寸
+  grid: Array<number>;
+
   /**
    * 画布设置
    */

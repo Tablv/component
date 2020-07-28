@@ -170,6 +170,8 @@ export interface GaugeChartOption extends PieChartOption {
   startAngle: number;
 }
 
+export interface FunnelChartOption extends ChartOption {}
+
 /**
  * 图表类型
  */

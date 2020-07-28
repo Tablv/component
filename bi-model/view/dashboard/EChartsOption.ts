@@ -13,7 +13,8 @@ import {
   BiaxialChartOption,
   HBarPercentageChartOption,
   GaugeChartOption,
-  TargetPieChartOption
+  TargetPieChartOption,
+  FunnelChartOption
 } from "glaway-bi-model/view/dashboard/chart/ChartOption";
 /**
  * ECharts Option
@@ -127,4 +128,6 @@ export interface EChartsSampleStyle {
   guage?: GaugeChartOption;
 
   targetpie?: TargetPieChartOption;
+
+  funnel?: FunnelChartOption;
 }

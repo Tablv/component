@@ -126557,7 +126557,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"c1564f2e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=068e160a&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"1cf502d0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=068e160a&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"chart-wrapper"},[_c('div',{ref:"echartsContainer",staticClass:"chart-container"})])}
 var staticRenderFns = []
 
@@ -128436,6 +128436,8 @@ var es_object_keys = __webpack_require__("b64b");
 
 
 
+
+
 var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
   function EChartServiceUtil() {
     _classCallCheck(this, EChartServiceUtil);
@@ -128471,6 +128473,19 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
           value: value
         };
       });
+      return fieldArray;
+    }
+  }, {
+    key: "getLineByFieldLineName",
+    value: function getLineByFieldLineName(dimensions, fieldName, result, decimals, connectNulls) {
+      var fieldArray = this.getDataByFieldName(dimensions, fieldName, result, decimals);
+
+      if (fieldArray && typeof connectNulls === "undefined") {
+        fieldArray.forEach(function (item) {
+          item.value = item.value || 0;
+        });
+      }
+
       return fieldArray;
     }
   }, {
@@ -128669,7 +128684,7 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
           fontFamily: sampleStyle.label.fontFamily,
           fontSize: sampleStyle.label.fontSize,
           formatter: function formatter(params) {
-            if (sampleStyle.label.isShowNumer) {
+            if (sampleStyle.label.isShowNumber) {
               return params.name + " - " + params.value.toFixed(sampleStyle.decimals.value);
             } else {
               return params.name + " - " + params.percent.toFixed(sampleStyle.decimals.value) + "%";
@@ -129843,7 +129858,12 @@ var LineHandler_LineHandler = /*#__PURE__*/function () {
             fontSize: _this2.sampleStyle.label.fontSize,
             fontFamily: _this2.sampleStyle.label.fontFamily
           },
-          data: EChartDataUtil_EChartServiceUtil.getDataByFieldName(dimensions, measureName, _this2.result, _this2.sampleStyle.decimals)
+          symbol: _this2.sampleStyle.symbol,
+          symbolSize: _this2.sampleStyle.symbolSize,
+          symbolRotate: _this2.sampleStyle.symbolRotate,
+          smooth: _this2.sampleStyle.smooth,
+          connectNulls: _this2.sampleStyle.connectNulls,
+          data: EChartDataUtil_EChartServiceUtil.getLineByFieldLineName(dimensions, measureName, _this2.result, _this2.sampleStyle.decimals, _this2.sampleStyle.connectNulls)
         };
         series.push(seriesData);
       });
@@ -129967,7 +129987,7 @@ var GuageHandler_GuageHandler = /*#__PURE__*/function () {
           fontFamily: this.sampleStyle.label.fontFamily,
           fontSize: this.sampleStyle.label.fontSize,
           formatter: function formatter(value) {
-            if (!_this.sampleStyle.label.isShowNumer) {
+            if (!_this.sampleStyle.label.isShowNumber) {
               return (value / comparison * 100).toFixed(_this.sampleStyle.decimals.value) + "%";
             } else {
               return value.toFixed(_this.sampleStyle.decimals.value);
@@ -130076,7 +130096,7 @@ var TargetPieHandler_TargetPieHandler = /*#__PURE__*/function (_PieHandler) {
       var dimevalue = this.result[0][dimensions] || measValue || 100;
       var result = "".concat((Number(measValue) / Number(dimevalue) * 100).toFixed(this.sampleStyle.decimals.value), "%");
 
-      if (this.sampleStyle.label.isShowNumer) {
+      if (this.sampleStyle.label.isShowNumber) {
         result = " ".concat(Number(measValue).toFixed(this.sampleStyle.decimals.value), " / ").concat(Number(dimevalue).toFixed(this.sampleStyle.decimals.value), " ");
       }
 
@@ -130161,7 +130181,19 @@ var TargetPieHandler_TargetPieHandler = /*#__PURE__*/function (_PieHandler) {
 }(PieHandler_PieHandler);
 
 
+// CONCATENATED MODULE: ./src/service/chart-handler/BiaxialHandler.ts
+
+
+/**
+ * 组合图处理
+ */
+var BiaxialHandler_BiaxialHandler = function BiaxialHandler() {
+  _classCallCheck(this, BiaxialHandler);
+};
+
+
 // CONCATENATED MODULE: ./src/service/HandlerRegistry.ts
+
 
 
 
@@ -130209,7 +130241,8 @@ var HANDLER_REGISTRY = {
   /**
    * 仪表盘图
    */
-  guage: GuageHandler_GuageHandler
+  guage: GuageHandler_GuageHandler,
+  biaxial: BiaxialHandler_BiaxialHandler
 };
 /* harmony default export */ var HandlerRegistry = (HANDLER_REGISTRY);
 // CONCATENATED MODULE: ./src/service/handleChart.ts
@@ -130952,7 +130985,7 @@ var templates = {
           color: "#000",
           fontFamily: "Microsoft YaHei",
           fontSize: 12,
-          isShowNumer: false
+          isShowNumber: false
         },
         axisGroup: {
           xAxis: {
@@ -131251,12 +131284,21 @@ var Line_templates = {
           color: "#000",
           fontSize: 12,
           fontFamily: "Microsoft YaHei",
-          isShowNumer: false
+          isShowNumber: false
         },
         axisLabel: {
           interval: 0,
           rotate: 0
         },
+        symbol: "emptyCircle",
+        // 标记大小
+        symbolSize: 5,
+        // 标记旋转角度 (统一)
+        symbolRotate: 0,
+        // 是否连接空数据
+        connectNulls: false,
+        // 是否平缓曲线
+        smooth: false,
         grid: {
           // 初始值需要与全局配置保持一致
           top: {
@@ -131340,7 +131382,7 @@ var Pie_templates = {
           color: "#000",
           fontSize: 12,
           fontFamily: "Microsoft YaHei",
-          isShowNumer: false
+          isShowNumber: false
         },
         centerConfig: {
           xAxias: "50%",
@@ -131723,7 +131765,7 @@ var TargetPie_templates = {
           color: "#000",
           fontSize: 12,
           fontFamily: "Microsoft YaHei",
-          isShowNumer: false
+          isShowNumber: false
         },
         radiusConfig: {
           inside: 0,
@@ -131802,7 +131844,7 @@ var Gauge_templates = {
           color: "#000",
           fontSize: 12,
           fontFamily: "Microsoft YaHei",
-          isShowNumer: false
+          isShowNumber: false
         },
         radiusConfig: {
           axisLineWidth: 2,
@@ -132076,6 +132118,7 @@ var defaultDashboardSet = {
   terminalType: 0,
   widthRatio: 16,
   heightRatio: 9,
+  grid: [10, 10],
   canvasSetting: {
     background: {
       show: true,
@@ -132145,14 +132188,35 @@ var generalDataTemplate = {
     }
   },
   visualData: {
-    grid: [10, 10],
     width: 400,
     height: 300,
-    background: "#fff",
-    borderWidth: 1,
-    borderStyle: "dashed",
-    borderColor: "#d6d6d6",
-    borderRadius: 0
+    background: {
+      enable: true,
+      props: {
+        type: BackgroundType.color,
+        color: "#fff",
+        url: ""
+      }
+    },
+    border: {
+      enable: false,
+      props: {
+        width: 1,
+        style: "solid",
+        color: "#000",
+        radius: 0
+      }
+    },
+    shadow: {
+      enable: false,
+      props: {
+        h: 0,
+        v: 0,
+        blur: 10,
+        spread: 0,
+        color: "#00000033"
+      }
+    }
   },
   echarts: {
     sampleStyle: {

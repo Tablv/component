@@ -13,8 +13,8 @@ import RadarHandler from "./chart-handler/RadarHandler";
 import LineHandler from "./chart-handler/LineHandler";
 import GuageHandler from "./chart-handler/GuageHandler";
 import TargetPieHandler from "./chart-handler/TargetPieHandler";
-
-
+import BiaxialHandler from "./chart-handler/BiaxialHandler";
+import FunnelHandler from "./chart-handler/FunnelHandler";
 
 const HANDLER_REGISTRY: RegistryConstructor = {
   /**
@@ -50,7 +50,14 @@ const HANDLER_REGISTRY: RegistryConstructor = {
   /**
    * 仪表盘图
    */
-  guage: GuageHandler
+  guage: GuageHandler,
+
+  /**
+   * 漏斗图
+   */
+  funnel: FunnelHandler,
+
+  biaxial: BiaxialHandler
 };
 
 export default HANDLER_REGISTRY;

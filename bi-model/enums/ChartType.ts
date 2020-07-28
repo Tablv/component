@@ -75,5 +75,10 @@ export const enum ChartType {
   /**
    * 指示器
    */
-  targetpie = "targetpie"
+  targetpie = "targetpie",
+
+  /**
+   * 漏斗图
+   */
+  funnel = "funnel"
 }
