@@ -81,6 +81,14 @@ const menuOptions = {
           { text: "内部", value: "inside" }
         ]
       }
+    },
+  },
+  label: {
+    position: {
+      selection: [
+        { text: "顶部", value: "top" },
+        { text: "内部", value: "inside" }
+      ]
     }
   }
 };

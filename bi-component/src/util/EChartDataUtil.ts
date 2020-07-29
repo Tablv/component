@@ -104,6 +104,88 @@ export default class EChartServiceUtil {
   }
 
   /**
+   * 漏斗图 分析数据处理方式
+   * 漏斗图单维度
+   * @param dimensions {string[]} 维度数组
+   * @param measureName {string} 度量字段名称
+   * @param result {AnalysisResults} 分析数据
+   * @param decimals {any} 小数位设置
+   */
+  public static getFunnelByDimensionsArray(
+    dimensions: string[],
+    measureName: string,
+    result: AnalysisResults,
+    decimals?: any
+  ): echarts.EChartOption.SeriesBar["data"] {
+    // dimensions 维度数组
+    const dimensKey = dimensions[0];
+    const dataresult: echarts.EChartOption.SeriesBar["data"] = result.map(
+      item => {
+        const resultValue = item[measureName],
+          value = decimals
+            ? Number(resultValue).toFixed(decimals.value)
+            : resultValue;
+        return {
+          measure: {
+            name: item[dimensKey],
+            value: resultValue
+          },
+          dimensions: [
+            {
+              name: item[dimensKey],
+              item: resultValue
+            }
+          ],
+          name: item[dimensKey],
+          value
+        };
+      }
+    ) as any;
+
+    return dataresult;
+  }
+
+  public static getFunnelByNoDimensionsArray(
+    measureList: string[],
+    result: AnalysisResults,
+    decimals?: any
+  ): echarts.EChartOption.SeriesBar["data"] {
+    // dimensions 维度数组
+    const dataresult: echarts.EChartOption.SeriesBar["data"] = [];
+    const mapResult = new Map<string, number>();
+    result.map(item => {
+      measureList.forEach(measure => {
+        const oldValue = mapResult.get(measure);
+        const newValue = oldValue
+          ? oldValue + Number(item[measure])
+          : Number(item[measure]);
+        mapResult.set(measure, newValue);
+      });
+    });
+    mapResult.forEach((resultValue: number, key: string) => {
+      const value = decimals
+        ? Number(resultValue).toFixed(decimals.value)
+        : resultValue;
+      dataresult.push(<any>{
+        measure: {
+          name: key,
+          value: resultValue
+        },
+        dimensions: [
+          {
+            name: key,
+            value: resultValue
+          }
+        ],
+        name: key,
+        value
+      });
+    });
+
+    return dataresult;
+  }
+
+  /**
    * 通过字段名，获取结果集内的数据数组
    * 百分比堆积柱图
    * @param fieldName 字段名

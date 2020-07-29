@@ -17,7 +17,6 @@ const templates = {
 /**
  * 菜单选项
  */
-// const menuOptions = ObjectUtil.copy(PieConfig.menuOptions);
 const menuOptions = {
   label: {
     position: {

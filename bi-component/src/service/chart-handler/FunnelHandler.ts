@@ -4,8 +4,9 @@ import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import EChartsService from "../EChartsService";
 import { ChartHandler } from "../../interfaces/ChartHandler";
-import { FunnelChartOption } from "glaway-bi-model/view/dashboard//chart/ChartOption";
+import { FunnelChartOption } from "glaway-bi-model/view/dashboard/chart/FunnelChartOption";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
+import { map } from "lodash";
 
 /**
  * 仪表盘处理
@@ -55,6 +56,7 @@ export default class FunnelHandler implements ChartHandler {
    */
   public getSeries(): Array<echarts.EChartOption.Series> {
     let series: Array<echarts.EChartOption.Series> = [];
+    const { dimensions, measures } = this.fieldNames;
 
     // 指示器这里 实际值 = 度量
     // 实际值必须唯一，
@@ -65,35 +67,102 @@ export default class FunnelHandler implements ChartHandler {
         color: this.sampleStyle.label.color,
         fontFamily: this.sampleStyle.label.fontFamily,
         fontSize: this.sampleStyle.label.fontSize,
-        position: this.sampleStyle.label.position
+        position: this.sampleStyle.label.position,
+        formatter: "{b} : {c}"
       },
-      itemStyle: {
-        borderColor: '#fff000',
-        borderWidth: 10
-      },
-      data: [
-        {value: 60, name: '访问'},
-        {value: 30, name: '咨询'},
-        {value: 10, name: '订单'},
-        {value: 80, name: '点击'},
-        {value: 100, name: '展现'}
-    ]
+      labelLine: this.sampleStyle.labelLine,
+      itemStyle: this.sampleStyle.itemStyle,
+      sort: this.sampleStyle.sort,
+      funnelAlign: this.sampleStyle.funnelAlign,
+      gap: this.sampleStyle.gap,
+      min: this.sampleStyle.min,
+      max: this.sampleStyle.max,
+      minSize: this.sampleStyle.minSize + "%",
+      maxSize: this.sampleStyle.maxSize + "%",
+      width: this.sampleStyle.width + "%",
+      height: this.sampleStyle.height + "%",
+      top: this.sampleStyle.centerConfig
+        ? this.sampleStyle.centerConfig.yAxias
+        : 0,
+      left: this.sampleStyle.centerConfig
+        ? this.sampleStyle.centerConfig.xAxias
+        : 0
     } as any;
-    series.push(seriesData);
+
+    if (dimensions.length) {
+      const serieData = this.getSeriesDimensions(seriesData, measures[0]);
+      series.push(serieData);
+    } else {
+      // 不存在维度字段
+      // 度量字段名字作为维度字段
+      const serieData = this.getSeriesUndimesion(seriesData);
+      series.push(serieData);
+    }
 
     return series;
+  }
+
+  /**
+   * 将会把结果数据以及度量设置为二维数组，返回对应一行数据
+   * @name 不存维度时的series处理函数
+   * @param seriesData 系列数据
+   * @param measureName 度量名
+   * @param index 下标
+   */
+  private getSeriesUndimesion(
+    seriesData: echarts.EChartOption.Series
+  ): echarts.EChartOption.Series {
+    const andSeriesData = {
+      name: "Undimesion",
+      data: EChartDataUtil.getFunnelByNoDimensionsArray(
+        this.fieldNames.measures,
+        this.result,
+        this.sampleStyle.decimals
+      )
+    };
+    return Object.assign(andSeriesData, seriesData);
+  }
+
+  /**
+   * @name 存在维度的series处理函数
+   * @param seriesData 系列数据
+   * @param measureName 度量名
+   */
+  private getSeriesDimensions(
+    seriesData: echarts.EChartOption.Series,
+    measureName: string
+  ): echarts.EChartOption.Series {
+    const dimensions = this.fieldNames.dimensions;
+    const andSeriesData = {
+      name: measureName,
+      data: EChartDataUtil.getFunnelByDimensionsArray(
+        dimensions,
+        measureName,
+        this.result,
+        this.sampleStyle.decimals
+      )
+    };
+    return Object.assign(andSeriesData, seriesData);
   }
 
   // 提示信息
   getTooltips() {
     return {
-      trigger: 'item',
-      formatter: "{b} : {c}%"
+      formatter: "{b} : {c}"
     };
   }
+
+  // 图例信息
   getLegend() {
-    return {
-      data:  ['展现','点击','访问','咨询','订单']
-    };
+    const { dimensions, measures } = this.fieldNames;
+    if (dimensions.length) {
+      return {
+        data: this.result.map(item => item[dimensions[0]].toString())
+      };
+    } else {
+      return {
+        data: measures
+      };
+    }
   }
 }

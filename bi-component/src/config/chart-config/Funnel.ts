@@ -9,7 +9,57 @@ import BarConfig from "./Bar";
 const templates = {
   echarts: {
     sampleStyle: {
-      funnel: Object.assign({}, BarConfig.templates.echarts.sampleStyle.bar)
+      funnel: {
+        min: 0,
+        max: 100,
+        minSize: 0,
+        maxSize: 100,
+        labelLine: {
+          show: false
+        },
+        itemStyle: {
+          borderColor: "#ffffff00",
+          borderWidth: 0
+        },
+        sort: "descending",
+        funnelAlign: "center",
+        gap: 2,
+        width: 40,
+        height: 45,
+        grid: {
+          // 初始值需要与全局配置保持一致
+          top: {
+            value: 50,
+            unit: "px"
+          },
+          left: {
+            value: 50,
+            unit: "px"
+          },
+          right: {
+            value: 50,
+            unit: "px"
+          },
+          bottom: {
+            value: 30,
+            unit: "px"
+          }
+        },
+        label: {
+          show: false,
+          position: "left",
+          color: "#000",
+          fontFamily: "Microsoft YaHei"
+        },
+        decimals: {
+          value: 0,
+          unit: ""
+        },
+        centerConfig: {
+          xAxias: "50px",
+          yAxias: "50px"
+        }
+      }
     }
   }
 };
@@ -17,7 +67,23 @@ const templates = {
 /**
  * 菜单选项
  */
-const menuOptions = ObjectUtil.copy(BarConfig.menuOptions);
+const menuOptions = {
+  label: {
+    position: {
+      selection: [
+        { text: "左侧", value: "left" },
+        { text: "右侧", value: "right" },
+        { text: "左侧上部", value: "leftTop" },
+        { text: "左侧下部", value: "leftBottom" },
+        { text: "右侧上部", value: "rightTop" },
+        { text: "右侧下部", value: "rightBottom" },
+        { text: "内部", value: "inside" },
+        { text: "内部右侧", value: "insideRight" },
+        { text: "内部左侧", value: "insideLeft" }
+      ]
+    }
+  }
+};
 
 /**
  * 创建菜单配置

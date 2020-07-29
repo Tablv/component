@@ -126548,7 +126548,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"1cf502d0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=068e160a&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"36611cf1-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=068e160a&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"chart-wrapper"},[_c('div',{ref:"echartsContainer",staticClass:"chart-container"})])}
 var staticRenderFns = []
 
@@ -128408,6 +128408,9 @@ var Warn_WarnBuilder = /*#__PURE__*/function () {
 
   return WarnBuilder;
 }();
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.map.js
+var es_map = __webpack_require__("4ec9");
+
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.number.constructor.js
 var es_number_constructor = __webpack_require__("a9e3");
 
@@ -128418,6 +128421,12 @@ var es_number_to_fixed = __webpack_require__("b680");
 var es_object_keys = __webpack_require__("b64b");
 
 // CONCATENATED MODULE: ./src/util/EChartDataUtil.ts
+
+
+
+
+
+
 
 
 
@@ -128447,7 +128456,12 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
     value: function getDataByFieldName(dimensions, fieldName, result, decimals) {
       var fieldArray = [];
       fieldArray = result.map(function (data) {
-        var value = decimals ? Number(data[fieldName]).toFixed(decimals.value) : data[fieldName];
+        var value = data[fieldName];
+
+        if (_typeof(value) !== "object") {
+          value = decimals ? Number(data[fieldName]).toFixed(decimals.value) : data[fieldName];
+        }
+
         return {
           measure: {
             name: fieldName,
@@ -128471,7 +128485,7 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
     value: function getLineByFieldLineName(dimensions, fieldName, result, decimals, connectNulls) {
       var fieldArray = this.getDataByFieldName(dimensions, fieldName, result, decimals);
 
-      if (fieldArray && typeof connectNulls === "undefined") {
+      if (fieldArray && _typeof(connectNulls) === "object") {
         fieldArray.forEach(function (item) {
           item.value = item.value || 0;
         });
@@ -128499,6 +128513,68 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
         originalValue: resultValue,
         value: value
       };
+      return dataresult;
+    }
+    /**
+     * 漏斗图 分析数据处理方式
+     * 漏斗图单维度
+     * @param dimensions {string[]} 维度数组
+     * @param measureName {string} 度量字段名称
+     * @param result {AnalysisResults} 分析数据
+     * @param decimals {any} 小数位设置
+     */
+
+  }, {
+    key: "getFunnelByDimensionsArray",
+    value: function getFunnelByDimensionsArray(dimensions, measureName, result, decimals) {
+      // dimensions 维度数组
+      var dimensKey = dimensions[0];
+      var dataresult = result.map(function (item) {
+        var resultValue = item[measureName],
+            value = decimals ? Number(resultValue).toFixed(decimals.value) : resultValue;
+        return {
+          measure: {
+            name: item[dimensKey],
+            value: resultValue
+          },
+          dimensions: [{
+            name: item[dimensKey],
+            item: resultValue
+          }],
+          name: item[dimensKey],
+          value: value
+        };
+      });
+      return dataresult;
+    }
+  }, {
+    key: "getFunnelByNoDimensionsArray",
+    value: function getFunnelByNoDimensionsArray(measureList, result, decimals) {
+      // dimensions 维度数组
+      var dataresult = [];
+      var mapResult = new Map();
+      result.map(function (item) {
+        measureList.forEach(function (measure) {
+          var oldValue = mapResult.get(measure);
+          var newValue = oldValue ? oldValue + Number(item[measure]) : Number(item[measure]);
+          mapResult.set(measure, newValue);
+        });
+      });
+      mapResult.forEach(function (resultValue, key) {
+        var value = decimals ? Number(resultValue).toFixed(decimals.value) : resultValue;
+        dataresult.push({
+          measure: {
+            name: key,
+            value: resultValue
+          },
+          dimensions: [{
+            name: key,
+            value: resultValue
+          }],
+          name: key,
+          value: value
+        });
+      });
       return dataresult;
     }
     /**
@@ -129838,6 +129914,7 @@ var LineHandler_LineHandler = /*#__PURE__*/function () {
       var _this$fieldNames = this.fieldNames,
           dimensions = _this$fieldNames.dimensions,
           measures = _this$fieldNames.measures;
+      var connectNulls = this.sampleStyle.connectNulls;
       measures.forEach(function (measureName) {
         var seriesData = {
           name: measureName,
@@ -129854,7 +129931,7 @@ var LineHandler_LineHandler = /*#__PURE__*/function () {
           symbolRotate: _this2.sampleStyle.symbolRotate,
           smooth: _this2.sampleStyle.smooth,
           connectNulls: _this2.sampleStyle.connectNulls,
-          data: EChartDataUtil_EChartServiceUtil.getLineByFieldLineName(dimensions, measureName, _this2.result, _this2.sampleStyle.decimals, _this2.sampleStyle.connectNulls)
+          data: EChartDataUtil_EChartServiceUtil.getLineByFieldLineName(dimensions, measureName, _this2.result, _this2.sampleStyle.decimals, connectNulls)
         };
         series.push(seriesData);
       });
@@ -130183,7 +130260,172 @@ var BiaxialHandler_BiaxialHandler = function BiaxialHandler() {
 };
 
 
+// CONCATENATED MODULE: ./src/service/chart-handler/FunnelHandler.ts
+
+
+
+
+
+
+
+
+
+/**
+ * 仪表盘处理
+ */
+
+var FunnelHandler_FunnelHandler = /*#__PURE__*/function () {
+  /**
+   * 数据设置
+   * 后面有其他的设置也加入到这里
+   * @param result 分析结果
+   * @param dashboard 仪表盘数据
+   * @param sampleStyle 样例样式
+   */
+  function FunnelHandler(result, dashboard, sampleStyle) {
+    _classCallCheck(this, FunnelHandler);
+
+    this.result = result;
+    this.dashboard = dashboard;
+    this.sampleStyle = sampleStyle;
+    this.fieldNames = EChartsService_EChartsService.splitFieldNames(this.result[0], this.dashboard);
+  }
+
+  _createClass(FunnelHandler, [{
+    key: "getStyle",
+    value: function getStyle() {
+      var style = {};
+
+      if (ObjectUtil_ObjectUtil.isEmpty(this.result)) {
+        style.series = [];
+        return {};
+      }
+
+      style.series = this.getSeries();
+      style.tooltip = this.getTooltips();
+      style.legend = this.getLegend();
+      return style;
+    }
+    /**
+     * 获取Series数据
+     */
+
+  }, {
+    key: "getSeries",
+    value: function getSeries() {
+      var series = [];
+      var _this$fieldNames = this.fieldNames,
+          dimensions = _this$fieldNames.dimensions,
+          measures = _this$fieldNames.measures; // 指示器这里 实际值 = 度量
+      // 实际值必须唯一，
+
+      var seriesData = {
+        type: "funnel",
+        label: {
+          show: this.sampleStyle.label.show,
+          color: this.sampleStyle.label.color,
+          fontFamily: this.sampleStyle.label.fontFamily,
+          fontSize: this.sampleStyle.label.fontSize,
+          position: this.sampleStyle.label.position,
+          formatter: "{b} : {c}"
+        },
+        labelLine: this.sampleStyle.labelLine,
+        itemStyle: this.sampleStyle.itemStyle,
+        sort: this.sampleStyle.sort,
+        funnelAlign: this.sampleStyle.funnelAlign,
+        gap: this.sampleStyle.gap,
+        min: this.sampleStyle.min,
+        max: this.sampleStyle.max,
+        minSize: this.sampleStyle.minSize + "%",
+        maxSize: this.sampleStyle.maxSize + "%",
+        width: this.sampleStyle.width + "%",
+        height: this.sampleStyle.height + "%",
+        top: this.sampleStyle.centerConfig ? this.sampleStyle.centerConfig.yAxias : 0,
+        left: this.sampleStyle.centerConfig ? this.sampleStyle.centerConfig.xAxias : 0
+      };
+
+      if (dimensions.length) {
+        var serieData = this.getSeriesDimensions(seriesData, measures[0]);
+        series.push(serieData);
+      } else {
+        // 不存在维度字段
+        // 度量字段名字作为维度字段
+        var _serieData = this.getSeriesUndimesion(seriesData);
+
+        series.push(_serieData);
+      }
+
+      return series;
+    }
+    /**
+     * 将会把结果数据以及度量设置为二维数组，返回对应一行数据
+     * @name 不存维度时的series处理函数
+     * @param seriesData 系列数据
+     * @param measureName 度量名
+     * @param index 下标
+     */
+
+  }, {
+    key: "getSeriesUndimesion",
+    value: function getSeriesUndimesion(seriesData) {
+      var andSeriesData = {
+        name: "Undimesion",
+        data: EChartDataUtil_EChartServiceUtil.getFunnelByNoDimensionsArray(this.fieldNames.measures, this.result, this.sampleStyle.decimals)
+      };
+      return Object.assign(andSeriesData, seriesData);
+    }
+    /**
+     * @name 存在维度的series处理函数
+     * @param seriesData 系列数据
+     * @param measureName 度量名
+     */
+
+  }, {
+    key: "getSeriesDimensions",
+    value: function getSeriesDimensions(seriesData, measureName) {
+      var dimensions = this.fieldNames.dimensions;
+      var andSeriesData = {
+        name: measureName,
+        data: EChartDataUtil_EChartServiceUtil.getFunnelByDimensionsArray(dimensions, measureName, this.result, this.sampleStyle.decimals)
+      };
+      return Object.assign(andSeriesData, seriesData);
+    } // 提示信息
+
+  }, {
+    key: "getTooltips",
+    value: function getTooltips() {
+      return {
+        formatter: "{b} : {c}"
+      };
+    } // 图例信息
+
+  }, {
+    key: "getLegend",
+    value: function getLegend() {
+      var _this$fieldNames2 = this.fieldNames,
+          dimensions = _this$fieldNames2.dimensions,
+          measures = _this$fieldNames2.measures;
+
+      if (dimensions.length) {
+        return {
+          data: this.result.map(function (item) {
+            return item[dimensions[0]].toString();
+          })
+        };
+      } else {
+        return {
+          data: measures
+        };
+      }
+    }
+  }]);
+
+  return FunnelHandler;
+}();
+
+
 // CONCATENATED MODULE: ./src/service/HandlerRegistry.ts
+
 
 
 
@@ -130233,6 +130475,11 @@ var HANDLER_REGISTRY = {
    * 仪表盘图
    */
   guage: GuageHandler_GuageHandler,
+
+  /**
+   * 漏斗图
+   */
+  funnel: FunnelHandler_FunnelHandler,
   biaxial: BiaxialHandler_BiaxialHandler
 };
 /* harmony default export */ var HandlerRegistry = (HANDLER_REGISTRY);
@@ -130399,9 +130646,6 @@ var ParamsConverter_ParamsConverter = /*#__PURE__*/function () {
   return ParamsConverter;
 }();
 
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.map.js
-var es_map = __webpack_require__("4ec9");
 
 // CONCATENATED MODULE: ./node_modules/glaway-bi-model/enums/SortType.ts
 /**
@@ -130955,6 +131199,11 @@ var ChartType;
    */
 
   ChartType["targetpie"] = "targetpie";
+  /**
+   * 漏斗图
+   */
+
+  ChartType["funnel"] = "funnel";
 })(ChartType || (ChartType = {}));
 // CONCATENATED MODULE: ./src/config/chart-config/Bar.ts
 
@@ -131045,6 +131294,17 @@ var menuOptions = {
           value: "inside"
         }]
       }
+    }
+  },
+  label: {
+    position: {
+      selection: [{
+        text: "顶部",
+        value: "top"
+      }, {
+        text: "内部",
+        value: "inside"
+      }]
     }
   }
 };
@@ -131317,7 +131577,19 @@ var Line_templates = {
  * 菜单选项
  */
 
-var Line_menuOptions = {};
+var Line_menuOptions = {
+  label: {
+    position: {
+      selection: [{
+        text: "顶部",
+        value: "top"
+      }, {
+        text: "内部",
+        value: "inside"
+      }]
+    }
+  }
+};
 /**
  * 创建菜单配置
  */
@@ -131594,7 +131866,6 @@ var Radar_templates = {
 /**
  * 菜单选项
  */
-// const menuOptions = ObjectUtil.copy(PieConfig.menuOptions);
 
 var Radar_menuOptions = {
   label: {
@@ -131893,6 +132164,131 @@ var GuageConfig = {
   config: Gauge_config
 };
 /* harmony default export */ var Gauge = (GuageConfig);
+// CONCATENATED MODULE: ./src/config/chart-config/Funnel.ts
+
+
+
+/**
+ * 初始化模板
+ */
+
+var Funnel_templates = {
+  echarts: {
+    sampleStyle: {
+      funnel: {
+        min: 0,
+        max: 100,
+        minSize: 0,
+        maxSize: 100,
+        labelLine: {
+          show: false
+        },
+        itemStyle: {
+          borderColor: "#ffffff00",
+          borderWidth: 0
+        },
+        sort: "descending",
+        funnelAlign: "center",
+        gap: 2,
+        width: 40,
+        height: 45,
+        grid: {
+          // 初始值需要与全局配置保持一致
+          top: {
+            value: 50,
+            unit: "px"
+          },
+          left: {
+            value: 50,
+            unit: "px"
+          },
+          right: {
+            value: 50,
+            unit: "px"
+          },
+          bottom: {
+            value: 30,
+            unit: "px"
+          }
+        },
+        label: {
+          show: false,
+          position: "left",
+          color: "#000",
+          fontFamily: "Microsoft YaHei"
+        },
+        decimals: {
+          value: 0,
+          unit: ""
+        },
+        centerConfig: {
+          xAxias: "50px",
+          yAxias: "50px"
+        }
+      }
+    }
+  }
+};
+/**
+ * 菜单选项
+ */
+
+var Funnel_menuOptions = {
+  label: {
+    position: {
+      selection: [{
+        text: "左侧",
+        value: "left"
+      }, {
+        text: "右侧",
+        value: "right"
+      }, {
+        text: "左侧上部",
+        value: "leftTop"
+      }, {
+        text: "左侧下部",
+        value: "leftBottom"
+      }, {
+        text: "右侧上部",
+        value: "rightTop"
+      }, {
+        text: "右侧下部",
+        value: "rightBottom"
+      }, {
+        text: "内部",
+        value: "inside"
+      }, {
+        text: "内部右侧",
+        value: "insideRight"
+      }, {
+        text: "内部左侧",
+        value: "insideLeft"
+      }]
+    }
+  }
+};
+/**
+ * 创建菜单配置
+ */
+
+var Funnel_createMenuConfig = {
+  iconClass: "gw-iconfsux_tubiao_loudoutu",
+  title: "漏斗图",
+  createType: ChartType.funnel,
+  enable: true
+};
+/**
+ * 配置项
+ */
+
+var Funnel_config = ObjectUtil_ObjectUtil.copy(Bar.config);
+var FunnelConfig = {
+  templates: Funnel_templates,
+  menuOptions: Funnel_menuOptions,
+  createMenuConfig: Funnel_createMenuConfig,
+  config: Funnel_config
+};
+/* harmony default export */ var Funnel = (FunnelConfig);
 // CONCATENATED MODULE: ./src/config/ChartConfig.ts
 
 
@@ -131908,6 +132304,8 @@ var GuageConfig = {
 
 
 
+
+ // import SunPieConfig from "./chart-config/SunPie";
 
 
 
@@ -132082,7 +132480,12 @@ ChartConfig_ChartConfig.chartConfigMap = {
   /**
    * 指示器
    */
-  targetpie: TargetPie
+  targetpie: TargetPie,
+
+  /**
+   * 指示器
+   */
+  funnel: Funnel
 };
 // CONCATENATED MODULE: ./src/config/DefaultTemplate.ts
 

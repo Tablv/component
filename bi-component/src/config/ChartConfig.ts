@@ -199,7 +199,6 @@ export default class ChartConfig {
         if (chartConfig) {
           resultMap[chartType] = chartConfig;
         }
-
         return resultMap;
       },
       {}
