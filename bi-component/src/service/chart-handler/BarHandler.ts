@@ -19,7 +19,7 @@ export default class BarHandler implements ChartHandler {
    */
   public fieldNames: SplitedFieldNames;
   /**
-   * 数据设置
+   * @function 构造函数
    * 后面有其他的设置也加入到这里
    * @param result 分析结果
    * @param dashboard 仪表盘数据
@@ -37,7 +37,7 @@ export default class BarHandler implements ChartHandler {
   }
 
   /**
-   * @name 获取图表的处理结果
+   * @function 获取图表的处理结果
    */
   public getStyle(): echarts.EChartOption {
     let style: echarts.EChartOption = {};
@@ -65,7 +65,7 @@ export default class BarHandler implements ChartHandler {
   }
 
   /**
-   * @name 获取X轴数据
+   * @function 获取X轴数据
    */
   public getXAxis(): Array<echarts.EChartOption.XAxis> {
     let xAxis: Array<echarts.EChartOption.XAxis> = [];
@@ -109,7 +109,7 @@ export default class BarHandler implements ChartHandler {
   }
 
   /**
-   * @name 获取Y轴数据
+   * @function 获取Y轴数据
    */
   public getYAxis(): Array<echarts.EChartOption.YAxis> {
     return [
@@ -123,7 +123,7 @@ export default class BarHandler implements ChartHandler {
 
   /**
    * 将会把结果数据以及度量设置为二维数组，返回对应一行数据
-   * @name 不存维度时的series处理函数
+   * @function 不存维度时的series处理函数
    * @param seriesData 系列数据
    * @param measureName 度量名
    * @param index 下标
@@ -144,7 +144,7 @@ export default class BarHandler implements ChartHandler {
   }
 
   /**
-   * @name 存在维度的series处理函数
+   * @function 存在维度的series处理函数
    * @param seriesData 系列数据
    * @param measureName 度量名
    */
@@ -167,7 +167,7 @@ export default class BarHandler implements ChartHandler {
   }
 
   /**
-   * @name 获取Series数据
+   * @function 获取Series数据
    */
   public getSeries(): Array<echarts.EChartOption.Series> {
     let series: Array<echarts.EChartOption.Series> = [];
@@ -194,7 +194,7 @@ export default class BarHandler implements ChartHandler {
   }
 
   /**
-   * @name 获取图例
+   * @function 获取图例
    */
   public getLegend(): echarts.EChartOption.Legend {
     const legend = {

@@ -6,7 +6,7 @@ import {
 
 export default class EChartServiceUtil {
   /**
-   * 通过字段名，获取结果集内的数据数组
+   * @function 通过字段名，获取结果集内的数据数组
    * - 柱图，堆积柱图
    *
    * @param fieldName 字段名
@@ -48,8 +48,8 @@ export default class EChartServiceUtil {
   }
 
   /**
-   * 线形图 分析数据处理方式
-   * 线形图单维度
+   * @function 线形图分析数据处理方式
+   * - 线形图单维度
    * @param dimensions {string[]} 维度数组
    * @param measureName {string} 度量字段名称
    * @param result {AnalysisResults} 分析数据
@@ -78,7 +78,8 @@ export default class EChartServiceUtil {
   }
 
   /**
-   * 线形图无维度处理方法
+   * @function 线形图无维度处理方法
+   * - 无维度
    * @param measureList 度量字段集合
    * @param result 分析结果集
    * @param decimals 小数设置
@@ -138,7 +139,7 @@ export default class EChartServiceUtil {
   }
 
   /**
-   * 漏斗图 分析数据处理方式
+   * @function 漏斗图分析数据处理方式
    * 漏斗图单维度
    * @param dimensions {string[]} 维度数组
    * @param measureName {string} 度量字段名称
@@ -180,7 +181,7 @@ export default class EChartServiceUtil {
   }
 
   /**
-   * 漏斗图无维度处理方法
+   * @function 漏斗图无维度处理方法
    * @param measureList 度量字段集合
    * @param result 分析结果集
    * @param decimals 小数设置

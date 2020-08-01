@@ -79,46 +79,46 @@ interface CharthandlerConstructor<T> {
  */
 export interface ChartHandler {
   /**
-   * 分析结果
+   * @name 分析结果
    */
   result: AnalysisResults;
 
   /**
-   * 仪表盘数据
+   * @name 仪表盘数据
    */
   dashboard: Dashboard;
 
   /**
-   * 样例样式
+   * @name 样例样式
    */
   sampleStyle: any;
 
   /**
-   * 分析字段
+   * @name 分析字段
    */
   fieldNames: SplitedFieldNames;
 
   /**
-   * 获取计算后的结果样式
+   * @function 获取计算后的结果样式
    */
   getStyle(): echarts.EChartOption;
   /**
-   * 获取 X轴 数据
+   * @function 获取X轴数据
    */
   getXAxis?(): Array<echarts.EChartOption.XAxis>;
 
   /**
-   * 获取 Y轴 数据
+   * @function 获取Y轴数据
    */
   getYAxis?(): Array<echarts.EChartOption.YAxis>;
 
   /**
-   * 获取 Series 数据
+   * @function 获取Series数据
    */
   getSeries(): Array<echarts.EChartOption.Series>;
 
   /**
-   * 获取图例
+   * @function 获取图例
    */
   getLegend?(): echarts.EChartOption.Legend;
 }
