@@ -81,7 +81,7 @@ const menuOptions = {
           { text: "内部", value: "inside" }
         ]
       }
-    },
+    }
   },
   label: {
     position: {

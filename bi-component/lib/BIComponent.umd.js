@@ -126557,12 +126557,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"36611cf1-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=068e160a&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"36611cf1-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=13c852d0&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"chart-wrapper"},[_c('div',{ref:"echartsContainer",staticClass:"chart-container"})])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=068e160a&
+// CONCATENATED MODULE: ./src/components/ChartComponent.vue?vue&type=template&id=13c852d0&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.join.js
 var es_array_join = __webpack_require__("a15b");
@@ -128457,7 +128457,7 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
 
     /**
      * 通过字段名，获取结果集内的数据数组
-     * - 柱图，堆积柱图, 折线图
+     * - 柱图，堆积柱图
      *
      * @param fieldName 字段名
      * @param result 结果集
@@ -128489,10 +128489,40 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
       });
       return fieldArray;
     }
+    /**
+     * 线形图 分析数据处理方式
+     * 线形图单维度
+     * @param dimensions {string[]} 维度数组
+     * @param measureName {string} 度量字段名称
+     * @param result {AnalysisResults} 分析数据
+     * @param decimals {any} 小数位设置
+     * @param connectNulls {boolean} null是否为0
+     */
+
   }, {
-    key: "getLineByFieldLineName",
-    value: function getLineByFieldLineName(dimensions, fieldName, result, decimals, connectNulls) {
-      var fieldArray = this.getDataByFieldName(dimensions, fieldName, result, decimals);
+    key: "getLineByDimensionsArray",
+    value: function getLineByDimensionsArray(dimensions, measureName, result, decimals, connectNulls) {
+      var fieldArray = this.getFunnelByDimensionsArray(dimensions, measureName, result, decimals);
+
+      if (fieldArray && _typeof(connectNulls) === "object") {
+        fieldArray.forEach(function (item) {
+          item.value = item.value || 0;
+        });
+      }
+
+      return fieldArray;
+    }
+    /**
+     * 线形图无维度处理方法
+     * @param measureList 度量字段集合
+     * @param result 分析结果集
+     * @param decimals 小数设置
+     */
+
+  }, {
+    key: "getLineByNoDimensionsArray",
+    value: function getLineByNoDimensionsArray(measureList, result, decimals, connectNulls) {
+      var fieldArray = this.getFunnelByNoDimensionsArray(measureList, result, decimals);
 
       if (fieldArray && _typeof(connectNulls) === "object") {
         fieldArray.forEach(function (item) {
@@ -128556,6 +128586,13 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
       });
       return dataresult;
     }
+    /**
+     * 漏斗图无维度处理方法
+     * @param measureList 度量字段集合
+     * @param result 分析结果集
+     * @param decimals 小数设置
+     */
+
   }, {
     key: "getFunnelByNoDimensionsArray",
     value: function getFunnelByNoDimensionsArray(measureList, result, decimals) {
@@ -128629,9 +128666,6 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
     key: "getDataByAxisName",
     value: function getDataByAxisName(dimensionName, measureName, result, decimals) {
       return result.map(function (data) {
-        // const value = decimals
-        //   ? Number(data[measureName]).toFixed(decimals.value)
-        //   : data[measureName];
         var dataObject = {
           measure: {
             name: measureName,
@@ -128659,10 +128693,7 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
     key: "getNameByMeasure",
     value: function getNameByMeasure(measureNameList, result, decimals) {
       return measureNameList.map(function (measureName) {
-        var value = EChartServiceUtil.getReduceSum(result, measureName); // value = decimals
-        //   ? Number(value.toFixed(decimals.value))
-        //   : value;
-
+        var value = EChartServiceUtil.getReduceSum(result, measureName);
         var dataObject = {
           measure: {
             name: measureName,
@@ -129821,6 +129852,8 @@ var RadarHandler_RadarHandler = /*#__PURE__*/function () {
 
 
 
+
+
 /**
  * 折线图处理
  */
@@ -129882,7 +129915,28 @@ var LineHandler_LineHandler = /*#__PURE__*/function () {
       var _this = this;
 
       var xAxis = [];
-      var dimensions = this.fieldNames.dimensions; // 遍历生成X轴
+      var _this$fieldNames = this.fieldNames,
+          dimensions = _this$fieldNames.dimensions,
+          measures = _this$fieldNames.measures;
+
+      if (!dimensions.length) {
+        var axisXData = {
+          name: "",
+          type: "category",
+          axisLabel: {
+            interval: this.sampleStyle.axisLabel.interval || 0,
+            rotate: this.sampleStyle.axisLabel.rotate || 0
+          },
+          data: measures.map(function (measure) {
+            return {
+              value: measure
+            };
+          })
+        }; //  维度不存在 x轴拿度量
+
+        xAxis.push(axisXData);
+      } // 遍历生成X轴
+
 
       dimensions.forEach(function (dimensionName) {
         var axisXData = {
@@ -129917,34 +129971,72 @@ var LineHandler_LineHandler = /*#__PURE__*/function () {
   }, {
     key: "getSeries",
     value: function getSeries() {
-      var _this2 = this;
-
       var series = [];
-      var _this$fieldNames = this.fieldNames,
-          dimensions = _this$fieldNames.dimensions,
-          measures = _this$fieldNames.measures;
+      var _this$fieldNames2 = this.fieldNames,
+          dimensions = _this$fieldNames2.dimensions,
+          measures = _this$fieldNames2.measures;
       var connectNulls = this.sampleStyle.connectNulls;
-      measures.forEach(function (measureName) {
-        var seriesData = {
-          name: measureName,
-          type: "line",
-          label: {
-            show: _this2.sampleStyle.label.show,
-            position: _this2.sampleStyle.label.position,
-            color: _this2.sampleStyle.label.color,
-            fontSize: _this2.sampleStyle.label.fontSize,
-            fontFamily: _this2.sampleStyle.label.fontFamily
-          },
-          symbol: _this2.sampleStyle.symbol,
-          symbolSize: _this2.sampleStyle.symbolSize,
-          symbolRotate: _this2.sampleStyle.symbolRotate,
-          smooth: _this2.sampleStyle.smooth,
-          connectNulls: _this2.sampleStyle.connectNulls,
-          data: EChartDataUtil_EChartServiceUtil.getLineByFieldLineName(dimensions, measureName, _this2.result, _this2.sampleStyle.decimals, connectNulls)
-        };
-        series.push(seriesData);
-      });
+      var seriesData = {
+        type: "line",
+        label: {
+          show: this.sampleStyle.label.show,
+          position: this.sampleStyle.label.position,
+          color: this.sampleStyle.label.color,
+          fontSize: this.sampleStyle.label.fontSize,
+          fontFamily: this.sampleStyle.label.fontFamily
+        },
+        symbol: this.sampleStyle.symbol,
+        symbolSize: this.sampleStyle.symbolSize,
+        symbolRotate: this.sampleStyle.symbolRotate,
+        smooth: this.sampleStyle.smooth,
+        connectNulls: connectNulls
+      };
+
+      if (dimensions.length) {
+        var serieData = this.getSeriesDimensions(seriesData, measures[0], connectNulls);
+        series.push(serieData);
+      } else {
+        // 不存在维度字段
+        // 度量字段名字作为维度字段
+        var _serieData = this.getSeriesUndimesion(seriesData, connectNulls);
+
+        series.push(_serieData);
+      }
+
       return series;
+    }
+    /**
+     * 将会把结果数据以及度量设置为二维数组，返回对应一行数据
+     * @name 不存维度时的series处理函数
+     * @param seriesData 系列数据
+     * @param measureName 度量名
+     * @param index 下标
+     */
+
+  }, {
+    key: "getSeriesUndimesion",
+    value: function getSeriesUndimesion(seriesData, connectNulls) {
+      var andSeriesData = {
+        name: "Undimesion",
+        data: EChartDataUtil_EChartServiceUtil.getLineByNoDimensionsArray(this.fieldNames.measures, this.result, this.sampleStyle.decimals, connectNulls)
+      };
+      return Object.assign(andSeriesData, seriesData);
+    }
+    /**
+     * @name 存在维度的series处理函数
+     * @param seriesData 系列数据
+     * @param measureName 度量名
+     */
+
+  }, {
+    key: "getSeriesDimensions",
+    value: function getSeriesDimensions(seriesData, measureName, connectNulls) {
+      var dimensions = this.fieldNames.dimensions;
+      var andSeriesData = {
+        name: measureName,
+        data: EChartDataUtil_EChartServiceUtil.getLineByDimensionsArray(dimensions, measureName, this.result, this.sampleStyle.decimals, connectNulls)
+      };
+      return Object.assign(andSeriesData, seriesData);
     }
     /**
      * 获取图例
@@ -133161,6 +133253,11 @@ var ChartComponentvue_type_script_lang_ts_ChartComponent = /*#__PURE__*/function
       // 存在实例时，忽略初始化
       if (!this.$data.echartsInstance) {
         var echartsContainer = this.$refs.echartsContainer;
+
+        echartsContainer.oncontextmenu = function () {
+          return false;
+        };
+
         this.$data.echartsInstance = EChartsUtil_EChartsUtil.init(echartsContainer);
       }
     }

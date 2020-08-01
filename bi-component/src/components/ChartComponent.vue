@@ -103,6 +103,10 @@ export default class ChartComponent extends Vue implements ChartUIService {
     // 存在实例时，忽略初始化
     if (!this.$data.echartsInstance) {
       let echartsContainer = this.$refs.echartsContainer as HTMLDivElement;
+      echartsContainer.oncontextmenu = () => {
+        return false;
+      };
+
       this.$data.echartsInstance = EChartsUtil.init(echartsContainer);
     }
   }

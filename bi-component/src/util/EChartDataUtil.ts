@@ -7,7 +7,7 @@ import {
 export default class EChartServiceUtil {
   /**
    * 通过字段名，获取结果集内的数据数组
-   * - 柱图，堆积柱图, 折线图
+   * - 柱图，堆积柱图
    *
    * @param fieldName 字段名
    * @param result 结果集
@@ -47,16 +47,50 @@ export default class EChartServiceUtil {
     return fieldArray;
   }
 
-  public static getLineByFieldLineName(
+  /**
+   * 线形图 分析数据处理方式
+   * 线形图单维度
+   * @param dimensions {string[]} 维度数组
+   * @param measureName {string} 度量字段名称
+   * @param result {AnalysisResults} 分析数据
+   * @param decimals {any} 小数位设置
+   * @param connectNulls {boolean} null是否为0
+   */
+  public static getLineByDimensionsArray(
     dimensions: Array<string>,
-    fieldName: string,
+    measureName: string,
     result: AnalysisResults,
     decimals?: any,
     connectNulls?: boolean | object
   ): echarts.EChartOption.SeriesBar["data"] {
-    let fieldArray: echarts.EChartOption.SeriesBar["data"] = this.getDataByFieldName(
+    let fieldArray: echarts.EChartOption.SeriesBar["data"] = this.getFunnelByDimensionsArray(
       dimensions,
-      fieldName,
+      measureName,
+      result,
+      decimals
+    );
+    if (fieldArray && typeof connectNulls === "object") {
+      fieldArray.forEach((item: any) => {
+        item.value = item.value || 0;
+      });
+    }
+    return fieldArray;
+  }
+
+  /**
+   * 线形图无维度处理方法
+   * @param measureList 度量字段集合
+   * @param result 分析结果集
+   * @param decimals 小数设置
+   */
+  public static getLineByNoDimensionsArray(
+    measureList: string[],
+    result: AnalysisResults,
+    decimals?: any,
+    connectNulls?: boolean | object
+  ): echarts.EChartOption.SeriesBar["data"] {
+    let fieldArray: echarts.EChartOption.SeriesBar["data"] = this.getFunnelByNoDimensionsArray(
+      measureList,
       result,
       decimals
     );
@@ -145,6 +179,12 @@ export default class EChartServiceUtil {
     return dataresult;
   }
 
+  /**
+   * 漏斗图无维度处理方法
+   * @param measureList 度量字段集合
+   * @param result 分析结果集
+   * @param decimals 小数设置
+   */
   public static getFunnelByNoDimensionsArray(
     measureList: string[],
     result: AnalysisResults,
@@ -235,9 +275,6 @@ export default class EChartServiceUtil {
     decimals?: any
   ): echarts.EChartOption.SeriesBar["data"] {
     return result.map((data: any) => {
-      // const value = decimals
-      //   ? Number(data[measureName]).toFixed(decimals.value)
-      //   : data[measureName];
       const dataObject: echarts.EChartOption.SeriesPie.DataObject = {
         measure: {
           name: measureName,
@@ -271,9 +308,6 @@ export default class EChartServiceUtil {
   ): echarts.EChartOption.SeriesBar["data"] {
     return measureNameList.map(measureName => {
       let value = EChartServiceUtil.getReduceSum(result, measureName);
-      // value = decimals
-      //   ? Number(value.toFixed(decimals.value))
-      //   : value;
       const dataObject: echarts.EChartOption.SeriesPie.DataObject = {
         measure: {
           name: measureName,
