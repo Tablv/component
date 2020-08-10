@@ -11,7 +11,7 @@ import RosePieHandler from "./chart-handler/RosePieHandler";
 import SunPieHandler from "./chart-handler/SunPieHandler";
 import RadarHandler from "./chart-handler/RadarHandler";
 import LineHandler from "./chart-handler/LineHandler";
-import GuageHandler from "./chart-handler/GuageHandler";
+import GaugeHandler from "./chart-handler/GaugeHandler";
 import TargetPieHandler from "./chart-handler/TargetPieHandler";
 import BiaxialHandler from "./chart-handler/BiaxialHandler";
 import FunnelHandler from "./chart-handler/FunnelHandler";
@@ -50,7 +50,7 @@ const HANDLER_REGISTRY: RegistryConstructor = {
   /**
    * 仪表盘图
    */
-  guage: GuageHandler,
+  gauge: GaugeHandler,
 
   /**
    * 漏斗图

@@ -127,7 +127,7 @@ export interface EChartsSampleStyle {
   biaxial?: BiaxialChartOption;
 
   // 仪表盘
-  guage?: GaugeChartOption;
+  gauge?: GaugeChartOption;
 
   targetpie?: PieChartOption;
 

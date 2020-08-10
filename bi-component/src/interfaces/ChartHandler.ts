@@ -40,7 +40,8 @@ export interface RegistryConstructor {
   rpie: CharthandlerConstructor<PieChartOption>;
   rosepie: CharthandlerConstructor<PieChartOption>;
   sunpie: CharthandlerConstructor<PieChartOption>;
-  targetpie: CharthandlerConstructor<PieChartOption>;
+  // targetpie: CharthandlerConstructor<PieChartOption>;
+  targetpie: CharthandlerConstructor<GaugeChartOption>;
 
   /**
    * 雷达图
@@ -55,7 +56,7 @@ export interface RegistryConstructor {
   /**
    * 仪表盘图
    */
-  guage: CharthandlerConstructor<GaugeChartOption>;
+  gauge: CharthandlerConstructor<GaugeChartOption>;
 
   /**
    * 漏斗图

@@ -84,12 +84,8 @@ export default class FunnelHandler implements ChartHandler {
       maxSize: this.sampleStyle.maxSize + "%",
       width: this.sampleStyle.width + "%",
       height: this.sampleStyle.height + "%",
-      top: this.sampleStyle.center
-        ? this.sampleStyle.center[0]
-        : 0,
-      left: this.sampleStyle.center
-        ? this.sampleStyle.center[1]
-        : 0
+      top: this.sampleStyle.center ? this.sampleStyle.center[0] : 0,
+      left: this.sampleStyle.center ? this.sampleStyle.center[1] : 0
     } as any;
 
     if (dimensions.length) {

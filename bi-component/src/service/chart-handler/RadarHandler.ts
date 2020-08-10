@@ -67,10 +67,10 @@ export default class RadarHandler implements ChartHandler {
     let radarData: any = {
       indicator: [],
       center: this.sampleStyle.center,
-      radius: 
+      radius:
         typeof this.sampleStyle.radius === "object"
-        ? this.sampleStyle.radius.map(item => item + "%")
-        : this.sampleStyle.radius,
+          ? this.sampleStyle.radius.map(item => item + "%")
+          : this.sampleStyle.radius
     };
     this.fieldNames.dimensions.forEach(dimensionName => {
       this.result.forEach((data: any) => {

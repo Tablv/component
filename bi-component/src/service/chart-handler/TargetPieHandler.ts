@@ -1,82 +1,21 @@
-import PieHandler from "./PieHandler";
+import ObjectUtil from "glaway-bi-util/ObjectUtil";
+import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
+import GaugeHandler from "./GaugeHandler";
 
 /**
- * 指示器处理
+ * 仪表盘处理
  */
-export default class TargetPieHandler extends PieHandler {
+export default class TargetPieHandler extends GaugeHandler {
   public getStyle(): echarts.EChartOption {
-    let style: echarts.EChartOption = super.getStyle() as echarts.EChartOption;
+    let style: echarts.EChartOption = {};
+
+    if (ObjectUtil.isEmpty(this.result)) {
+      style.series = [];
+      return {};
+    }
 
     style.series = this.getSeries();
-
-    style.angleAxis = this.getAngleAxis();
-
-    style.radiusAxis = this.getRadiusAxis();
-
-    style.legend = this.getLegend();
-
-    style.polar = this.getPolar();
-
-    style.tooltip = this.getTooltips();
-
     return style;
-  }
-
-  public getAngleAxis(): any {
-    const dimensions = this.fieldNames.dimensions[0];
-    const measureName = this.fieldNames.measures[0];
-    const maxName = dimensions || measureName;
-    return {
-      max: this.result[0][maxName] || 100,
-      show: false
-    };
-  }
-
-  public getRadiusAxis(): any {
-    const dimensions = this.fieldNames.dimensions[0];
-    const measureName = this.fieldNames.measures[0];
-    const measValue = this.result[0][measureName] || 0;
-    const dimevalue = this.result[0][dimensions] || measValue || 100;
-    let result = `${((Number(measValue) / Number(dimevalue)) * 100).toFixed(
-      this.sampleStyle.decimals.value
-    )}%`;
-    if (this.sampleStyle.label.isShowNumber) {
-      result = ` ${Number(measValue).toFixed(
-        this.sampleStyle.decimals.value
-      )} / ${Number(dimevalue).toFixed(this.sampleStyle.decimals.value)} `;
-    }
-    return {
-      type: "category",
-      show: this.sampleStyle.label.show,
-      name: result,
-      nameLocation: "start",
-      nameTextStyle: {
-        align: "center",
-        verticalAlign: "middle",
-        color: this.sampleStyle.label.color,
-        fontFamily: this.sampleStyle.label.fontFamily,
-        fontSize: this.sampleStyle.label.fontSize
-      },
-      axisLabel: {
-        show: false
-      },
-      axisLine: {
-        show: false
-      },
-      axisTick: {
-        show: false
-      }
-    };
-  }
-
-  public getPolar(): any {
-    return {
-      radius:
-        typeof this.sampleStyle.radius === "object"
-          ? this.sampleStyle.radius.map(item => item + "%")
-          : this.sampleStyle.radius,
-      center: this.sampleStyle.center
-    };
   }
 
   /**
@@ -84,42 +23,88 @@ export default class TargetPieHandler extends PieHandler {
    */
   public getSeries(): Array<echarts.EChartOption.Series> {
     let series: Array<echarts.EChartOption.Series> = [];
-    const measureName = this.fieldNames.measures[0];
+
+    // 指示器这里 实际值 = 度量
+    // 实际值必须唯一，
+    const measures = this.fieldNames.measures[0];
+    const actual = EChartDataUtil.getReduceSum(this.result, measures);
+    // 对比值 = 维度 唯一
+    const dimensions = this.fieldNames.dimensions[0];
+    const comparison =
+      EChartDataUtil.getReduceSum(this.result, dimensions) || actual || 100;
+
+    if (this.sampleStyle.label.offset) {
+      this.sampleStyle.label.offset.forEach((item: string | number) => {
+        item = item + "%";
+      });
+    }
+
+    if (this.sampleStyle.title?.offsetCenter) {
+      this.sampleStyle.title.offsetCenter.forEach((item: string | number) => {
+        item = item + "%";
+      });
+    }
+
+    let colorGroup = [
+      [actual / comparison, this.dashboard.echarts.sampleStyle.global.color[1]],
+      [1, this.dashboard.echarts.sampleStyle.global.color[0]]
+    ];
+
     const seriesData = {
-      type: "bar",
-      roundCap: true,
-      barWidth: this.sampleStyle.barWidth,
-      showBackground: true,
-      coordinateSystem: "polar",
-      name: measureName,
+      type: "gauge",
+      detail: {
+        show: this.sampleStyle.label.show,
+        color: this.sampleStyle.label.color,
+        fontFamily: this.sampleStyle.label.fontFamily,
+        fontSize: this.sampleStyle.label.fontSize,
+        offsetCenter: this.sampleStyle.label.offset,
+        formatter: (value: number) => {
+          let result = `${((value / comparison) * 100).toFixed(2)}%`;
+          if (this.sampleStyle.label.isShowNumber) {
+            result = `${value}` + `(${result})`;
+          }
+          return result;
+        }
+      },
+      // 坐标轴线
+      axisLine: {
+        // 属性lineStyle控制线条样式
+        lineStyle: {
+          width: this.sampleStyle.axisLine?.lineStyle.width,
+          color: colorGroup
+        }
+      },
+      title: this.sampleStyle.title,
+      center: this.sampleStyle.center,
+      radius: this.sampleStyle.radius + "%",
+      splitNumber: 1,
+      pointer: { show: false },
+      axisTick: { show: false },
+      splitLine: { show: false },
+      axisLabel: { show: false },
+      endAngle: "-269.99",
+      startAngle: "90",
+      max: comparison || 100,
       data: [
         {
-          name: measureName,
-          value: this.result[0][measureName]
+          measure: {
+            name: measures,
+            value: actual
+          },
+          dimensions: [
+            {
+              name: measures,
+              value: actual
+            }
+          ],
+          name: measures,
+          originalValue: actual,
+          value: actual
         }
       ]
-    } as echarts.EChartOption.Series;
+    } as any;
     series.push(seriesData);
+
     return series;
-  }
-
-  public getLegend(): any {
-    return {
-      data: this.fieldNames.measures
-    };
-  }
-
-  public getTooltips(): any {
-    const dimensions = this.fieldNames.dimensions[0];
-    const dimevalue = this.result[0][dimensions];
-    return {
-      formatter: (params: any) => {
-        return `
-          对比值: ${dimevalue}
-          \n
-          实际值: ${params.value}
-        `;
-      }
-    };
   }
 }

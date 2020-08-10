@@ -12,7 +12,7 @@ import RosePieConfig from "./chart-config/RosePie";
 import RadarConfig from "./chart-config/Radar";
 import BiaxialConfig from "./chart-config/Biaxial";
 import HBarPercentageConfig from "./chart-config/HBarPercentage";
-import GuageConfig from "./chart-config/Gauge";
+import GaugeConfig from "./chart-config/Gauge";
 import TargetPieConfig from "./chart-config/TargetPie";
 import FunnelConfig from "./chart-config/Funnel";
 
@@ -116,7 +116,7 @@ export default class ChartConfig {
     /**
      * 仪表盘
      */
-    guage: GuageConfig,
+    gauge: GaugeConfig,
 
     /**
      * 指示器

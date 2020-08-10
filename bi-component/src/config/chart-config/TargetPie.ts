@@ -1,6 +1,7 @@
 import { ChartType } from "glaway-bi-model/enums/ChartType";
 import { ChartConfigItem } from "../ChartConfig";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
+import GaugeConfig from "./Gauge";
 import PieConfig from "./Pie";
 
 /**
@@ -11,20 +12,20 @@ const templates = {
     sampleStyle: {
       targetpie: Object.assign(
         {},
-        PieConfig.templates.echarts.sampleStyle.pie,
-        {
-          label: {
-            show: false,
-            hidePosition: true,
-            position: "",
-            color: "#000",
-            fontSize: 12,
-            fontFamily: "Microsoft YaHei",
-            isShowNumber: false
-          },
-          barWidth: 10,
-          radius: [0, 90]
-        }
+        GaugeConfig.templates.echarts.sampleStyle.gauge
+        // {
+        //   label: {
+        //     show: false,
+        //     hidePosition: true,
+        //     position: "",
+        //     color: "#000",
+        //     fontSize: 12,
+        //     fontFamily: "Microsoft YaHei",
+        //     isShowNumber: false
+        //   },
+        //   barWidth: 10,
+        //   radius: [0, 90]
+        // }
       )
     }
   }

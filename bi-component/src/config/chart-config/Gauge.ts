@@ -10,7 +10,7 @@ import TargetPieConfig from "./TargetPie";
 const templates = {
   echarts: {
     sampleStyle: {
-      guage: Object.assign({}, PieConfig.templates.echarts.sampleStyle.pie, {
+      gauge: Object.assign({}, PieConfig.templates.echarts.sampleStyle.pie, {
         // 半径
         radius: 90,
         // 分割段数
@@ -74,22 +74,22 @@ const templates = {
         title: {
           show: true,
           offsetCenter: [0, -40],
-          color: 'auto',
+          color: "auto",
           fontFamily: "Microsoft YaHei",
           fontSize: 16,
           lineHeight: 16,
-          backgroundColor: '#00000000',
-          borderColor: 'auto',
+          backgroundColor: "#00000000",
+          borderColor: "auto",
           borderWidth: 0,
           borderRadius: 0,
           padding: 0,
-          shadowColor: 'auto',
+          shadowColor: "auto",
           shadowBlur: 0,
           shadowOffsetX: 0,
           shadowOffsetY: 0,
-          textBorderColor: 'auto',
+          textBorderColor: "auto",
           textBorderWidth: 0,
-          textShadowColor: 'auto',
+          textShadowColor: "auto",
           textShadowBlur: 0,
           textShadowOffsetX: 0,
           textShadowOffsetY: 0
@@ -112,20 +112,48 @@ const menuOptions = ObjectUtil.copy(PieConfig.menuOptions);
 const createMenuConfig = {
   iconClass: "gw-iconfsux_tubiao_yibiaopan",
   title: "仪表盘",
-  createType: ChartType.guage,
+  createType: ChartType.gauge,
   enable: true
 };
 
 /**
  * 配置项
  */
-const config = ObjectUtil.copy(TargetPieConfig.config);
+const config = {
+  warnable: false,
+  changeLimit: [
+    {
+      // 维度
+      dimensions: [
+        {
+          symbol: ">=",
+          value: 1
+        },
+        {
+          symbol: "<",
+          value: 2
+        }
+      ],
+      // 度量
+      measures: [
+        {
+          symbol: ">",
+          value: 0
+        },
+        {
+          symbol: "<",
+          value: 2
+        }
+      ]
+    }
+  ]
+};
 
-const GuageConfig: ChartConfigItem = {
+const GaugeConfig: ChartConfigItem = {
   templates,
   menuOptions,
   createMenuConfig,
   config
 };
 
-export default GuageConfig;
+export default GaugeConfig;
