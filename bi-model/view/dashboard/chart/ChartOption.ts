@@ -17,7 +17,7 @@ export interface ChartOption {
   /**
    * 数据标注
    */
-  label: {
+  label: Partial<{
     show: boolean;
     // 'top' 'left' 'right' 'bottom' 'inside'
     position: string;
@@ -27,8 +27,28 @@ export interface ChartOption {
     hidePosition?: boolean;
     color: string;
     fontSize: number;
+    fontWeight: string;
     fontFamily: string;
-  };
+    backgroundColor: string;
+    borderWidth: string;
+    borderColor: string;
+    lineHeight: number;
+    borderRadius: number | any[];
+    padding: number | number[];
+    shadowBlur: string;
+    shadowColor: string;
+    shadowOffsetX: number;
+    shadowOffsetY: number;
+    textBorderColor: string;
+    textBorderWidth: number;
+    textShadowColor: string;
+    textShadowBlur: string;
+    textShadowOffsetX: number;
+    textShadowOffsetY: number;
+    offsetCenter: string[] | number[];
+    offset: string[] | number[];
+    rich: object;
+  }>;
 
   /**
    * 数据小数设置
@@ -126,69 +146,69 @@ export interface LineChartOption extends ChartOption{
 
 /**
  * 饼状图
- */
-export interface PieChartOption extends ChartOption {
-  centerConfig: {
-    xAxias: string;
-    yAxias: string;
-  };
-  radiusConfig: {
-    inside: string | number;
-    outside: string | number;
-    axisLineWidth: string | number;
-  };
-}
+//  */
+// export interface PieChartOption extends ChartOption {
+//   centerConfig: {
+//     xAxias: string;
+//     yAxias: string;
+//   };
+//   radiusConfig: {
+//     inside: string | number;
+//     outside: string | number;
+//     axisLineWidth: string | number;
+//   };
+// }
 
-/**
- * 图表类型
- */
-export interface RadarChartOption extends PieChartOption {}
+// /**
+//  * 图表类型
+//  */
+// export interface RadarChartOption extends PieChartOption {}
 
-/**
- * 图表类型
- */
-export interface RosePieChartOption extends PieChartOption {}
+// /**
+//  * 图表类型
+//  */
+// export interface RosePieChartOption extends PieChartOption {}
 
-/**
- * 图表类型
- */
-export interface RPieChartOption extends PieChartOption {}
+// /**
+//  * 图表类型
+//  */
+// export interface RPieChartOption extends PieChartOption {}
 
-/**
- * 图表类型
- */
-export interface SunPieChartOption extends PieChartOption {}
+// /**
+//  * 图表类型
+//  */
+// export interface SunPieChartOption extends PieChartOption {}
 
-/**
- * 图表类型
- */
-export interface TargetPieChartOption extends PieChartOption {}
+// /**
+//  * 图表类型
+//  */
+// export interface TargetPieChartOption extends PieChartOption {}
 
-/**
- * 图表类型
- */
-export interface GaugeChartOption extends PieChartOption {
-  splitNumber: number;
-  pointer: {
-    show: boolean;
-    length: number;
-    width: number;
-  };
-  splitLine: {
-    show: boolean;
-    length: number;
-    // 属性lineStyle控制线条样式
-    lineStyle: {  
-      color: string;
-    };
-  },
-  axisTick: {
-    showt: boolean;
-    length: number;
-  };
-  endAngle: number;
-  startAngle: number;
-}
+// /**
+//  * 图表类型
+//  */
+// export interface GaugeChartOption extends PieChartOption {
+//   splitNumber: number;
+//   pointer: {
+//     show: boolean;
+//     length: number;
+//     width: number;
+//   };
+//   splitLine: {
+//     show: boolean;
+//     length: number;
+//     // 属性lineStyle控制线条样式
+//     lineStyle: {  
+//       color: string;
+//     };
+//   },
+//   axisTick: {
+//     showt: boolean;
+//     length: number;
+//   };
+//   endAngle: number;
+//   startAngle: number;
+// }
 
 /**
  * 漏斗图配置

@@ -1,8 +1,6 @@
 import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
-import {
-  BarChartOption,
-  PieChartOption
-} from "glaway-bi-model/view/dashboard/chart/ChartOption";
+import { BarChartOption } from "glaway-bi-model/view/dashboard/chart/ChartOption";
+import { PieChartOption } from "glaway-bi-model/view/dashboard/chart/PieOption";
 
 export default class EChartServiceUtil {
   /**

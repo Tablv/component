@@ -10,10 +10,7 @@ const templates = {
   echarts: {
     sampleStyle: {
       rpie: Object.assign({}, PieConfig.templates.echarts.sampleStyle.pie, {
-        radiusConfig: {
-          inside: 45,
-          outside: 90
-        }
+        radius: [45, 90]
       })
     }
   }

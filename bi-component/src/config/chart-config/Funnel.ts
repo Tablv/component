@@ -55,10 +55,7 @@ const templates = {
           value: 0,
           unit: ""
         },
-        centerConfig: {
-          xAxias: "50px",
-          yAxias: "50px"
-        }
+        center: ["50px", "50px"]
       }
     }
   }

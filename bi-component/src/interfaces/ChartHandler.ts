@@ -9,16 +9,18 @@ import {
   HBarStackChartOption,
   HBarPercentageChartOption,
   LineChartOption,
-  PieChartOption,
-  RadarChartOption,
-  RosePieChartOption,
-  RPieChartOption,
-  SunPieChartOption,
-  TargetPieChartOption,
-  GaugeChartOption,
+  // PieChartOption,
+  // RadarChartOption,
+  // RosePieChartOption,
+  // RPieChartOption,
+  // SunPieChartOption,
+  // TargetPieChartOption,
+  // GaugeChartOption,
   FunnelChartOption,
   BiaxialChartOption
 } from "glaway-bi-model/view/dashboard/chart/ChartOption";
+import { GaugeChartOption } from "glaway-bi-model/view/dashboard/chart/GaugeChartOption";
+import { PieChartOption } from "glaway-bi-model/view/dashboard/chart/PieOption";
 
 export interface RegistryConstructor {
   bar: CharthandlerConstructor<BarChartOption>;
@@ -35,15 +37,15 @@ export interface RegistryConstructor {
    * 饼图
    */
   pie: CharthandlerConstructor<PieChartOption>;
-  rpie: CharthandlerConstructor<RPieChartOption>;
-  rosepie: CharthandlerConstructor<RosePieChartOption>;
-  sunpie: CharthandlerConstructor<SunPieChartOption>;
-  targetpie: CharthandlerConstructor<TargetPieChartOption>;
+  rpie: CharthandlerConstructor<PieChartOption>;
+  rosepie: CharthandlerConstructor<PieChartOption>;
+  sunpie: CharthandlerConstructor<PieChartOption>;
+  targetpie: CharthandlerConstructor<PieChartOption>;
 
   /**
    * 雷达图
    */
-  radar: CharthandlerConstructor<RadarChartOption>;
+  radar: CharthandlerConstructor<PieChartOption>;
 
   /**
    * 折线图

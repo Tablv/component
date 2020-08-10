@@ -60,11 +60,10 @@ export interface FunnelChartOption extends ChartOption, Partial<{
    */
   bottom: number | string;
 
-  // top left 配置集合
-  centerConfig: {
-    xAxias: string;
-    yAxias: string;
-  }
+  /**
+   * 仪表盘的中心（圆心）坐标
+   */
+  center: Array<string | number>;
 
   /**
    * 漏斗图组件的宽度。 默认自适应。
@@ -83,12 +82,8 @@ export interface FunnelChartOption extends ChartOption, Partial<{
     orderColor: string;
     borderWidth: number;
     borderType: string;
-    shadowBlur: string;
-    shadowColor: string;
-    shadowOffsetX: number;
-    shadowOffsetY: number;
     opacity: number
-  }>;
+  } & IShadow>;
 
   /**
    * 标签的视觉引导线样式
@@ -100,12 +95,8 @@ export interface FunnelChartOption extends ChartOption, Partial<{
       color: string;
       width: number;
       type: string;
-      shadowBlur: string;
-      shadowColor: string;
-      shadowOffsetX: number;
-      shadowOffsetY: number;
       opacity: number;
-    }>;
+    } & IShadow>;
   };
 
   /**
@@ -118,5 +109,29 @@ export interface FunnelChartOption extends ChartOption, Partial<{
    * z相比zlevel优先级更低，而且不会创建新的 Canvas。
    */
   z?: number;
+
+  /**
+   * 
+   */
+  centerConfig: {
+    xAxias: string;
+    yAxias: string;
+  };
+
+  /**
+   * 
+   */
+  radiusConfig: {
+    inside: string | number;
+    outside: string | number;
+    axisLineWidth: string | number;
+  };
   
 }> {}
+
+interface IShadow {
+  shadowBlur: string;
+  shadowColor: string;
+  shadowOffsetX: number;
+  shadowOffsetY: number;
+}

@@ -5,7 +5,7 @@ import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import EChartsService from "../EChartsService";
 import { ChartHandler } from "glaway-bi-component/src/interfaces/ChartHandler";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
-import { PieChartOption } from "glaway-bi-model/view/dashboard/chart/ChartOption";
+import { PieChartOption } from "glaway-bi-model/view/dashboard/chart/PieOption";
 
 /**
  * 饼图处理
@@ -74,15 +74,15 @@ export default class PieHandler implements ChartHandler {
     // dimension 存在元素 走 一维度一度量
     const dimensionName = this.fieldNames.dimensions[0];
     const measuresList = this.fieldNames.measures;
-
     // series
     const seriesData = {
       type: "pie",
-      radius: Object.values(this.sampleStyle.radiusConfig).map(
-        item => item + "%"
-      ),
+      radius:
+        typeof this.sampleStyle.radius === "object"
+          ? this.sampleStyle.radius.map(item => item + "%")
+          : this.sampleStyle.radius,
       itemStyle: {},
-      center: Object.values(this.sampleStyle.centerConfig),
+      center: this.sampleStyle.center,
       label: EChartDataUtil.getPieSeriesLabel(this.sampleStyle),
       data: [] as echarts.EChartOption.SeriesBar["data"]
     };

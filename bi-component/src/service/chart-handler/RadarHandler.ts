@@ -5,7 +5,8 @@ import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import EChartsService from "../EChartsService";
 import { ChartHandler } from "glaway-bi-component/src/interfaces/ChartHandler";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
-import { RadarChartOption } from "glaway-bi-model/view/dashboard/chart/ChartOption";
+// import { RadarChartOption } from "glaway-bi-model/view/dashboard/chart/ChartOption";
+import { PieChartOption } from "glaway-bi-model/view/dashboard/chart/PieOption";
 
 /**
  * 雷达图处理
@@ -26,7 +27,7 @@ export default class RadarHandler implements ChartHandler {
   constructor(
     public result: AnalysisResults,
     public dashboard: Dashboard,
-    public sampleStyle: RadarChartOption
+    public sampleStyle: PieChartOption
   ) {
     this.fieldNames = EChartsService.splitFieldNames(
       this.result[0],
@@ -65,10 +66,11 @@ export default class RadarHandler implements ChartHandler {
   getRadar(): echarts.EChartOption.SeriesRadar.DataObject {
     let radarData: any = {
       indicator: [],
-      center: Object.values(this.sampleStyle.centerConfig),
-      radius: Object.values(this.sampleStyle.radiusConfig).map(
-        item => item + "%"
-      )
+      center: this.sampleStyle.center,
+      radius: 
+        typeof this.sampleStyle.radius === "object"
+        ? this.sampleStyle.radius.map(item => item + "%")
+        : this.sampleStyle.radius,
     };
     this.fieldNames.dimensions.forEach(dimensionName => {
       this.result.forEach((data: any) => {

@@ -16,18 +16,12 @@ const templates = {
           fontFamily: "Microsoft YaHei",
           isShowNumber: false
         },
-        centerConfig: {
-          xAxias: "50%",
-          yAxias: "50%"
-        },
+        center: ["50%", "50%"],
         decimals: {
           value: 2,
           unit: ""
         },
-        radiusConfig: {
-          inside: 0,
-          outside: 60
-        },
+        radius: [0, 60],
         grid: {
           top: {
             value: 50,

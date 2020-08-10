@@ -20705,114 +20705,6 @@ exports.devicePixelRatio = devicePixelRatio;
 
 /***/ }),
 
-/***/ "2cf49":
-/***/ (function(module, exports, __webpack_require__) {
-
-var global = __webpack_require__("da84");
-var fails = __webpack_require__("d039");
-var classof = __webpack_require__("c6b6");
-var bind = __webpack_require__("f8c2");
-var html = __webpack_require__("1be4");
-var createElement = __webpack_require__("cc12");
-var IS_IOS = __webpack_require__("b629");
-
-var location = global.location;
-var set = global.setImmediate;
-var clear = global.clearImmediate;
-var process = global.process;
-var MessageChannel = global.MessageChannel;
-var Dispatch = global.Dispatch;
-var counter = 0;
-var queue = {};
-var ONREADYSTATECHANGE = 'onreadystatechange';
-var defer, channel, port;
-
-var run = function (id) {
-  // eslint-disable-next-line no-prototype-builtins
-  if (queue.hasOwnProperty(id)) {
-    var fn = queue[id];
-    delete queue[id];
-    fn();
-  }
-};
-
-var runner = function (id) {
-  return function () {
-    run(id);
-  };
-};
-
-var listener = function (event) {
-  run(event.data);
-};
-
-var post = function (id) {
-  // old engines have not location.origin
-  global.postMessage(id + '', location.protocol + '//' + location.host);
-};
-
-// Node.js 0.9+ & IE10+ has setImmediate, otherwise:
-if (!set || !clear) {
-  set = function setImmediate(fn) {
-    var args = [];
-    var i = 1;
-    while (arguments.length > i) args.push(arguments[i++]);
-    queue[++counter] = function () {
-      // eslint-disable-next-line no-new-func
-      (typeof fn == 'function' ? fn : Function(fn)).apply(undefined, args);
-    };
-    defer(counter);
-    return counter;
-  };
-  clear = function clearImmediate(id) {
-    delete queue[id];
-  };
-  // Node.js 0.8-
-  if (classof(process) == 'process') {
-    defer = function (id) {
-      process.nextTick(runner(id));
-    };
-  // Sphere (JS game engine) Dispatch API
-  } else if (Dispatch && Dispatch.now) {
-    defer = function (id) {
-      Dispatch.now(runner(id));
-    };
-  // Browsers with MessageChannel, includes WebWorkers
-  // except iOS - https://github.com/zloirock/core-js/issues/624
-  } else if (MessageChannel && !IS_IOS) {
-    channel = new MessageChannel();
-    port = channel.port2;
-    channel.port1.onmessage = listener;
-    defer = bind(port.postMessage, port, 1);
-  // Browsers with postMessage, skip WebWorkers
-  // IE8 has postMessage, but it's sync & typeof its postMessage is 'object'
-  } else if (global.addEventListener && typeof postMessage == 'function' && !global.importScripts && !fails(post)) {
-    defer = post;
-    global.addEventListener('message', listener, false);
-  // IE8-
-  } else if (ONREADYSTATECHANGE in createElement('script')) {
-    defer = function (id) {
-      html.appendChild(createElement('script'))[ONREADYSTATECHANGE] = function () {
-        html.removeChild(this);
-        run(id);
-      };
-    };
-  // Rest old browsers
-  } else {
-    defer = function (id) {
-      setTimeout(runner(id), 0);
-    };
-  }
-}
-
-module.exports = {
-  set: set,
-  clear: clear
-};
-
-
-/***/ }),
-
 /***/ "2cfc":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -51249,21 +51141,6 @@ module.exports = function (key) {
 
 /***/ }),
 
-/***/ "44de":
-/***/ (function(module, exports, __webpack_require__) {
-
-var global = __webpack_require__("da84");
-
-module.exports = function (a, b) {
-  var console = global.console;
-  if (console && console.error) {
-    arguments.length === 1 ? console.error(a) : console.error(a, b);
-  }
-};
-
-
-/***/ }),
-
 /***/ "44e7":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -61695,66 +61572,6 @@ function isEmptyValue(val, axisType) {
 
 var _default = ParallelView;
 module.exports = _default;
-
-/***/ }),
-
-/***/ "60da":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var DESCRIPTORS = __webpack_require__("83ab");
-var fails = __webpack_require__("d039");
-var objectKeys = __webpack_require__("df75");
-var getOwnPropertySymbolsModule = __webpack_require__("7418");
-var propertyIsEnumerableModule = __webpack_require__("d1e7");
-var toObject = __webpack_require__("7b0b");
-var IndexedObject = __webpack_require__("44ad");
-
-var nativeAssign = Object.assign;
-var defineProperty = Object.defineProperty;
-
-// `Object.assign` method
-// https://tc39.github.io/ecma262/#sec-object.assign
-module.exports = !nativeAssign || fails(function () {
-  // should have correct order of operations (Edge bug)
-  if (DESCRIPTORS && nativeAssign({ b: 1 }, nativeAssign(defineProperty({}, 'a', {
-    enumerable: true,
-    get: function () {
-      defineProperty(this, 'b', {
-        value: 3,
-        enumerable: false
-      });
-    }
-  }), { b: 2 })).b !== 1) return true;
-  // should work with symbols and should have deterministic property order (V8 bug)
-  var A = {};
-  var B = {};
-  // eslint-disable-next-line no-undef
-  var symbol = Symbol();
-  var alphabet = 'abcdefghijklmnopqrst';
-  A[symbol] = 7;
-  alphabet.split('').forEach(function (chr) { B[chr] = chr; });
-  return nativeAssign({}, A)[symbol] != 7 || objectKeys(nativeAssign({}, B)).join('') != alphabet;
-}) ? function assign(target, source) { // eslint-disable-line no-unused-vars
-  var T = toObject(target);
-  var argumentsLength = arguments.length;
-  var index = 1;
-  var getOwnPropertySymbols = getOwnPropertySymbolsModule.f;
-  var propertyIsEnumerable = propertyIsEnumerableModule.f;
-  while (argumentsLength > index) {
-    var S = IndexedObject(arguments[index++]);
-    var keys = getOwnPropertySymbols ? objectKeys(S).concat(getOwnPropertySymbols(S)) : objectKeys(S);
-    var length = keys.length;
-    var j = 0;
-    var key;
-    while (length > j) {
-      key = keys[j++];
-      if (!DESCRIPTORS || propertyIsEnumerable.call(S, key)) T[key] = S[key];
-    }
-  } return T;
-} : nativeAssign;
-
 
 /***/ }),
 
@@ -96387,91 +96204,6 @@ module.exports = _default;
 
 /***/ }),
 
-/***/ "b575":
-/***/ (function(module, exports, __webpack_require__) {
-
-var global = __webpack_require__("da84");
-var getOwnPropertyDescriptor = __webpack_require__("06cf").f;
-var classof = __webpack_require__("c6b6");
-var macrotask = __webpack_require__("2cf49").set;
-var IS_IOS = __webpack_require__("b629");
-
-var MutationObserver = global.MutationObserver || global.WebKitMutationObserver;
-var process = global.process;
-var Promise = global.Promise;
-var IS_NODE = classof(process) == 'process';
-// Node.js 11 shows ExperimentalWarning on getting `queueMicrotask`
-var queueMicrotaskDescriptor = getOwnPropertyDescriptor(global, 'queueMicrotask');
-var queueMicrotask = queueMicrotaskDescriptor && queueMicrotaskDescriptor.value;
-
-var flush, head, last, notify, toggle, node, promise, then;
-
-// modern engines have queueMicrotask method
-if (!queueMicrotask) {
-  flush = function () {
-    var parent, fn;
-    if (IS_NODE && (parent = process.domain)) parent.exit();
-    while (head) {
-      fn = head.fn;
-      head = head.next;
-      try {
-        fn();
-      } catch (error) {
-        if (head) notify();
-        else last = undefined;
-        throw error;
-      }
-    } last = undefined;
-    if (parent) parent.enter();
-  };
-
-  // Node.js
-  if (IS_NODE) {
-    notify = function () {
-      process.nextTick(flush);
-    };
-  // browsers with MutationObserver, except iOS - https://github.com/zloirock/core-js/issues/339
-  } else if (MutationObserver && !IS_IOS) {
-    toggle = true;
-    node = document.createTextNode('');
-    new MutationObserver(flush).observe(node, { characterData: true });
-    notify = function () {
-      node.data = toggle = !toggle;
-    };
-  // environments with maybe non-completely correct, but existent Promise
-  } else if (Promise && Promise.resolve) {
-    // Promise.resolve without an argument throws an error in LG WebOS 2
-    promise = Promise.resolve(undefined);
-    then = promise.then;
-    notify = function () {
-      then.call(promise, flush);
-    };
-  // for other environments - macrotask based on:
-  // - setImmediate
-  // - MessageChannel
-  // - window.postMessag
-  // - onreadystatechange
-  // - setTimeout
-  } else {
-    notify = function () {
-      // strange IE + webpack dev server bug - use .call(global)
-      macrotask.call(global, flush);
-    };
-  }
-}
-
-module.exports = queueMicrotask || function (fn) {
-  var task = { fn: fn, next: undefined };
-  if (last) last.next = task;
-  if (!head) {
-    head = task;
-    notify();
-  } last = task;
-};
-
-
-/***/ }),
-
 /***/ "b5c7":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -96553,16 +96285,6 @@ module.exports = function (name) {
     else WellKnownSymbolsStore[name] = createWellKnownSymbol('Symbol.' + name);
   } return WellKnownSymbolsStore[name];
 };
-
-
-/***/ }),
-
-/***/ "b629":
-/***/ (function(module, exports, __webpack_require__) {
-
-var userAgent = __webpack_require__("b39a");
-
-module.exports = /(iphone|ipod|ipad).*applewebkit/i.test(userAgent);
 
 
 /***/ }),
@@ -103210,21 +102932,6 @@ module.exports = _default;
 
 /***/ }),
 
-/***/ "cca6":
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__("23e7");
-var assign = __webpack_require__("60da");
-
-// `Object.assign` method
-// https://tc39.github.io/ecma262/#sec-object.assign
-$({ target: 'Object', stat: true, forced: Object.assign !== assign }, {
-  assign: assign
-});
-
-
-/***/ }),
-
 /***/ "cccd":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -104355,25 +104062,6 @@ handlerDomProxyProto.setCursor = function (cursorStyle) {
 zrUtil.mixin(HandlerDomProxy, Eventful);
 var _default = HandlerDomProxy;
 module.exports = _default;
-
-/***/ }),
-
-/***/ "cdf9":
-/***/ (function(module, exports, __webpack_require__) {
-
-var anObject = __webpack_require__("825a");
-var isObject = __webpack_require__("861d");
-var newPromiseCapability = __webpack_require__("f069");
-
-module.exports = function (C, x) {
-  anObject(C);
-  if (isObject(x) && x.constructor === C) return x;
-  var promiseCapability = newPromiseCapability.f(C);
-  var resolve = promiseCapability.resolve;
-  resolve(x);
-  return promiseCapability.promise;
-};
-
 
 /***/ }),
 
@@ -114584,20 +114272,6 @@ __webpack_require__("9e87");
 
 /***/ }),
 
-/***/ "e667":
-/***/ (function(module, exports) {
-
-module.exports = function (exec) {
-  try {
-    return { error: false, value: exec() };
-  } catch (error) {
-    return { error: true, value: error };
-  }
-};
-
-
-/***/ }),
-
 /***/ "e6cd":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -114739,393 +114413,6 @@ function createWrap() {
 }
 
 exports.createWrap = createWrap;
-
-/***/ }),
-
-/***/ "e6cf":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var $ = __webpack_require__("23e7");
-var IS_PURE = __webpack_require__("c430");
-var global = __webpack_require__("da84");
-var getBuiltIn = __webpack_require__("d066");
-var NativePromise = __webpack_require__("fea9");
-var redefine = __webpack_require__("6eeb");
-var redefineAll = __webpack_require__("e2cc");
-var setToStringTag = __webpack_require__("d44e");
-var setSpecies = __webpack_require__("2626");
-var isObject = __webpack_require__("861d");
-var aFunction = __webpack_require__("1c0b");
-var anInstance = __webpack_require__("19aa");
-var classof = __webpack_require__("c6b6");
-var inspectSource = __webpack_require__("8925");
-var iterate = __webpack_require__("2266");
-var checkCorrectnessOfIteration = __webpack_require__("1c7e");
-var speciesConstructor = __webpack_require__("4840");
-var task = __webpack_require__("2cf49").set;
-var microtask = __webpack_require__("b575");
-var promiseResolve = __webpack_require__("cdf9");
-var hostReportErrors = __webpack_require__("44de");
-var newPromiseCapabilityModule = __webpack_require__("f069");
-var perform = __webpack_require__("e667");
-var InternalStateModule = __webpack_require__("69f3");
-var isForced = __webpack_require__("94ca");
-var wellKnownSymbol = __webpack_require__("b622");
-var V8_VERSION = __webpack_require__("60ae");
-
-var SPECIES = wellKnownSymbol('species');
-var PROMISE = 'Promise';
-var getInternalState = InternalStateModule.get;
-var setInternalState = InternalStateModule.set;
-var getInternalPromiseState = InternalStateModule.getterFor(PROMISE);
-var PromiseConstructor = NativePromise;
-var TypeError = global.TypeError;
-var document = global.document;
-var process = global.process;
-var $fetch = getBuiltIn('fetch');
-var newPromiseCapability = newPromiseCapabilityModule.f;
-var newGenericPromiseCapability = newPromiseCapability;
-var IS_NODE = classof(process) == 'process';
-var DISPATCH_EVENT = !!(document && document.createEvent && global.dispatchEvent);
-var UNHANDLED_REJECTION = 'unhandledrejection';
-var REJECTION_HANDLED = 'rejectionhandled';
-var PENDING = 0;
-var FULFILLED = 1;
-var REJECTED = 2;
-var HANDLED = 1;
-var UNHANDLED = 2;
-var Internal, OwnPromiseCapability, PromiseWrapper, nativeThen;
-
-var FORCED = isForced(PROMISE, function () {
-  var GLOBAL_CORE_JS_PROMISE = inspectSource(PromiseConstructor) !== String(PromiseConstructor);
-  if (!GLOBAL_CORE_JS_PROMISE) {
-    // V8 6.6 (Node 10 and Chrome 66) have a bug with resolving custom thenables
-    // https://bugs.chromium.org/p/chromium/issues/detail?id=830565
-    // We can't detect it synchronously, so just check versions
-    if (V8_VERSION === 66) return true;
-    // Unhandled rejections tracking support, NodeJS Promise without it fails @@species test
-    if (!IS_NODE && typeof PromiseRejectionEvent != 'function') return true;
-  }
-  // We need Promise#finally in the pure version for preventing prototype pollution
-  if (IS_PURE && !PromiseConstructor.prototype['finally']) return true;
-  // We can't use @@species feature detection in V8 since it causes
-  // deoptimization and performance degradation
-  // https://github.com/zloirock/core-js/issues/679
-  if (V8_VERSION >= 51 && /native code/.test(PromiseConstructor)) return false;
-  // Detect correctness of subclassing with @@species support
-  var promise = PromiseConstructor.resolve(1);
-  var FakePromise = function (exec) {
-    exec(function () { /* empty */ }, function () { /* empty */ });
-  };
-  var constructor = promise.constructor = {};
-  constructor[SPECIES] = FakePromise;
-  return !(promise.then(function () { /* empty */ }) instanceof FakePromise);
-});
-
-var INCORRECT_ITERATION = FORCED || !checkCorrectnessOfIteration(function (iterable) {
-  PromiseConstructor.all(iterable)['catch'](function () { /* empty */ });
-});
-
-// helpers
-var isThenable = function (it) {
-  var then;
-  return isObject(it) && typeof (then = it.then) == 'function' ? then : false;
-};
-
-var notify = function (promise, state, isReject) {
-  if (state.notified) return;
-  state.notified = true;
-  var chain = state.reactions;
-  microtask(function () {
-    var value = state.value;
-    var ok = state.state == FULFILLED;
-    var index = 0;
-    // variable length - can't use forEach
-    while (chain.length > index) {
-      var reaction = chain[index++];
-      var handler = ok ? reaction.ok : reaction.fail;
-      var resolve = reaction.resolve;
-      var reject = reaction.reject;
-      var domain = reaction.domain;
-      var result, then, exited;
-      try {
-        if (handler) {
-          if (!ok) {
-            if (state.rejection === UNHANDLED) onHandleUnhandled(promise, state);
-            state.rejection = HANDLED;
-          }
-          if (handler === true) result = value;
-          else {
-            if (domain) domain.enter();
-            result = handler(value); // can throw
-            if (domain) {
-              domain.exit();
-              exited = true;
-            }
-          }
-          if (result === reaction.promise) {
-            reject(TypeError('Promise-chain cycle'));
-          } else if (then = isThenable(result)) {
-            then.call(result, resolve, reject);
-          } else resolve(result);
-        } else reject(value);
-      } catch (error) {
-        if (domain && !exited) domain.exit();
-        reject(error);
-      }
-    }
-    state.reactions = [];
-    state.notified = false;
-    if (isReject && !state.rejection) onUnhandled(promise, state);
-  });
-};
-
-var dispatchEvent = function (name, promise, reason) {
-  var event, handler;
-  if (DISPATCH_EVENT) {
-    event = document.createEvent('Event');
-    event.promise = promise;
-    event.reason = reason;
-    event.initEvent(name, false, true);
-    global.dispatchEvent(event);
-  } else event = { promise: promise, reason: reason };
-  if (handler = global['on' + name]) handler(event);
-  else if (name === UNHANDLED_REJECTION) hostReportErrors('Unhandled promise rejection', reason);
-};
-
-var onUnhandled = function (promise, state) {
-  task.call(global, function () {
-    var value = state.value;
-    var IS_UNHANDLED = isUnhandled(state);
-    var result;
-    if (IS_UNHANDLED) {
-      result = perform(function () {
-        if (IS_NODE) {
-          process.emit('unhandledRejection', value, promise);
-        } else dispatchEvent(UNHANDLED_REJECTION, promise, value);
-      });
-      // Browsers should not trigger `rejectionHandled` event if it was handled here, NodeJS - should
-      state.rejection = IS_NODE || isUnhandled(state) ? UNHANDLED : HANDLED;
-      if (result.error) throw result.value;
-    }
-  });
-};
-
-var isUnhandled = function (state) {
-  return state.rejection !== HANDLED && !state.parent;
-};
-
-var onHandleUnhandled = function (promise, state) {
-  task.call(global, function () {
-    if (IS_NODE) {
-      process.emit('rejectionHandled', promise);
-    } else dispatchEvent(REJECTION_HANDLED, promise, state.value);
-  });
-};
-
-var bind = function (fn, promise, state, unwrap) {
-  return function (value) {
-    fn(promise, state, value, unwrap);
-  };
-};
-
-var internalReject = function (promise, state, value, unwrap) {
-  if (state.done) return;
-  state.done = true;
-  if (unwrap) state = unwrap;
-  state.value = value;
-  state.state = REJECTED;
-  notify(promise, state, true);
-};
-
-var internalResolve = function (promise, state, value, unwrap) {
-  if (state.done) return;
-  state.done = true;
-  if (unwrap) state = unwrap;
-  try {
-    if (promise === value) throw TypeError("Promise can't be resolved itself");
-    var then = isThenable(value);
-    if (then) {
-      microtask(function () {
-        var wrapper = { done: false };
-        try {
-          then.call(value,
-            bind(internalResolve, promise, wrapper, state),
-            bind(internalReject, promise, wrapper, state)
-          );
-        } catch (error) {
-          internalReject(promise, wrapper, error, state);
-        }
-      });
-    } else {
-      state.value = value;
-      state.state = FULFILLED;
-      notify(promise, state, false);
-    }
-  } catch (error) {
-    internalReject(promise, { done: false }, error, state);
-  }
-};
-
-// constructor polyfill
-if (FORCED) {
-  // 25.4.3.1 Promise(executor)
-  PromiseConstructor = function Promise(executor) {
-    anInstance(this, PromiseConstructor, PROMISE);
-    aFunction(executor);
-    Internal.call(this);
-    var state = getInternalState(this);
-    try {
-      executor(bind(internalResolve, this, state), bind(internalReject, this, state));
-    } catch (error) {
-      internalReject(this, state, error);
-    }
-  };
-  // eslint-disable-next-line no-unused-vars
-  Internal = function Promise(executor) {
-    setInternalState(this, {
-      type: PROMISE,
-      done: false,
-      notified: false,
-      parent: false,
-      reactions: [],
-      rejection: false,
-      state: PENDING,
-      value: undefined
-    });
-  };
-  Internal.prototype = redefineAll(PromiseConstructor.prototype, {
-    // `Promise.prototype.then` method
-    // https://tc39.github.io/ecma262/#sec-promise.prototype.then
-    then: function then(onFulfilled, onRejected) {
-      var state = getInternalPromiseState(this);
-      var reaction = newPromiseCapability(speciesConstructor(this, PromiseConstructor));
-      reaction.ok = typeof onFulfilled == 'function' ? onFulfilled : true;
-      reaction.fail = typeof onRejected == 'function' && onRejected;
-      reaction.domain = IS_NODE ? process.domain : undefined;
-      state.parent = true;
-      state.reactions.push(reaction);
-      if (state.state != PENDING) notify(this, state, false);
-      return reaction.promise;
-    },
-    // `Promise.prototype.catch` method
-    // https://tc39.github.io/ecma262/#sec-promise.prototype.catch
-    'catch': function (onRejected) {
-      return this.then(undefined, onRejected);
-    }
-  });
-  OwnPromiseCapability = function () {
-    var promise = new Internal();
-    var state = getInternalState(promise);
-    this.promise = promise;
-    this.resolve = bind(internalResolve, promise, state);
-    this.reject = bind(internalReject, promise, state);
-  };
-  newPromiseCapabilityModule.f = newPromiseCapability = function (C) {
-    return C === PromiseConstructor || C === PromiseWrapper
-      ? new OwnPromiseCapability(C)
-      : newGenericPromiseCapability(C);
-  };
-
-  if (!IS_PURE && typeof NativePromise == 'function') {
-    nativeThen = NativePromise.prototype.then;
-
-    // wrap native Promise#then for native async functions
-    redefine(NativePromise.prototype, 'then', function then(onFulfilled, onRejected) {
-      var that = this;
-      return new PromiseConstructor(function (resolve, reject) {
-        nativeThen.call(that, resolve, reject);
-      }).then(onFulfilled, onRejected);
-    // https://github.com/zloirock/core-js/issues/640
-    }, { unsafe: true });
-
-    // wrap fetch result
-    if (typeof $fetch == 'function') $({ global: true, enumerable: true, forced: true }, {
-      // eslint-disable-next-line no-unused-vars
-      fetch: function fetch(input /* , init */) {
-        return promiseResolve(PromiseConstructor, $fetch.apply(global, arguments));
-      }
-    });
-  }
-}
-
-$({ global: true, wrap: true, forced: FORCED }, {
-  Promise: PromiseConstructor
-});
-
-setToStringTag(PromiseConstructor, PROMISE, false, true);
-setSpecies(PROMISE);
-
-PromiseWrapper = getBuiltIn(PROMISE);
-
-// statics
-$({ target: PROMISE, stat: true, forced: FORCED }, {
-  // `Promise.reject` method
-  // https://tc39.github.io/ecma262/#sec-promise.reject
-  reject: function reject(r) {
-    var capability = newPromiseCapability(this);
-    capability.reject.call(undefined, r);
-    return capability.promise;
-  }
-});
-
-$({ target: PROMISE, stat: true, forced: IS_PURE || FORCED }, {
-  // `Promise.resolve` method
-  // https://tc39.github.io/ecma262/#sec-promise.resolve
-  resolve: function resolve(x) {
-    return promiseResolve(IS_PURE && this === PromiseWrapper ? PromiseConstructor : this, x);
-  }
-});
-
-$({ target: PROMISE, stat: true, forced: INCORRECT_ITERATION }, {
-  // `Promise.all` method
-  // https://tc39.github.io/ecma262/#sec-promise.all
-  all: function all(iterable) {
-    var C = this;
-    var capability = newPromiseCapability(C);
-    var resolve = capability.resolve;
-    var reject = capability.reject;
-    var result = perform(function () {
-      var $promiseResolve = aFunction(C.resolve);
-      var values = [];
-      var counter = 0;
-      var remaining = 1;
-      iterate(iterable, function (promise) {
-        var index = counter++;
-        var alreadyCalled = false;
-        values.push(undefined);
-        remaining++;
-        $promiseResolve.call(C, promise).then(function (value) {
-          if (alreadyCalled) return;
-          alreadyCalled = true;
-          values[index] = value;
-          --remaining || resolve(values);
-        }, reject);
-      });
-      --remaining || resolve(values);
-    });
-    if (result.error) reject(result.value);
-    return capability.promise;
-  },
-  // `Promise.race` method
-  // https://tc39.github.io/ecma262/#sec-promise.race
-  race: function race(iterable) {
-    var C = this;
-    var capability = newPromiseCapability(C);
-    var reject = capability.reject;
-    var result = perform(function () {
-      var $promiseResolve = aFunction(C.resolve);
-      iterate(iterable, function (promise) {
-        $promiseResolve.call(C, promise).then(capability.resolve, reject);
-      });
-    });
-    if (result.error) reject(result.value);
-    return capability.promise;
-  }
-});
-
 
 /***/ }),
 
@@ -121556,32 +120843,6 @@ echarts.registerLayout(treeLayout);
 
 /***/ }),
 
-/***/ "f069":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var aFunction = __webpack_require__("1c0b");
-
-var PromiseCapability = function (C) {
-  var resolve, reject;
-  this.promise = new C(function ($$resolve, $$reject) {
-    if (resolve !== undefined || reject !== undefined) throw TypeError('Bad Promise constructor');
-    resolve = $$resolve;
-    reject = $$reject;
-  });
-  this.resolve = aFunction(resolve);
-  this.reject = aFunction(reject);
-};
-
-// 25.4.1.5 NewPromiseCapability(C)
-module.exports.f = function (C) {
-  return new PromiseCapability(C);
-};
-
-
-/***/ }),
-
 /***/ "f123":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -126548,7 +125809,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"36611cf1-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=13c852d0&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"05e01b0c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/ChartComponent.vue?vue&type=template&id=13c852d0&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"chart-wrapper"},[_c('div',{ref:"echartsContainer",staticClass:"chart-container"})])}
 var staticRenderFns = []
 
@@ -127588,12 +126849,6 @@ var UUID_UUID = /*#__PURE__*/function () {
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.for-each.js
 var es_array_for_each = __webpack_require__("4160");
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.object.assign.js
-var es_object_assign = __webpack_require__("cca6");
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.promise.js
-var es_promise = __webpack_require__("e6cf");
-
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.regexp.exec.js
 var es_regexp_exec = __webpack_require__("ac1f");
 
@@ -127699,7 +126954,6 @@ var lodash = __webpack_require__("2ef0");
 var lodash_default = /*#__PURE__*/__webpack_require__.n(lodash);
 
 // CONCATENATED MODULE: ./node_modules/glaway-bi-util/ObjectUtil.ts
-
 
 
 
@@ -128437,7 +127691,6 @@ var es_object_keys = __webpack_require__("b64b");
 
 
 
-
 var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
   function EChartServiceUtil() {
     _classCallCheck(this, EChartServiceUtil);
@@ -128447,7 +127700,7 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
     key: "getDataByFieldName",
 
     /**
-     * 通过字段名，获取结果集内的数据数组
+     * @function 通过字段名，获取结果集内的数据数组
      * - 柱图，堆积柱图
      *
      * @param fieldName 字段名
@@ -128481,8 +127734,8 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
       return fieldArray;
     }
     /**
-     * 线形图 分析数据处理方式
-     * 线形图单维度
+     * @function 线形图分析数据处理方式
+     * - 线形图单维度
      * @param dimensions {string[]} 维度数组
      * @param measureName {string} 度量字段名称
      * @param result {AnalysisResults} 分析数据
@@ -128504,7 +127757,8 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
       return fieldArray;
     }
     /**
-     * 线形图无维度处理方法
+     * @function 线形图无维度处理方法
+     * - 无维度
      * @param measureList 度量字段集合
      * @param result 分析结果集
      * @param decimals 小数设置
@@ -128546,7 +127800,7 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
       return dataresult;
     }
     /**
-     * 漏斗图 分析数据处理方式
+     * @function 漏斗图分析数据处理方式
      * 漏斗图单维度
      * @param dimensions {string[]} 维度数组
      * @param measureName {string} 度量字段名称
@@ -128578,7 +127832,7 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
       return dataresult;
     }
     /**
-     * 漏斗图无维度处理方法
+     * @function 漏斗图无维度处理方法
      * @param measureList 度量字段集合
      * @param result 分析结果集
      * @param decimals 小数设置
@@ -128814,14 +128068,13 @@ var EChartDataUtil_EChartServiceUtil = /*#__PURE__*/function () {
 
 
 
-
 /**
  * 柱图处理
  */
 
 var BarHandler_BarHandler = /*#__PURE__*/function () {
   /**
-   * 数据设置
+   * @function 构造函数
    * 后面有其他的设置也加入到这里
    * @param result 分析结果
    * @param dashboard 仪表盘数据
@@ -128836,7 +128089,7 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
     this.fieldNames = EChartsService_EChartsService.splitFieldNames(this.result[0], this.dashboard);
   }
   /**
-   * @name 获取图表的处理结果
+   * @function 获取图表的处理结果
    */
 
 
@@ -128867,7 +128120,7 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
       return style;
     }
     /**
-     * @name 获取X轴数据
+     * @function 获取X轴数据
      */
 
   }, {
@@ -128917,7 +128170,7 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
       return xAxis;
     }
     /**
-     * @name 获取Y轴数据
+     * @function 获取Y轴数据
      */
 
   }, {
@@ -128931,7 +128184,7 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
     }
     /**
      * 将会把结果数据以及度量设置为二维数组，返回对应一行数据
-     * @name 不存维度时的series处理函数
+     * @function 不存维度时的series处理函数
      * @param seriesData 系列数据
      * @param measureName 度量名
      * @param index 下标
@@ -128950,7 +128203,7 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
       return Object.assign(andSeriesData, seriesData);
     }
     /**
-     * @name 存在维度的series处理函数
+     * @function 存在维度的series处理函数
      * @param seriesData 系列数据
      * @param measureName 度量名
      */
@@ -128967,7 +128220,7 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
       return Object.assign(andSeriesData, seriesData);
     }
     /**
-     * @name 获取Series数据
+     * @function 获取Series数据
      */
 
   }, {
@@ -128994,7 +128247,7 @@ var BarHandler_BarHandler = /*#__PURE__*/function () {
       return series;
     }
     /**
-     * @name 获取图例
+     * @function 获取图例
      */
 
   }, {
@@ -129448,9 +128701,6 @@ var HBarPercentageHandler_HBarPercentageHandler = /*#__PURE__*/function (_HBarSt
 }(HBarStackHandler_HBarStackHandler);
 
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.object.values.js
-var es_object_values = __webpack_require__("07ac");
-
 // CONCATENATED MODULE: ./src/service/chart-handler/PieHandler.ts
 
 
@@ -129525,11 +128775,11 @@ var PieHandler_PieHandler = /*#__PURE__*/function () {
 
       var seriesData = {
         type: "pie",
-        radius: Object.values(this.sampleStyle.radiusConfig).map(function (item) {
+        radius: _typeof(this.sampleStyle.radius) === "object" ? this.sampleStyle.radius.map(function (item) {
           return item + "%";
-        }),
+        }) : this.sampleStyle.radius,
         itemStyle: {},
-        center: Object.values(this.sampleStyle.centerConfig),
+        center: this.sampleStyle.center,
         label: EChartDataUtil_EChartServiceUtil.getPieSeriesLabel(this.sampleStyle),
         data: []
       }; // 度量必须唯一，不然要提示前端禁用失败
@@ -129789,10 +129039,10 @@ var RadarHandler_RadarHandler = /*#__PURE__*/function () {
 
       var radarData = {
         indicator: [],
-        center: Object.values(this.sampleStyle.centerConfig),
-        radius: Object.values(this.sampleStyle.radiusConfig).map(function (item) {
+        center: this.sampleStyle.center,
+        radius: _typeof(this.sampleStyle.radius) === "object" ? this.sampleStyle.radius.map(function (item) {
           return item + "%";
-        })
+        }) : this.sampleStyle.radius
       };
       this.fieldNames.dimensions.forEach(function (dimensionName) {
         _this.result.forEach(function (data) {
@@ -129844,15 +129094,14 @@ var RadarHandler_RadarHandler = /*#__PURE__*/function () {
 
 
 
-
 /**
  * 折线图处理
  */
 
 var LineHandler_LineHandler = /*#__PURE__*/function () {
   /**
-   * 数据设置
-   * 后面有其他的设置也加入到这里
+   * @function 构造函数
+   *  后面有其他的设置也加入到这里
    * @param result 分析结果
    * @param dashboard 仪表盘数据
    * @param sampleStyle 样例样式
@@ -129866,7 +129115,7 @@ var LineHandler_LineHandler = /*#__PURE__*/function () {
     this.fieldNames = EChartsService_EChartsService.splitFieldNames(this.result[0], this.dashboard);
   }
   /**
-   * 获取图表的处理结果
+   * @function 获取图表的处理结果
    */
 
 
@@ -129897,7 +129146,7 @@ var LineHandler_LineHandler = /*#__PURE__*/function () {
       return style;
     }
     /**
-     * 获取X轴数据
+     * @function 获取X轴数据
      */
 
   }, {
@@ -129944,7 +129193,7 @@ var LineHandler_LineHandler = /*#__PURE__*/function () {
       return xAxis;
     }
     /**
-     * 获取Y轴数据
+     * @function 获取Y轴数据
      */
 
   }, {
@@ -129956,7 +129205,7 @@ var LineHandler_LineHandler = /*#__PURE__*/function () {
       }];
     }
     /**
-     * 获取Series数据
+     * @function 获取Series数据
      */
 
   }, {
@@ -129997,8 +129246,8 @@ var LineHandler_LineHandler = /*#__PURE__*/function () {
       return series;
     }
     /**
-     * 将会把结果数据以及度量设置为二维数组，返回对应一行数据
-     * @name 不存维度时的series处理函数
+     * @function 不存维度时的series处理函数
+     * @todo 将会把结果数据以及度量设置为二维数组，返回对应一行数据
      * @param seriesData 系列数据
      * @param measureName 度量名
      * @param index 下标
@@ -130014,7 +129263,7 @@ var LineHandler_LineHandler = /*#__PURE__*/function () {
       return Object.assign(andSeriesData, seriesData);
     }
     /**
-     * @name 存在维度的series处理函数
+     * @function 存在维度的series处理函数
      * @param seriesData 系列数据
      * @param measureName 度量名
      */
@@ -130030,7 +129279,7 @@ var LineHandler_LineHandler = /*#__PURE__*/function () {
       return Object.assign(andSeriesData, seriesData);
     }
     /**
-     * 获取图例
+     * @function 获取图例
      */
 
   }, {
@@ -130048,6 +129297,7 @@ var LineHandler_LineHandler = /*#__PURE__*/function () {
 
 
 // CONCATENATED MODULE: ./src/service/chart-handler/GuageHandler.ts
+
 
 
 
@@ -130100,7 +129350,14 @@ var GuageHandler_GuageHandler = /*#__PURE__*/function () {
   }, {
     key: "getSeries",
     value: function getSeries() {
-      var _this = this;
+      var _this$sampleStyle$tit,
+          _this$sampleStyle$axi,
+          _this = this,
+          _this$sampleStyle$axi3,
+          _this$sampleStyle$axi4,
+          _this$sampleStyle$axi5,
+          _this$sampleStyle$axi6,
+          _this$sampleStyle$axi7;
 
       var series = []; // 指示器这里 实际值 = 度量
       // 实际值必须唯一，
@@ -130110,42 +129367,73 @@ var GuageHandler_GuageHandler = /*#__PURE__*/function () {
 
       var dimensions = this.fieldNames.dimensions[0];
       var comparison = EChartDataUtil_EChartServiceUtil.getReduceSum(this.result, dimensions) || actual || 100;
-      this.sampleStyle.pointer.length = this.sampleStyle.pointer.length + "%";
+
+      if (this.sampleStyle.pointer) {
+        this.sampleStyle.pointer.length = this.sampleStyle.pointer.length + "%";
+      }
+
+      if (this.sampleStyle.label.offset) {
+        this.sampleStyle.label.offset.forEach(function (item) {
+          item = item + "%";
+        });
+      }
+
+      if ((_this$sampleStyle$tit = this.sampleStyle.title) === null || _this$sampleStyle$tit === void 0 ? void 0 : _this$sampleStyle$tit.offsetCenter) {
+        this.sampleStyle.title.offsetCenter.forEach(function (item) {
+          item = item + "%";
+        });
+      }
+
+      var colorGroup = this.dashboard.echarts.sampleStyle.global.color.map(function (item, index) {
+        return [(index + 3) / 10, item];
+      });
+
+      if ((_this$sampleStyle$axi = this.sampleStyle.axisLine) === null || _this$sampleStyle$axi === void 0 ? void 0 : _this$sampleStyle$axi.lineStyle.color) {
+        var _this$sampleStyle$axi2;
+
+        colorGroup = (_this$sampleStyle$axi2 = this.sampleStyle.axisLine) === null || _this$sampleStyle$axi2 === void 0 ? void 0 : _this$sampleStyle$axi2.lineStyle.color;
+      }
+
       var seriesData = {
         type: "gauge",
         detail: {
+          show: this.sampleStyle.label.show,
+          color: this.sampleStyle.label.color,
+          // backgroundColor: this.sampleStyle.label.color,
+          fontFamily: this.sampleStyle.label.fontFamily,
+          fontSize: this.sampleStyle.label.fontSize,
+          offsetCenter: this.sampleStyle.label.offset,
           formatter: function formatter(value) {
-            var result = value - comparison;
-            return ["{measuresStyle|".concat(value, "(").concat((value / comparison * 100).toFixed(2), "%)\n}"), "{percentageStyle|".concat(result, "(").concat((result / comparison * 100).toFixed(2), "%)}")].join("");
-          },
-          rich: {
-            measuresStyle: {
-              lineHeight: 25,
-              fontSize: 20
-            },
-            percentageStyle: {
-              fontSize: 16
+            var result = "".concat((value / comparison * 100).toFixed(2), "%");
+
+            if (_this.sampleStyle.label.isShowNumber) {
+              result = "".concat(value) + "(".concat(result, ")");
             }
+
+            var number = [result, "\n".concat(comparison)].join("");
+            return number;
           }
         },
         // 坐标轴线
         axisLine: {
           // 属性lineStyle控制线条样式
           lineStyle: {
-            width: this.sampleStyle.radiusConfig.axisLineWidth
+            width: (_this$sampleStyle$axi3 = this.sampleStyle.axisLine) === null || _this$sampleStyle$axi3 === void 0 ? void 0 : _this$sampleStyle$axi3.lineStyle.width,
+            color: colorGroup
           }
         },
         splitNumber: this.sampleStyle.splitNumber,
         pointer: this.sampleStyle.pointer,
+        itemStyle: this.sampleStyle.itemStyle,
         splitLine: this.sampleStyle.splitLine,
         axisTick: this.sampleStyle.axisTick,
         endAngle: this.sampleStyle.endAngle,
         startAngle: this.sampleStyle.startAngle,
         axisLabel: {
-          show: this.sampleStyle.label.show,
-          color: this.sampleStyle.label.color,
-          fontFamily: this.sampleStyle.label.fontFamily,
-          fontSize: this.sampleStyle.label.fontSize,
+          show: (_this$sampleStyle$axi4 = this.sampleStyle.axisLabel) === null || _this$sampleStyle$axi4 === void 0 ? void 0 : _this$sampleStyle$axi4.show,
+          color: (_this$sampleStyle$axi5 = this.sampleStyle.axisLabel) === null || _this$sampleStyle$axi5 === void 0 ? void 0 : _this$sampleStyle$axi5.color,
+          fontFamily: (_this$sampleStyle$axi6 = this.sampleStyle.axisLabel) === null || _this$sampleStyle$axi6 === void 0 ? void 0 : _this$sampleStyle$axi6.fontFamily,
+          fontSize: (_this$sampleStyle$axi7 = this.sampleStyle.axisLabel) === null || _this$sampleStyle$axi7 === void 0 ? void 0 : _this$sampleStyle$axi7.fontSize,
           formatter: function formatter(value) {
             if (!_this.sampleStyle.label.isShowNumber) {
               return (value / comparison * 100).toFixed(_this.sampleStyle.decimals.value) + "%";
@@ -130154,8 +129442,9 @@ var GuageHandler_GuageHandler = /*#__PURE__*/function () {
             }
           }
         },
-        radius: this.sampleStyle.radiusConfig.outside,
-        center: Object.values(this.sampleStyle.centerConfig),
+        title: this.sampleStyle.title,
+        radius: this.sampleStyle.radius + "%",
+        center: this.sampleStyle.center,
         max: comparison || 100,
         data: [{
           measure: {
@@ -130287,10 +129576,10 @@ var TargetPieHandler_TargetPieHandler = /*#__PURE__*/function (_PieHandler) {
     key: "getPolar",
     value: function getPolar() {
       return {
-        radius: Object.values(this.sampleStyle.radiusConfig).map(function (item) {
+        radius: _typeof(this.sampleStyle.radius) === "object" ? this.sampleStyle.radius.map(function (item) {
           return item + "%";
-        }),
-        center: Object.values(this.sampleStyle.centerConfig)
+        }) : this.sampleStyle.radius,
+        center: this.sampleStyle.center
       };
     }
     /**
@@ -130305,7 +129594,7 @@ var TargetPieHandler_TargetPieHandler = /*#__PURE__*/function (_PieHandler) {
       var seriesData = {
         type: "bar",
         roundCap: true,
-        barWidth: this.sampleStyle.radiusConfig.axisLineWidth,
+        barWidth: this.sampleStyle.barWidth,
         showBackground: true,
         coordinateSystem: "polar",
         name: measureName,
@@ -130361,14 +129650,13 @@ var BiaxialHandler_BiaxialHandler = function BiaxialHandler() {
 
 
 
-
 /**
  * 仪表盘处理
  */
 
 var FunnelHandler_FunnelHandler = /*#__PURE__*/function () {
   /**
-   * 数据设置
+   * @function 构造函数
    * 后面有其他的设置也加入到这里
    * @param result 分析结果
    * @param dashboard 仪表盘数据
@@ -130382,6 +129670,10 @@ var FunnelHandler_FunnelHandler = /*#__PURE__*/function () {
     this.sampleStyle = sampleStyle;
     this.fieldNames = EChartsService_EChartsService.splitFieldNames(this.result[0], this.dashboard);
   }
+  /**
+   * @function 获取计算后的样式
+   */
+
 
   _createClass(FunnelHandler, [{
     key: "getStyle",
@@ -130399,7 +129691,7 @@ var FunnelHandler_FunnelHandler = /*#__PURE__*/function () {
       return style;
     }
     /**
-     * 获取Series数据
+     * @function 获取Series数据
      */
 
   }, {
@@ -130432,8 +129724,8 @@ var FunnelHandler_FunnelHandler = /*#__PURE__*/function () {
         maxSize: this.sampleStyle.maxSize + "%",
         width: this.sampleStyle.width + "%",
         height: this.sampleStyle.height + "%",
-        top: this.sampleStyle.centerConfig ? this.sampleStyle.centerConfig.yAxias : 0,
-        left: this.sampleStyle.centerConfig ? this.sampleStyle.centerConfig.xAxias : 0
+        top: this.sampleStyle.center ? this.sampleStyle.center[0] : 0,
+        left: this.sampleStyle.center ? this.sampleStyle.center[1] : 0
       };
 
       if (dimensions.length) {
@@ -130451,7 +129743,7 @@ var FunnelHandler_FunnelHandler = /*#__PURE__*/function () {
     }
     /**
      * 将会把结果数据以及度量设置为二维数组，返回对应一行数据
-     * @name 不存维度时的series处理函数
+     * @function 不存维度时的series处理函数
      * @param seriesData 系列数据
      * @param measureName 度量名
      * @param index 下标
@@ -130467,7 +129759,7 @@ var FunnelHandler_FunnelHandler = /*#__PURE__*/function () {
       return Object.assign(andSeriesData, seriesData);
     }
     /**
-     * @name 存在维度的series处理函数
+     * @function 存在维度的series处理函数
      * @param seriesData 系列数据
      * @param measureName 度量名
      */
@@ -130481,7 +129773,10 @@ var FunnelHandler_FunnelHandler = /*#__PURE__*/function () {
         data: EChartDataUtil_EChartServiceUtil.getFunnelByDimensionsArray(dimensions, measureName, this.result, this.sampleStyle.decimals)
       };
       return Object.assign(andSeriesData, seriesData);
-    } // 提示信息
+    }
+    /**
+     * @function 提示信息
+     */
 
   }, {
     key: "getTooltips",
@@ -130489,7 +129784,10 @@ var FunnelHandler_FunnelHandler = /*#__PURE__*/function () {
       return {
         formatter: "{b} : {c}"
       };
-    } // 图例信息
+    }
+    /**
+     * @function 图例信息
+     */
 
   }, {
     key: "getLegend",
@@ -130879,7 +130177,6 @@ var WhereTypeMapping = [{
 
 
 
-
 var FILTER_DEFAULT_VALUE = "DEFAULT";
 /**
  * 构建类
@@ -131209,6 +130506,9 @@ var Limit_LimitBuilder = /*#__PURE__*/function () {
 }();
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.object.entries.js
 var es_object_entries = __webpack_require__("4fad");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.object.values.js
+var es_object_values = __webpack_require__("07ac");
 
 // CONCATENATED MODULE: ./node_modules/glaway-bi-model/enums/ChartType.ts
 /**
@@ -131739,18 +131039,12 @@ var Pie_templates = {
           fontFamily: "Microsoft YaHei",
           isShowNumber: false
         },
-        centerConfig: {
-          xAxias: "50%",
-          yAxias: "50%"
-        },
+        center: ["50%", "50%"],
         decimals: {
           value: 2,
           unit: ""
         },
-        radiusConfig: {
-          inside: 0,
-          outside: 60
-        },
+        radius: [0, 60],
         grid: {
           top: {
             value: 50,
@@ -131853,7 +131147,6 @@ var PieConfig = {
 
 
 
-
 /**
  * 初始化模板
  */
@@ -131862,10 +131155,7 @@ var RPie_templates = {
   echarts: {
     sampleStyle: {
       rpie: Object.assign({}, Pie.templates.echarts.sampleStyle.pie, {
-        radiusConfig: {
-          inside: 45,
-          outside: 90
-        }
+        radius: [45, 90]
       })
     }
   }
@@ -131940,7 +131230,6 @@ var RosePieConfig = {
 };
 /* harmony default export */ var RosePie = (RosePieConfig);
 // CONCATENATED MODULE: ./src/config/chart-config/Radar.ts
-
 
 
 
@@ -132103,7 +131392,6 @@ var HBarPercentageConfig = {
 
 
 
-
 /**
  * 初始化模板
  */
@@ -132121,11 +131409,8 @@ var TargetPie_templates = {
           fontFamily: "Microsoft YaHei",
           isShowNumber: false
         },
-        radiusConfig: {
-          inside: 0,
-          outside: 60,
-          axisLineWidth: 10
-        }
+        barWidth: 10,
+        radius: [0, 90]
       })
     }
   }
@@ -132182,7 +131467,6 @@ var TargetPieConfig = {
 
 
 
-
 /**
  * 初始化模板
  */
@@ -132191,37 +131475,88 @@ var Gauge_templates = {
   echarts: {
     sampleStyle: {
       guage: Object.assign({}, Pie.templates.echarts.sampleStyle.pie, {
-        label: {
-          show: false,
-          hidePosition: true,
-          position: "",
-          color: "#000",
-          fontSize: 12,
-          fontFamily: "Microsoft YaHei",
-          isShowNumber: false
+        // 半径
+        radius: 90,
+        // 分割段数
+        splitNumber: 3,
+        // 轴线
+        axisLine: {
+          lineStyle: {
+            width: 12
+          }
         },
-        radiusConfig: {
-          axisLineWidth: 2,
-          inside: 0,
-          outside: 90
-        },
-        splitNumber: 5,
+        // 指针
         pointer: {
           show: true,
-          length: 50,
-          width: 4
+          length: 70,
+          width: 5
         },
+        label: {
+          show: true,
+          hidePosition: true,
+          position: "",
+          color: "auto",
+          fontSize: 16,
+          fontFamily: "Microsoft YaHei",
+          isShowNumber: true,
+          offset: [0, 50]
+        },
+        // 指针样式
+        itemStyle: {
+          color: "auto",
+          borderColor: "auto",
+          borderWidth: 0,
+          borderType: "solid",
+          shadowColor: "auto",
+          shadowBlur: 0,
+          shadowOffsetX: 0,
+          shadowOffsetY: 0,
+          opacity: 100
+        },
+        // 分割线
         splitLine: {
           show: true,
-          length: 6,
+          length: 20,
           lineStyle: {
             // 属性lineStyle控制线条样式
             color: "auto"
           }
         },
+        // 刻度线
         axisTick: {
           showt: true,
-          length: 2
+          length: 7
+        },
+        // 刻度lable
+        axisLabel: {
+          show: true,
+          color: "auto",
+          fontSize: 12,
+          fontFamily: "Microsoft YaHei"
+        },
+        // 标题
+        title: {
+          show: true,
+          offsetCenter: [0, -40],
+          color: 'auto',
+          fontFamily: "Microsoft YaHei",
+          fontSize: 16,
+          lineHeight: 16,
+          backgroundColor: '#00000000',
+          borderColor: 'auto',
+          borderWidth: 0,
+          borderRadius: 0,
+          padding: 0,
+          shadowColor: 'auto',
+          shadowBlur: 0,
+          shadowOffsetX: 0,
+          shadowOffsetY: 0,
+          textBorderColor: 'auto',
+          textBorderWidth: 0,
+          textShadowColor: 'auto',
+          textShadowBlur: 0,
+          textShadowOffsetX: 0,
+          textShadowOffsetY: 0
         },
         endAngle: -45,
         startAngle: 225
@@ -132313,10 +131648,7 @@ var Funnel_templates = {
           value: 0,
           unit: ""
         },
-        centerConfig: {
-          xAxias: "50px",
-          yAxias: "50px"
-        }
+        center: ["50px", "50px"]
       }
     }
   }
@@ -132595,7 +131927,6 @@ ChartConfig_ChartConfig.chartConfigMap = {
 
 
 
-
 /**
  * 仪表盘集通用初始化数据
  */
@@ -132820,8 +132151,6 @@ var DefaultTemplate_DefaultTemplate = /*#__PURE__*/function () {
 
 DefaultTemplate_DefaultTemplate.configCache = new Map();
 // CONCATENATED MODULE: ./src/service/EChartsService.ts
-
-
 
 
 
@@ -135219,16 +134548,6 @@ var _default = {
   }
 };
 module.exports = _default;
-
-/***/ }),
-
-/***/ "fea9":
-/***/ (function(module, exports, __webpack_require__) {
-
-var global = __webpack_require__("da84");
-
-module.exports = global.Promise;
-
 
 /***/ }),
 

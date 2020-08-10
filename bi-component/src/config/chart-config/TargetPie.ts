@@ -22,11 +22,8 @@ const templates = {
             fontFamily: "Microsoft YaHei",
             isShowNumber: false
           },
-          radiusConfig: {
-            inside: 0,
-            outside: 60,
-            axisLineWidth: 10
-          }
+          barWidth: 10,
+          radius: [0, 90]
         }
       )
     }

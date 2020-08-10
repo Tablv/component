@@ -4,8 +4,8 @@ import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import EChartsService from "../EChartsService";
 import { ChartHandler } from "../../interfaces/ChartHandler";
-import { GaugeChartOption } from "glaway-bi-model/view/dashboard//chart/ChartOption";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
+import { GaugeChartOption } from "glaway-bi-model/view/dashboard/chart/GaugeChartOption";
 
 /**
  * 仪表盘处理
@@ -64,50 +64,75 @@ export default class GuageHandler implements ChartHandler {
     const dimensions = this.fieldNames.dimensions[0];
     const comparison =
       EChartDataUtil.getReduceSum(this.result, dimensions) || actual || 100;
-    this.sampleStyle.pointer.length = (this.sampleStyle.pointer.length +
-      "%") as any;
+
+    if (this.sampleStyle.pointer) {
+      this.sampleStyle.pointer.length = (this.sampleStyle.pointer.length +
+        "%") as any;
+    }
+
+    if (this.sampleStyle.label.offset) {
+      this.sampleStyle.label.offset.forEach((item: string | number) => {
+        item = item + "%"
+      })
+    }
+
+    if (this.sampleStyle.title?.offsetCenter) {
+      this.sampleStyle.title.offsetCenter.forEach((item: string | number) => {
+        item = item + "%"
+      })
+    }
+
+    let colorGroup = this.dashboard.echarts.sampleStyle.global.color.map((item, index) => {
+      return [ (index + 3) / 10, item ]
+    });
+
+    if (this.sampleStyle.axisLine?.lineStyle.color) {
+      colorGroup = this.sampleStyle.axisLine?.lineStyle.color;
+    }
+
     const seriesData = {
       type: "gauge",
       detail: {
+        show: this.sampleStyle.label.show,
+        color: this.sampleStyle.label.color,
+        // backgroundColor: this.sampleStyle.label.color,
+        fontFamily: this.sampleStyle.label.fontFamily,
+        fontSize: this.sampleStyle.label.fontSize,
+        offsetCenter: this.sampleStyle.label.offset,
         formatter: (value: number) => {
-          const result = value - comparison;
-          return [
-            `{measuresStyle|${value}(${((value / comparison) * 100).toFixed(
-              2
-            )}%)\n}`,
-            `{percentageStyle|${result}(${((result / comparison) * 100).toFixed(
-              2
-            )}%)}`
-          ].join("");
-        },
-        rich: {
-          measuresStyle: {
-            lineHeight: 25,
-            fontSize: 20
-          },
-          percentageStyle: {
-            fontSize: 16
+          let result = `${((value / comparison) * 100).toFixed(
+            2
+          )}%`;
+          if (this.sampleStyle.label.isShowNumber) {
+            result = `${value}` + `(${result})`;
           }
+          const number = [
+            result,
+            `\n${comparison}`
+          ].join("");
+          return number
         }
       },
       // 坐标轴线
       axisLine: {
         // 属性lineStyle控制线条样式
         lineStyle: {
-          width: this.sampleStyle.radiusConfig.axisLineWidth
+          width: this.sampleStyle.axisLine?.lineStyle.width,
+          color: colorGroup
         }
       },
       splitNumber: this.sampleStyle.splitNumber,
       pointer: this.sampleStyle.pointer,
+      itemStyle: this.sampleStyle.itemStyle,
       splitLine: this.sampleStyle.splitLine,
       axisTick: this.sampleStyle.axisTick,
       endAngle: this.sampleStyle.endAngle,
       startAngle: this.sampleStyle.startAngle,
       axisLabel: {
-        show: this.sampleStyle.label.show,
-        color: this.sampleStyle.label.color,
-        fontFamily: this.sampleStyle.label.fontFamily,
-        fontSize: this.sampleStyle.label.fontSize,
+        show: this.sampleStyle.axisLabel?.show,
+        color: this.sampleStyle.axisLabel?.color,
+        fontFamily: this.sampleStyle.axisLabel?.fontFamily,
+        fontSize: this.sampleStyle.axisLabel?.fontSize,
         formatter: (value: number) => {
           if (!this.sampleStyle.label.isShowNumber) {
             return (
@@ -120,8 +145,9 @@ export default class GuageHandler implements ChartHandler {
           }
         }
       },
-      radius: this.sampleStyle.radiusConfig.outside,
-      center: Object.values(this.sampleStyle.centerConfig),
+      title: this.sampleStyle.title,
+      radius: this.sampleStyle.radius + "%",
+      center: this.sampleStyle.center,
       max: comparison || 100,
       data: [
         {

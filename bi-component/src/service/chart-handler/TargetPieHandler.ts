@@ -71,10 +71,11 @@ export default class TargetPieHandler extends PieHandler {
 
   public getPolar(): any {
     return {
-      radius: Object.values(this.sampleStyle.radiusConfig).map(
-        item => item + "%"
-      ),
-      center: Object.values(this.sampleStyle.centerConfig)
+      radius:
+        typeof this.sampleStyle.radius === "object"
+          ? this.sampleStyle.radius.map(item => item + "%")
+          : this.sampleStyle.radius,
+      center: this.sampleStyle.center
     };
   }
 
@@ -87,7 +88,7 @@ export default class TargetPieHandler extends PieHandler {
     const seriesData = {
       type: "bar",
       roundCap: true,
-      barWidth: this.sampleStyle.radiusConfig.axisLineWidth,
+      barWidth: this.sampleStyle.barWidth,
       showBackground: true,
       coordinateSystem: "polar",
       name: measureName,

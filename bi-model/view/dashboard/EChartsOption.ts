@@ -5,17 +5,19 @@ import {
   HBarChartOption,
   HBarStackChartOption,
   LineChartOption,
-  PieChartOption,
-  RPieChartOption,
-  RosePieChartOption,
-  SunPieChartOption,
-  RadarChartOption,
+  // PieChartOption,
+  // RPieChartOption,
+  // RosePieChartOption,
+  // SunPieChartOption,
+  // RadarChartOption,
   BiaxialChartOption,
   HBarPercentageChartOption,
-  GaugeChartOption,
-  TargetPieChartOption,
+  // GaugeChartOption,
+  // TargetPieChartOption,
   FunnelChartOption
 } from "glaway-bi-model/view/dashboard/chart/ChartOption";
+import { PieChartOption } from "glaway-bi-model/view/dashboard/chart/PieOption";
+import { GaugeChartOption } from "glaway-bi-model/view/dashboard/chart/GaugeChartOption";
 /**
  * ECharts Option
  */
@@ -107,16 +109,16 @@ export interface EChartsSampleStyle {
   pie?: PieChartOption;
 
   //环形图配置
-  rpie?: RPieChartOption;
+  rpie?: PieChartOption;
 
   //玫瑰图配置
-  rosepie?: RosePieChartOption;
+  rosepie?: PieChartOption;
 
   //旭日图配置
-  sunpie?: SunPieChartOption;
+  sunpie?: PieChartOption;
 
   //雷达图配置
-  radar?: RadarChartOption;
+  radar?: PieChartOption;
 
   // 线图配置
   line?: LineChartOption;
@@ -127,7 +129,7 @@ export interface EChartsSampleStyle {
   // 仪表盘
   guage?: GaugeChartOption;
 
-  targetpie?: TargetPieChartOption;
+  targetpie?: PieChartOption;
 
   funnel?: FunnelChartOption;
 }
