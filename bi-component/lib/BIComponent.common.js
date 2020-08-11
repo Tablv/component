@@ -130297,6 +130297,7 @@ var TargetPieHandler_TargetPieHandler = /*#__PURE__*/function (_GaugeHandler) {
       }
 
       var colorGroup = [[actual / comparison, this.dashboard.echarts.sampleStyle.global.color[1]], [1, this.dashboard.echarts.sampleStyle.global.color[0]]];
+      var decimals = this.sampleStyle.decimals.value;
       var seriesData = {
         type: "gauge",
         detail: {
@@ -130306,7 +130307,7 @@ var TargetPieHandler_TargetPieHandler = /*#__PURE__*/function (_GaugeHandler) {
           fontSize: this.sampleStyle.label.fontSize,
           offsetCenter: this.sampleStyle.label.offset,
           formatter: function formatter(value) {
-            var result = "".concat((value / comparison * 100).toFixed(2), "%");
+            var result = "".concat((value / comparison * 100).toFixed(decimals), "%");
 
             if (_this.sampleStyle.label.isShowNumber) {
               result = "".concat(value) + "(".concat(result, ")");
@@ -130386,6 +130387,8 @@ var BiaxialHandler_BiaxialHandler = function BiaxialHandler() {
 
 
 
+
+
 /**
  * 仪表盘处理
  */
@@ -130433,12 +130436,14 @@ var FunnelHandler_FunnelHandler = /*#__PURE__*/function () {
   }, {
     key: "getSeries",
     value: function getSeries() {
+      var _this = this;
+
       var series = [];
       var _this$fieldNames = this.fieldNames,
           dimensions = _this$fieldNames.dimensions,
-          measures = _this$fieldNames.measures; // 指示器这里 实际值 = 度量
-      // 实际值必须唯一，
+          measures = _this$fieldNames.measures; // 实际值必须唯一，
 
+      var decimals = this.sampleStyle.decimals.value;
       var seriesData = {
         type: "funnel",
         label: {
@@ -130447,7 +130452,17 @@ var FunnelHandler_FunnelHandler = /*#__PURE__*/function () {
           fontFamily: this.sampleStyle.label.fontFamily,
           fontSize: this.sampleStyle.label.fontSize,
           position: this.sampleStyle.label.position,
-          formatter: "{b} : {c}"
+          formatter: function formatter(params) {
+            var value = Number((params.value * 1).toFixed(decimals));
+            var percent = Number((params.percent * 1).toFixed(decimals));
+            var result = "".concat(percent.toFixed(decimals), "%");
+
+            if (_this.sampleStyle.label.isShowNumber) {
+              result = "".concat(value) + "(".concat(result, ")");
+            }
+
+            return result;
+          }
         },
         labelLine: this.sampleStyle.labelLine,
         itemStyle: this.sampleStyle.itemStyle,
@@ -130455,13 +130470,13 @@ var FunnelHandler_FunnelHandler = /*#__PURE__*/function () {
         funnelAlign: this.sampleStyle.funnelAlign,
         gap: this.sampleStyle.gap,
         min: this.sampleStyle.min,
-        max: this.sampleStyle.max,
+        // max: this.sampleStyle.max,
         minSize: this.sampleStyle.minSize + "%",
         maxSize: this.sampleStyle.maxSize + "%",
         width: this.sampleStyle.width + "%",
         height: this.sampleStyle.height + "%",
-        top: this.sampleStyle.center ? this.sampleStyle.center[0] : 0,
-        left: this.sampleStyle.center ? this.sampleStyle.center[1] : 0
+        top: this.sampleStyle.center ? this.sampleStyle.center[1] : 0,
+        left: this.sampleStyle.center ? this.sampleStyle.center[0] : 0
       };
 
       if (dimensions.length) {
@@ -132289,20 +132304,48 @@ var GaugeConfig = {
 var TargetPie_templates = {
   echarts: {
     sampleStyle: {
-      targetpie: Object.assign({}, Gauge.templates.echarts.sampleStyle.gauge // {
-      //   label: {
-      //     show: false,
-      //     hidePosition: true,
-      //     position: "",
-      //     color: "#000",
-      //     fontSize: 12,
-      //     fontFamily: "Microsoft YaHei",
-      //     isShowNumber: false
-      //   },
-      //   barWidth: 10,
-      //   radius: [0, 90]
-      // }
-      )
+      targetpie: Object.assign({}, Gauge.templates.echarts.sampleStyle.gauge, {
+        // 分割段数
+        splitNumber: 1,
+        // 轴线
+        axisLine: {
+          lineStyle: {
+            width: 12
+          }
+        },
+        // 指针
+        pointer: {
+          show: false
+        },
+        label: {
+          show: true,
+          hidePosition: true,
+          position: "",
+          color: "auto",
+          fontSize: 16,
+          fontFamily: "Microsoft YaHei",
+          isShowNumber: true,
+          offset: [0, 50]
+        },
+        // 指针样式
+        itemStyle: {},
+        // 分割线
+        splitLine: {
+          show: false
+        },
+        // 刻度线
+        axisTick: {
+          showt: false
+        },
+        // 刻度lable
+        axisLabel: {
+          show: false
+        },
+        decimals: {
+          value: 2,
+          unit: ""
+        }
+      })
     }
   }
 };
@@ -132379,8 +132422,8 @@ var Funnel_templates = {
         sort: "descending",
         funnelAlign: "center",
         gap: 2,
-        width: 40,
-        height: 45,
+        width: 77,
+        height: 80,
         grid: {
           // 初始值需要与全局配置保持一致
           top: {
@@ -132402,8 +132445,9 @@ var Funnel_templates = {
         },
         label: {
           show: false,
-          position: "left",
+          position: "inside",
           color: "#000",
+          fontSize: 12,
           fontFamily: "Microsoft YaHei"
         },
         decimals: {

@@ -24,8 +24,8 @@ const templates = {
         sort: "descending",
         funnelAlign: "center",
         gap: 2,
-        width: 40,
-        height: 45,
+        width: 77,
+        height: 80,
         grid: {
           // 初始值需要与全局配置保持一致
           top: {
@@ -47,8 +47,9 @@ const templates = {
         },
         label: {
           show: false,
-          position: "left",
+          position: "inside",
           color: "#000",
+          fontSize: 12,
           fontFamily: "Microsoft YaHei"
         },
         decimals: {

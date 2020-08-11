@@ -61,8 +61,8 @@ export default class FunnelHandler implements ChartHandler {
     let series: Array<echarts.EChartOption.Series> = [];
     const { dimensions, measures } = this.fieldNames;
 
-    // 指示器这里 实际值 = 度量
     // 实际值必须唯一，
+    const decimals = this.sampleStyle.decimals.value;
     const seriesData = {
       type: "funnel",
       label: {
@@ -71,7 +71,15 @@ export default class FunnelHandler implements ChartHandler {
         fontFamily: this.sampleStyle.label.fontFamily,
         fontSize: this.sampleStyle.label.fontSize,
         position: this.sampleStyle.label.position,
-        formatter: "{b} : {c}"
+        formatter: (params: { value: number; percent: number }) => {
+          const value = Number((params.value * 1).toFixed(decimals));
+          const percent = Number((params.percent * 1).toFixed(decimals));
+          let result = `${percent.toFixed(decimals)}%`;
+          if (this.sampleStyle.label.isShowNumber) {
+            result = `${value}` + `(${result})`;
+          }
+          return result;
+        }
       },
       labelLine: this.sampleStyle.labelLine,
       itemStyle: this.sampleStyle.itemStyle,
@@ -79,13 +87,13 @@ export default class FunnelHandler implements ChartHandler {
       funnelAlign: this.sampleStyle.funnelAlign,
       gap: this.sampleStyle.gap,
       min: this.sampleStyle.min,
-      max: this.sampleStyle.max,
+      // max: this.sampleStyle.max,
       minSize: this.sampleStyle.minSize + "%",
       maxSize: this.sampleStyle.maxSize + "%",
       width: this.sampleStyle.width + "%",
       height: this.sampleStyle.height + "%",
-      top: this.sampleStyle.center ? this.sampleStyle.center[0] : 0,
-      left: this.sampleStyle.center ? this.sampleStyle.center[1] : 0
+      top: this.sampleStyle.center ? this.sampleStyle.center[1] : 0,
+      left: this.sampleStyle.center ? this.sampleStyle.center[0] : 0
     } as any;
 
     if (dimensions.length) {

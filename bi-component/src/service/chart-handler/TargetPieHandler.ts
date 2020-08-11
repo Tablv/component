@@ -49,7 +49,7 @@ export default class TargetPieHandler extends GaugeHandler {
       [actual / comparison, this.dashboard.echarts.sampleStyle.global.color[1]],
       [1, this.dashboard.echarts.sampleStyle.global.color[0]]
     ];
-
+    const decimals = this.sampleStyle.decimals.value;
     const seriesData = {
       type: "gauge",
       detail: {
@@ -59,7 +59,7 @@ export default class TargetPieHandler extends GaugeHandler {
         fontSize: this.sampleStyle.label.fontSize,
         offsetCenter: this.sampleStyle.label.offset,
         formatter: (value: number) => {
-          let result = `${((value / comparison) * 100).toFixed(2)}%`;
+          let result = `${((value / comparison) * 100).toFixed(decimals)}%`;
           if (this.sampleStyle.label.isShowNumber) {
             result = `${value}` + `(${result})`;
           }

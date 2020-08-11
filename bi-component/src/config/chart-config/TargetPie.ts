@@ -12,20 +12,49 @@ const templates = {
     sampleStyle: {
       targetpie: Object.assign(
         {},
-        GaugeConfig.templates.echarts.sampleStyle.gauge
-        // {
-        //   label: {
-        //     show: false,
-        //     hidePosition: true,
-        //     position: "",
-        //     color: "#000",
-        //     fontSize: 12,
-        //     fontFamily: "Microsoft YaHei",
-        //     isShowNumber: false
-        //   },
-        //   barWidth: 10,
-        //   radius: [0, 90]
-        // }
+        GaugeConfig.templates.echarts.sampleStyle.gauge,
+        {
+          // 分割段数
+          splitNumber: 1,
+          // 轴线
+          axisLine: {
+            lineStyle: {
+              width: 12
+            }
+          },
+          // 指针
+          pointer: {
+            show: false
+          },
+          label: {
+            show: true,
+            hidePosition: true,
+            position: "",
+            color: "auto",
+            fontSize: 16,
+            fontFamily: "Microsoft YaHei",
+            isShowNumber: true,
+            offset: [0, 50]
+          },
+          // 指针样式
+          itemStyle: {},
+          // 分割线
+          splitLine: {
+            show: false
+          },
+          // 刻度线
+          axisTick: {
+            showt: false
+          },
+          // 刻度lable
+          axisLabel: {
+            show: false
+          },
+          decimals: {
+            value: 2,
+            unit: ""
+          }
+        }
       )
     }
   }
