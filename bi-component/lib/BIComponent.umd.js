@@ -130274,7 +130274,7 @@ var TargetPieHandler_TargetPieHandler = /*#__PURE__*/function (_GaugeHandler) {
       return style;
     }
     /**
-     * 获取Series数据
+     * @function 获取Series数据
      */
 
   }, {

@@ -19,7 +19,7 @@ export default class TargetPieHandler extends GaugeHandler {
   }
 
   /**
-   * 获取Series数据
+   * @function 获取Series数据
    */
   public getSeries(): Array<echarts.EChartOption.Series> {
     let series: Array<echarts.EChartOption.Series> = [];
