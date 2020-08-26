@@ -9,7 +9,7 @@ import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
 import { map } from "lodash";
 
 /**
- * 仪表盘处理
+ * 漏斗图处理
  */
 export default class FunnelHandler implements ChartHandler {
   /**

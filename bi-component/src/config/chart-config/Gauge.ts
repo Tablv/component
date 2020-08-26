@@ -18,7 +18,13 @@ const templates = {
         // 轴线
         axisLine: {
           lineStyle: {
-            width: 12
+            width: 12,
+            color: [
+              [0.3, "#1B5E20FF"],
+              [0.8, "#FF6F00FF"],
+              [1, "#B71C1CFF"],
+              [0, 0]
+            ]
           }
         },
         // 指针
@@ -95,7 +101,9 @@ const templates = {
           textShadowOffsetY: 0
         },
         endAngle: -45,
-        startAngle: 225
+        startAngle: 225,
+        min: 0,
+        max: 0
       })
     }
   }

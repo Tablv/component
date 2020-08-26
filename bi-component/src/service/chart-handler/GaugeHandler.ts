@@ -17,7 +17,7 @@ export default class GaugeHandler implements ChartHandler {
   public fieldNames: SplitedFieldNames;
 
   /**
-   * 数据设置
+   * @function 构造函数
    * 后面有其他的设置也加入到这里
    * @param result 分析结果
    * @param dashboard 仪表盘数据
@@ -34,6 +34,9 @@ export default class GaugeHandler implements ChartHandler {
     );
   }
 
+  /**
+   * @function 获取样式
+   */
   public getStyle(): echarts.EChartOption {
     let style: echarts.EChartOption = {};
 
@@ -49,7 +52,7 @@ export default class GaugeHandler implements ChartHandler {
   }
 
   /**
-   * 获取Series数据
+   * @function 获取Series数据
    */
   public getSeries(): Array<echarts.EChartOption.Series> {
     let series: Array<echarts.EChartOption.Series> = [];
@@ -79,15 +82,22 @@ export default class GaugeHandler implements ChartHandler {
         item = item + "%";
       });
     }
+    const LineColor = this.sampleStyle.axisLine?.lineStyle.color as Array<
+      Array<string | number>
+    >;
+    let colorGroup = LineColor.slice(0, 3);
+    const sum =
+      Math.abs(this.sampleStyle.min || 0) + Math.abs(this.sampleStyle.max || 0);
 
-    let colorGroup = this.dashboard.echarts.sampleStyle.global.color.map(
-      (item, index) => {
-        return [(index + 3) / 10, item];
-      }
-    );
-
-    if (this.sampleStyle.axisLine?.lineStyle.color) {
-      colorGroup = this.sampleStyle.axisLine?.lineStyle.color;
+    if (sum) {
+      colorGroup[0][0] = <number>LineColor[3][0] / sum;
+      colorGroup[1][0] = <number>LineColor[3][1] / sum;
+    } else {
+      colorGroup = this.dashboard.echarts.sampleStyle.global.color.map(
+        (item, index) => {
+          return [(index + 3) / 10, item];
+        }
+      );
     }
 
     const seriesData = {
@@ -95,7 +105,6 @@ export default class GaugeHandler implements ChartHandler {
       detail: {
         show: this.sampleStyle.label.show,
         color: this.sampleStyle.label.color,
-        // backgroundColor: this.sampleStyle.label.color,
         fontFamily: this.sampleStyle.label.fontFamily,
         fontSize: this.sampleStyle.label.fontSize,
         offsetCenter: this.sampleStyle.label.offset,
@@ -143,7 +152,8 @@ export default class GaugeHandler implements ChartHandler {
       title: this.sampleStyle.title,
       radius: this.sampleStyle.radius + "%",
       center: this.sampleStyle.center,
-      max: comparison || 100,
+      max: this.sampleStyle.max || comparison,
+      min: this.sampleStyle.min,
       data: [
         {
           measure: {
