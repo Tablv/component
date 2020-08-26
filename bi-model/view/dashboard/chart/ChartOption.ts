@@ -1,3 +1,4 @@
+import * as baseOption from "./ChartBaseOption";
 /**
  * 图表样式-基类
  */
@@ -17,38 +18,7 @@ export interface ChartOption {
   /**
    * 数据标注
    */
-  label: Partial<{
-    show: boolean;
-    // 'top' 'left' 'right' 'bottom' 'inside'
-    position: string;
-    // 显示数值
-    isShowNumber: boolean;
-    // 隐藏定位
-    hidePosition?: boolean;
-    color: string;
-    fontSize: number;
-    fontWeight: string;
-    fontFamily: string;
-    backgroundColor: string;
-    borderWidth: string;
-    borderColor: string;
-    lineHeight: number;
-    borderRadius: number | any[];
-    padding: number | number[];
-    shadowBlur: string;
-    shadowColor: string;
-    shadowOffsetX: number;
-    shadowOffsetY: number;
-    textBorderColor: string;
-    textBorderWidth: number;
-    textShadowColor: string;
-    textShadowBlur: string;
-    textShadowOffsetX: number;
-    textShadowOffsetY: number;
-    offsetCenter: string[] | number[];
-    offset: string[] | number[];
-    rich: object;
-  }>;
+  label: Partial<baseOption.ILabel>;
 
   /**
    * 数据小数设置

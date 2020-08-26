@@ -1,48 +1,94 @@
+export interface ILabel extends IFont, IBorder, IShadow, ITextShadow, ITextBorder  {
+  show: boolean;
+  // 'top' 'left' 'right' 'bottom' 'inside'
+  // map 支持：top / left / right / bottom / inside / insideLeft / insideRight / insideTop / insideBottom / insideTopLeft / insideBottomLeft / insideTopRight / insideBottomRight
+  position: string | number[];
+  // 显示数值
+  isShowNumber: boolean;
+  // 隐藏定位
+  hidePosition: boolean;
+  // 距离图形元素的距离 map
+  distance: number;
+  // 标签旋转 从 -90 度到 90 度。正值是逆时针 map
+  rotate: number;
+  // 是否对文字进行偏移
+  offset: string[] | number[];
+  // 标签内容格式器
+  formatter: string | Function;
+  // 文字水平对齐方式，默认自动
+  algin: string;
+  // 文字垂直对齐方式，默认自动
+  verticalAlgin: string;
+  // 行高
+  lineHeight: number;
+  // 文字块背景色
+  backgroundColor: string;
+  // 文字块的内边距
+  padding: number | number[];
+  // 文字块的宽度
+  width: number | string;
+  // 文字块的高度
+  height: number | string;
+  
+  offsetCenter: string[] | number[];
+  // 富文本
+  rich: object;
+};
+
 // 字体
 export interface IFont {
+  // 文字的颜色
+  // 可以设置 auto
   color: string;
-
-  fontStyle: EFontStyle;
-
-  fontWeight: EFontWeight;
-
+  // 文字字体的风格
+  fontStyle: string;
+  // 文字字体的粗细
+  fontWeight: string | number;
+  // 文字字体系列
   fontFamily: string;
-
+  // 文字的字体大小
   fontSize: number;
 }
 
 // 边框
 export interface IBorder {
+  // 文字块边框颜色
   borderColor: string;
-
-  borderWidth: number;
-
-  borderRadius: number | number[];
+  // 文字块边框宽度
+  borderWidth: string;
+  // 文字块的圆角
+  borderRadius: number | any[];
 }
 
 // 文本边框
 export interface ITextBorder {
+  // 文字本身的描边颜色
   textBorderColor: string;
-
+  // 文字本身的描边宽度
   textBorderWidth: number;
 }
 
 // 文本阴影
 export interface ITextShadow {
+  // 文字本身的阴影颜色
   textShadowColor: string;
-
+  // 文字本身的阴影长度
   textShadowBlur: string;
-
+  // 文字本身的阴影 X 偏移
   textShadowOffsetX: number;
-
+  // 文字本身的阴影 Y 偏移
   textShadowOffsetY: number;
 }
 
 // 阴影
 export interface IShadow {
-  shadowBlur: string;
+  // 文字块的背景阴影颜色
   shadowColor: string;
+  // 文字块的背景阴影长度
+  shadowBlur: string;
+  // 文字块的背景阴影X偏移
   shadowOffsetX: number;
+  // 文字块的背景阴影Y偏移
   shadowOffsetY: number;
 }
 
