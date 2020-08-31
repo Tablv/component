@@ -15,6 +15,7 @@ import HBarPercentageConfig from "./chart-config/HBarPercentage";
 import GaugeConfig from "./chart-config/Gauge";
 import TargetPieConfig from "./chart-config/TargetPie";
 import FunnelConfig from "./chart-config/Funnel";
+import MapConfig from "./chart-config/Map";
 
 /**
  * 图表全部配置项
@@ -126,7 +127,9 @@ export default class ChartConfig {
     /**
      * 指示器
      */
-    funnel: FunnelConfig
+    funnel: FunnelConfig,
+
+    map: MapConfig
   };
 
   /**

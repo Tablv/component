@@ -31,6 +31,11 @@ import EChartsService, {
 } from "glaway-bi-component/src/service/EChartsService";
 import EChartsUtil from "glaway-bi-component/src/util/EChartsUtil";
 import WhereDTO from "glaway-bi-model/params/WhereDTO";
+import JsonData from "../map/index";
+
+for (const [key, value] of JsonData.JsonData) {
+  echarts.registerMap(key, value);
+}
 
 @Component
 export default class ChartComponent extends Vue implements ChartUIService {
@@ -103,6 +108,7 @@ export default class ChartComponent extends Vue implements ChartUIService {
     // 存在实例时，忽略初始化
     if (!this.$data.echartsInstance) {
       let echartsContainer = this.$refs.echartsContainer as HTMLDivElement;
+      // 阻止事件
       echartsContainer.oncontextmenu = () => {
         return false;
       };

@@ -25,6 +25,8 @@ export interface MapChartOption extends ChartOption, Partial<{
    */
   map: string;
 
+  mapList: string[];
+
   /**
    * 是否 开启鼠标缩放和平移漫游
    * 默认不开启

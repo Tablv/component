@@ -15,6 +15,7 @@ import GaugeHandler from "./chart-handler/GaugeHandler";
 import TargetPieHandler from "./chart-handler/TargetPieHandler";
 import BiaxialHandler from "./chart-handler/BiaxialHandler";
 import FunnelHandler from "./chart-handler/FunnelHandler";
+import MapHandler from "./chart-handler/MapHandler";
 
 const HANDLER_REGISTRY: RegistryConstructor = {
   /**
@@ -56,6 +57,8 @@ const HANDLER_REGISTRY: RegistryConstructor = {
    * 漏斗图
    */
   funnel: FunnelHandler,
+
+  map: MapHandler,
 
   biaxial: BiaxialHandler
 };

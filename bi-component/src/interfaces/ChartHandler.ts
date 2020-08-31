@@ -21,6 +21,7 @@ import {
 } from "glaway-bi-model/view/dashboard/chart/ChartOption";
 import { GaugeChartOption } from "glaway-bi-model/view/dashboard/chart/GaugeChartOption";
 import { PieChartOption } from "glaway-bi-model/view/dashboard/chart/PieOption";
+import { MapChartOption } from "glaway-bi-model/view/dashboard/chart/MapChartOption";
 
 export interface RegistryConstructor {
   bar: CharthandlerConstructor<BarChartOption>;
@@ -62,6 +63,8 @@ export interface RegistryConstructor {
    * 漏斗图
    */
   funnel: CharthandlerConstructor<FunnelChartOption>;
+
+  map: CharthandlerConstructor<MapChartOption>;
 
   biaxial: any;
 }

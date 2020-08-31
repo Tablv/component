@@ -80,5 +80,10 @@ export const enum ChartType {
   /**
    * 漏斗图
    */
-  funnel = "funnel"
+  funnel = "funnel",
+
+  /**
+   * 地图
+   */
+  map = "map"
 }

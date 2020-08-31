@@ -18,6 +18,7 @@ import {
 } from "glaway-bi-model/view/dashboard/chart/ChartOption";
 import { PieChartOption } from "glaway-bi-model/view/dashboard/chart/PieOption";
 import { GaugeChartOption } from "glaway-bi-model/view/dashboard/chart/GaugeChartOption";
+import { MapChartOption } from "./chart/MapChartOption";
 /**
  * ECharts Option
  */
@@ -132,4 +133,6 @@ export interface EChartsSampleStyle {
   targetpie?: PieChartOption;
 
   funnel?: FunnelChartOption;
+
+  map?: MapChartOption;
 }
