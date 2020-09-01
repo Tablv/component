@@ -12,7 +12,8 @@ const templates = {
       hbarPercentage: ObjectUtil.copy(
         HBarStackConfig.templates.echarts.sampleStyle.hbarStack
       )
-    }
+    },
+    grid: ObjectUtil.copy(HBarStackConfig.templates.echarts.grid)
   }
 };
 

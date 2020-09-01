@@ -6,7 +6,6 @@ import EChartsService from "../EChartsService";
 import { ChartHandler } from "../../interfaces/ChartHandler";
 import { MapSeriesOption } from "glaway-bi-model/view/dashboard/chart/MapSeriesOption";
 import echarts from "echarts";
-import GEOHandler from "glaway-bi-component/src/service/option-handler/GEOHandler";
 
 /**
  * 柱图处理
@@ -49,14 +48,8 @@ export default class MapHandler implements ChartHandler {
     // 图表结构
     style.series = this.getSeries();
 
-    // 视觉标注
-    style.visualMap = this.getVisualMap();
-
     // 数据提示
     style.tooltip = this.getToolTip();
-
-    // 地图组件
-    style.geo = GEOHandler.getGEO(this.sampleStyle);
 
     // dataset
     style.dataset = this.getDataSet();
@@ -116,21 +109,21 @@ export default class MapHandler implements ChartHandler {
     ];
   }
 
-  public getVisualMap(): Array<echarts.EChartOption.VisualMap> {
-    const visualMapList = [] as Array<echarts.EChartOption.VisualMap>;
-    visualMapList.push({
-      show: true,
-      type: "piecewise",
-      min: 800,
-      max: 50000,
-      // realtime: false,
-      // calculable: false,
-      inRange: {
-        color: this.dashboard.echarts.color
-      }
-    });
-    return visualMapList;
-  }
+  // public getVisualMap(): Array<echarts.EChartOption.VisualMap> {
+  //   const visualMapList = [] as Array<echarts.EChartOption.VisualMap>;
+  //   visualMapList.push({
+  //     show: true,
+  //     type: "piecewise",
+  //     min: 800,
+  //     max: 50000,
+  //     // realtime: false,
+  //     // calculable: false,
+  //     inRange: {
+  //       color: this.dashboard.echarts.color
+  //     }
+  //   });
+  //   return visualMapList;
+  // }
 
   public getToolTip(): echarts.EChartOption.Tooltip {
     return {

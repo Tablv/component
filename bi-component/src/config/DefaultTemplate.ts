@@ -126,26 +126,7 @@ export const generalDataTemplate: any = {
   newCreated: true,
   echarts: {
     sampleStyle: {
-      global: {
-        grid: {
-          top: {
-            value: 60,
-            unit: ""
-          },
-          left: {
-            value: 50,
-            unit: ""
-          },
-          right: {
-            value: 50,
-            unit: ""
-          },
-          bottom: {
-            value: 30,
-            unit: ""
-          }
-        }
-      }
+      global: {}
     },
     animation: false,
     title: {
@@ -160,10 +141,7 @@ export const generalDataTemplate: any = {
         fontSize: 18
       }
     },
-    grid: {
-      show: false,
-      containLabel: true
-    },
+    
     legend: {
       show: true,
       orient: "horizontal",

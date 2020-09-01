@@ -12,7 +12,8 @@ const templates = {
       barPercentage: ObjectUtil.copy(
         BarStackConfig.templates.echarts.sampleStyle.barStack
       )
-    }
+    },
+    grid: ObjectUtil.copy(BarStackConfig.templates.echarts.grid)
   }
 };
 

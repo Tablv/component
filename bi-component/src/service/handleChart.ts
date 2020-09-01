@@ -26,8 +26,10 @@ export default function handleChart(
     sampleStyle
   ).getStyle();
 
+  // 全局配置
   const styleGlobal = GlobalHandler(result, dashboard);
 
+  // 结果配置
   const resultStyle = ObjectUtil.merge(styleCustomized, styleGlobal);
 
   return resultStyle;

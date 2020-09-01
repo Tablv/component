@@ -35,7 +35,7 @@ export default interface EChartsOption extends Partial<{
       borderRadius: number | number[];
       padding: number | number[];
       shadowColor: string;
-      shadowBlur: string;
+      shadowBlur: number;
       shadowOffsetX: number;
       shadowOffsetY: number;
       width: string | number;
@@ -43,7 +43,7 @@ export default interface EChartsOption extends Partial<{
       textBorderColor: string;
       textBorderWidth: number;
       textShadowColor: string;
-      textShadowBlur: string;
+      textShadowBlur: number;
       textShadowOffsetX: number;
       textShadowOffsetY: number;
       rich: object;
@@ -147,7 +147,7 @@ export default interface EChartsOption extends Partial<{
       borderRadius: number | number[];
       padding: number | number[];
       shadowColor: string;
-      shadowBlur: string;
+      shadowBlur: number;
       shadowOffsetX: number;
       shadowOffsetY: number;
       width: string | number;
@@ -155,7 +155,7 @@ export default interface EChartsOption extends Partial<{
       textBorderColor: string;
       textBorderWidth: number;
       textShadowColor: string;
-      textShadowBlur: string;
+      textShadowBlur: number;
       textShadowOffsetX: number;
       textShadowOffsetY: number;
       rich: object;

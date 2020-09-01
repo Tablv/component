@@ -51,20 +51,24 @@ export default class EChartsService {
     dashboard: Dashboard,
     result: AnalysisResults
   ): echarts.EChartOption {
-    let style: EChartsOption = ObjectUtil.copy(dashboard.echarts),
-      resultStyle: EChartsOption = this.getResultStyle(result, dashboard);
+    // let style: EChartsOption = ObjectUtil.copy(dashboard.echarts),
+    const resultStyle: EChartsOption = this.getResultStyle(result, dashboard);
 
     // 获取当前的style对象
-    if (!style) {
+    // if (!style) {
+    //   throw "图表样式为null";
+    // }
+    if (!resultStyle) {
       throw "图表样式为null";
     }
 
-    const mergedStyle = ObjectUtil.merge(
-      resultStyle,
-      style
-    ) as echarts.EChartOption;
+    // const mergedStyle = ObjectUtil.merge(
+    //   resultStyle,
+    //   style
+    // ) as echarts.EChartOption;
 
-    return mergedStyle;
+    // return mergedStyle;
+    return <echarts.EChartOption>resultStyle;
   }
 
   /**

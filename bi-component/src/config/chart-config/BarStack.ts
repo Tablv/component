@@ -10,7 +10,8 @@ const templates = {
   echarts: {
     sampleStyle: {
       barStack: ObjectUtil.copy(BarConfig.templates.echarts.sampleStyle.bar)
-    }
+    },
+    grid: ObjectUtil.copy(BarConfig.templates.echarts.grid)
   }
 };
 

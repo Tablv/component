@@ -33,26 +33,26 @@ const templates = {
         connectNulls: false,
         // 是否平缓曲线
         smooth: false,
-
-        grid: {
-          // 初始值需要与全局配置保持一致
-          top: {
-            value: 60,
-            unit: "px"
-          },
-          left: {
-            value: 50,
-            unit: "px"
-          },
-          right: {
-            value: 50,
-            unit: "px"
-          },
-          bottom: {
-            value: 30,
-            unit: "px"
-          }
-        }
+      }
+    },
+    grid: {
+      show: false,
+      containLabel: true,
+      top: {
+        value: 60,
+        unit: ""
+      },
+      left: {
+        value: 50,
+        unit: ""
+      },
+      right: {
+        value: 50,
+        unit: ""
+      },
+      bottom: {
+        value: 30,
+        unit: ""
       }
     }
   }
