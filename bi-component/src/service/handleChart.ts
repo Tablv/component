@@ -1,4 +1,4 @@
-import { ChartOption } from "glaway-bi-model/view/dashboard/chart/ChartOption";
+import { SeriesOption } from "glaway-bi-model/view/dashboard/chart/SeriesOption";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
@@ -18,14 +18,17 @@ export default function handleChart(
     throw new Error("找不到对应图表类型的处理方法");
   }
 
-  const sampleStyle = dashboard.echarts.sampleStyle[chartType] as ChartOption;
-  let styleCustomized = new CustomizedHandler(
-      result,
-      dashboard,
-      sampleStyle
-    ).getStyle(),
-    styleGlobal = GlobalHandler(result, dashboard),
-    resultStyle = ObjectUtil.merge(styleCustomized, styleGlobal);
+  // 对应的独立配置
+  const sampleStyle = dashboard.echarts.sampleStyle[chartType] as SeriesOption;
+  const styleCustomized = new CustomizedHandler(
+    result,
+    dashboard,
+    sampleStyle
+  ).getStyle();
+
+  const styleGlobal = GlobalHandler(result, dashboard);
+
+  const resultStyle = ObjectUtil.merge(styleCustomized, styleGlobal);
 
   return resultStyle;
 }

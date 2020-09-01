@@ -43,8 +43,23 @@ const templates = {
           }
         }
       }
+    },
+    // 地图组件
+    geo: {
+      id: 0,
+      name: 'babablalla'
     }
   }
+};
+
+/**
+ * 创建菜单配置
+ */
+const createMenuConfig = {
+  iconClass: "gw-iconfsux_tubiao_ditu_sandian",
+  title: "地图",
+  createType: ChartType.map,
+  enable: true
 };
 
 /**
@@ -65,17 +80,7 @@ const menuOptions = {
 };
 
 /**
- * 创建菜单配置
- */
-const createMenuConfig = {
-  iconClass: "gw-iconfsux_tubiao_ditu_sandian",
-  title: "地图",
-  createType: ChartType.map,
-  enable: true
-};
-
-/**
- * 配置项
+ * 功能配置项
  */
 const config = {
   warnable: false,
@@ -102,6 +107,7 @@ const config = {
     }
   ]
 };
+
 
 const MapConfig: ChartConfigItem = {
   templates,

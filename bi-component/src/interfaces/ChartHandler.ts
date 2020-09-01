@@ -2,69 +2,69 @@ import { SplitedFieldNames } from "../service/EChartsService";
 import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
 import {
-  BarChartOption,
-  BarStackChartOption,
-  BarPercentageChartOption,
-  HBarChartOption,
-  HBarStackChartOption,
-  HBarPercentageChartOption,
-  LineChartOption,
-  // PieChartOption,
-  // RadarChartOption,
-  // RosePieChartOption,
-  // RPieChartOption,
-  // SunPieChartOption,
-  // TargetPieChartOption,
-  // GaugeChartOption,
-  FunnelChartOption,
-  BiaxialChartOption
-} from "glaway-bi-model/view/dashboard/chart/ChartOption";
-import { GaugeChartOption } from "glaway-bi-model/view/dashboard/chart/GaugeChartOption";
-import { PieChartOption } from "glaway-bi-model/view/dashboard/chart/PieOption";
-import { MapChartOption } from "glaway-bi-model/view/dashboard/chart/MapChartOption";
+  BarSeriesOption,
+  BarStackSeriesOption,
+  BarPercentageSeriesOption,
+  HBarSeriesOption,
+  HBarStackSeriesOption,
+  HBarPercentageSeriesOption,
+  LineSeriesOption,
+  // PieSeriesOption,
+  // RadarSeriesOption,
+  // RosePieSeriesOption,
+  // RPieSeriesOption,
+  // SunPieSeriesOption,
+  // TargetPieSeriesOption,
+  // GaugeSeriesOption,
+  FunnelSeriesOption,
+  BiaxialSeriesOption
+} from "glaway-bi-model/view/dashboard/chart/SeriesOption";
+import { GaugeSeriesOption } from "glaway-bi-model/view/dashboard/chart/GaugeSeriesOption";
+import { PieSeriesOption } from "glaway-bi-model/view/dashboard/chart/PieSeriesOption";
+import { MapSeriesOption } from "glaway-bi-model/view/dashboard/chart/MapSeriesOption";
 
 export interface RegistryConstructor {
-  bar: CharthandlerConstructor<BarChartOption>;
+  bar: CharthandlerConstructor<BarSeriesOption>;
 
-  barStack: CharthandlerConstructor<BarStackChartOption>;
+  barStack: CharthandlerConstructor<BarStackSeriesOption>;
 
-  barPercentage: CharthandlerConstructor<BarPercentageChartOption>;
+  barPercentage: CharthandlerConstructor<BarPercentageSeriesOption>;
 
-  hbar: CharthandlerConstructor<HBarChartOption>;
-  hbarStack: CharthandlerConstructor<HBarStackChartOption>;
-  hbarPercentage: CharthandlerConstructor<HBarPercentageChartOption>;
+  hbar: CharthandlerConstructor<HBarSeriesOption>;
+  hbarStack: CharthandlerConstructor<HBarStackSeriesOption>;
+  hbarPercentage: CharthandlerConstructor<HBarPercentageSeriesOption>;
 
   /**
    * 饼图
    */
-  pie: CharthandlerConstructor<PieChartOption>;
-  rpie: CharthandlerConstructor<PieChartOption>;
-  rosepie: CharthandlerConstructor<PieChartOption>;
-  sunpie: CharthandlerConstructor<PieChartOption>;
-  // targetpie: CharthandlerConstructor<PieChartOption>;
-  targetpie: CharthandlerConstructor<GaugeChartOption>;
+  pie: CharthandlerConstructor<PieSeriesOption>;
+  rpie: CharthandlerConstructor<PieSeriesOption>;
+  rosepie: CharthandlerConstructor<PieSeriesOption>;
+  sunpie: CharthandlerConstructor<PieSeriesOption>;
+  // targetpie: CharthandlerConstructor<PieSeriesOption>;
+  targetpie: CharthandlerConstructor<GaugeSeriesOption>;
 
   /**
    * 雷达图
    */
-  radar: CharthandlerConstructor<PieChartOption>;
+  radar: CharthandlerConstructor<PieSeriesOption>;
 
   /**
    * 折线图
    */
-  line: CharthandlerConstructor<LineChartOption>;
+  line: CharthandlerConstructor<LineSeriesOption>;
 
   /**
    * 仪表盘图
    */
-  gauge: CharthandlerConstructor<GaugeChartOption>;
+  gauge: CharthandlerConstructor<GaugeSeriesOption>;
 
   /**
    * 漏斗图
    */
-  funnel: CharthandlerConstructor<FunnelChartOption>;
+  funnel: CharthandlerConstructor<FunnelSeriesOption>;
 
-  map: CharthandlerConstructor<MapChartOption>;
+  map: CharthandlerConstructor<MapSeriesOption>;
 
   biaxial: any;
 }

@@ -118,19 +118,15 @@ export const generalDataTemplate: any = {
       }
     }
   },
+  tasks: {
+    ratotionEnable: false,
+    ratotionNumb: 5,
+    ratotionId: null
+  },
+  newCreated: true,
   echarts: {
     sampleStyle: {
       global: {
-        color: [
-          "#118DFF",
-          "#12239E",
-          "#E66C37",
-          "#6B007B",
-          "#E044A7",
-          "#744EC2",
-          "#D9B300",
-          "#D64550"
-        ],
         grid: {
           top: {
             value: 60,
@@ -181,14 +177,18 @@ export const generalDataTemplate: any = {
     tooltip: {
       show: false
     },
+    color: [
+      "#118DFF",
+      "#12239E",
+      "#E66C37",
+      "#6B007B",
+      "#E044A7",
+      "#744EC2",
+      "#D9B300",
+      "#D64550"
+    ],
     series: []
-  },
-  tasks: {
-    ratotionEnable: false,
-    ratotionNumb: 5,
-    ratotionId: null
-  },
-  newCreated: true
+  }
 };
 
 /**
@@ -217,11 +217,13 @@ export default class DefaultTemplate {
       return cache;
     }
 
-    // 合并数据
+    // 合并配置
     let generalData = ObjectUtil.copy(generalDataTemplate),
-      // let generalData = generalDataTemplate,
+      // 自定义配置
       customData = customDataTemplates[chartType],
+      // 合并后的默认配置
       defaultConfig: Dashboard = ObjectUtil.merge(generalData, customData);
+
     // 设置图表类型
     defaultConfig.visualData.type = chartType;
 

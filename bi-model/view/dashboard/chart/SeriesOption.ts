@@ -2,7 +2,7 @@ import * as baseOption from "./ChartBaseOption";
 /**
  * 图表样式-基类
  */
-export interface ChartOption {
+export interface SeriesOption {
   /**
    * 坐标轴显示标志
    */
@@ -51,7 +51,7 @@ export interface ChartOption {
 /**
  * 柱状图
  */
-export interface BarChartOption extends ChartOption {
+export interface BarSeriesOption extends SeriesOption {
   /**
    * 柱宽
    */
@@ -71,32 +71,32 @@ export interface BarChartOption extends ChartOption {
 /**
  * 堆积柱图
  */
-export interface BarStackChartOption extends BarChartOption {}
+export interface BarStackSeriesOption extends BarSeriesOption {}
 
 /**
  * 百分比堆积柱图
  */
-export interface BarPercentageChartOption extends BarStackChartOption {}
+export interface BarPercentageSeriesOption extends BarStackSeriesOption {}
 
 /**
  * 条形图
  */
-export interface HBarChartOption extends BarChartOption {}
+export interface HBarSeriesOption extends BarSeriesOption {}
 
 /**
  * 堆积条形图
  */
-export interface HBarStackChartOption extends HBarChartOption {}
+export interface HBarStackSeriesOption extends HBarSeriesOption {}
 
 /**
  * 百分比堆积条图
  */
-export interface HBarPercentageChartOption extends HBarStackChartOption {}
+export interface HBarPercentageSeriesOption extends HBarStackSeriesOption {}
 
 /**
  * 线形图
  */
-export interface LineChartOption extends ChartOption{
+export interface LineSeriesOption extends SeriesOption{
   axisLabel: {
     interval: 0;
     rotate: 0;
@@ -117,7 +117,7 @@ export interface LineChartOption extends ChartOption{
 /**
  * 饼状图
 //  */
-// export interface PieChartOption extends ChartOption {
+// export interface PieSeriesOption extends SeriesOption {
 //   centerConfig: {
 //     xAxias: string;
 //     yAxias: string;
@@ -132,32 +132,32 @@ export interface LineChartOption extends ChartOption{
 // /**
 //  * 图表类型
 //  */
-// export interface RadarChartOption extends PieChartOption {}
+// export interface RadarSeriesOption extends PieSeriesOption {}
 
 // /**
 //  * 图表类型
 //  */
-// export interface RosePieChartOption extends PieChartOption {}
+// export interface RosePieSeriesOption extends PieSeriesOption {}
 
 // /**
 //  * 图表类型
 //  */
-// export interface RPieChartOption extends PieChartOption {}
+// export interface RPieSeriesOption extends PieSeriesOption {}
 
 // /**
 //  * 图表类型
 //  */
-// export interface SunPieChartOption extends PieChartOption {}
+// export interface SunPieSeriesOption extends PieSeriesOption {}
 
 // /**
 //  * 图表类型
 //  */
-// export interface TargetPieChartOption extends PieChartOption {}
+// export interface TargetPieSeriesOption extends PieSeriesOption {}
 
 // /**
 //  * 图表类型
 //  */
-// export interface GaugeChartOption extends PieChartOption {
+// export interface GaugeSeriesOption extends PieSeriesOption {
 //   splitNumber: number;
 //   pointer: {
 //     show: boolean;
@@ -183,7 +183,7 @@ export interface LineChartOption extends ChartOption{
 /**
  * 漏斗图配置
  */
-export interface FunnelChartOption extends ChartOption, Partial<{
+export interface FunnelSeriesOption extends SeriesOption, Partial<{
   /**
    * 数据最小值
    */
@@ -298,4 +298,4 @@ export interface FunnelChartOption extends ChartOption, Partial<{
 /**
  * 图表类型
  */
-export interface BiaxialChartOption {}
+export interface BiaxialSeriesOption {}

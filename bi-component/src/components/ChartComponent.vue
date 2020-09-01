@@ -9,7 +9,6 @@ import { Vue, Prop, Component, Emit, Watch } from "vue-property-decorator";
 import echarts from "echarts";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
 import ChartUIService from "glaway-bi-component/src/interfaces/ChartUIService";
-import EChartsOption from "glaway-bi-model/view/dashboard/EChartsOption";
 import AnalysisData from "glaway-bi-model/view/dashboard/AnalysisData";
 import EventsConfig from "glaway-bi-model/view/dashboard/EventsConfig";
 import ReactWhere from "glaway-bi-model/view/ReactWhere";

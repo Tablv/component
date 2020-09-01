@@ -19,7 +19,6 @@ JsonData.set("320100", nanjing);
 JsonData.set("370000", shandong);
 JsonData.set("371700", heze);
 
-
 export default {
   JsonData
 };

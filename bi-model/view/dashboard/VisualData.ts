@@ -1,5 +1,5 @@
 import { ChartType } from "glaway-bi-model/enums/ChartType";
-import { EChartsSampleStyle } from "glaway-bi-model/view/dashboard/EChartsOption";
+import { EChartsSampleStyle } from "./chart/EChartsOption";
 import Draggable from "glaway-bi-model/view/Draggable";
 import { BackgroundType } from "glaway-bi-model/enums/DashboardSet";
 

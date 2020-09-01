@@ -1,43 +1,43 @@
-import { ChartOption } from "./ChartOption";
-import * as baseOption from "./ChartBaseOption";
+/**
+ * 地理坐标系组件
+ * 
+ * {
+    componentType: 'geo',
+    // Geo 组件在 option 中的 index
+    geoIndex: number,
+    // 点击区域的名称，比如"上海"
+    name: string,
+    // 传入的点击区域的 region 对象，见 geo.regions
+    region: Object
+  }
+ * 
+ */
+import * as baseOption from "glaway-bi-model/view/dashboard/chart/ChartBaseOption";
 
-export interface MapChartOption extends ChartOption, Partial<{
-  /**
-   * 图表类型
-   * 地图
-   */
-  type: string;
-
+export interface GEO extends Partial<{
   /**
    * id
    */
-  id: string;
+  id: string | number;
 
-  /**
-   * name
-   * 用于tooltip显示，legend的图例筛选
-   * 在setOption 更新数据和配置项时用于指定对应的系列
-   */
-  name: string;
+  show: boolean;
 
   /**
    * map 地图类型
    */
   map: string;
 
-  mapList: string[];
-
   /**
    * 是否 开启鼠标缩放和平移漫游
    * 默认不开启
    * 如果只想要开启缩放或者平移，可以设置成 'scale' 或者 'move'。设置成 true 为都开启
    */
-  roam: boolean | string;
-
+  roam: boolean | ERoam;
+  
   /**
    * 当前视角的中心点，用经纬度表示
    */
-  center: any[];
+  center: number[];
 
   /**
    * scale地图的长宽比
@@ -47,7 +47,7 @@ export interface MapChartOption extends ChartOption, Partial<{
   /**
    * 定义定位的左上角以及右下角分别对应的经纬度
    */
-  boundingCoords: any[];
+  boundingCoords: Array<Array<number>>,
 
   /**
    * 当前视角的缩放比例
@@ -58,12 +58,15 @@ export interface MapChartOption extends ChartOption, Partial<{
    * 滚轮缩放的极限控制
    * 通过min max 最小和最大的缩放值，默认的缩放为1
    */
-  scaleLimit: IScaleLimite;
+  scaleLimit: {
+    min: number;
+    max: number;
+  };
 
   /**
    * 自定义地图的名称映射
    */
-  nameMap: { [key: string]: string };
+  nameMap: Map<string, string>;
 
   /**
    * 针对GeoJSON要素的自定义属性名称
@@ -77,14 +80,16 @@ export interface MapChartOption extends ChartOption, Partial<{
    */
   selectedMode: boolean | string;
 
+  label: Partial<baseOption.ILabel>,
+
   // 地图区域的多边形 图形样式
   itemStyle: Partial<IItemStyle>;
 
   // 高亮状态下的多边形和标签样式
-  emphasis: {
-    label: Partial<baseOption.ILabel>,
+  emphasis: Partial<{
+    label: Partial<baseOption.ILabel>;
     itemStyle: Partial<IItemStyle>;
-  }
+  }>;
 
   // 所有图形的 zlevel 值
   zlevel: number;
@@ -99,36 +104,35 @@ export interface MapChartOption extends ChartOption, Partial<{
 
   layoutCenter: Array<number | string>;
   layoutSize: number | string;
-  geoIndex: number;
-
-  // 多个拥有相同地图类型的系列会使用同一个地图展示
-  mapValueCalculation: string;
-
-  // 在图例相应区域显示图例的颜色标识（系列标识的小圆点），存在 legend 组件时生效。
-  showLegendSymbol: boolean;
-
-  seriesLayoutBy: string;
-
-  datasetIndex: number;
 
   // 图形是否不响应和触发鼠标事件，默认为false
   silent: boolean;
 
-  // 本系列特定的tooltip设定
-  // tooltip: {
-  //   position: string | Array<number | string> | Function;
-  //   formatter: string | Function;
-  // }
-}>{}
+  /**
+   * regions
+   */
+  regions: {
+    name: string;
+    selected: boolean;
+    itemStyle: Partial<IItemStyle>;
+    label: Partial<baseOption.ILabel>;
+    // 高亮状态下的多边形和标签样式
+    emphasis: {
+      label: Partial<baseOption.ILabel>;
+      itemStyle: Partial<IItemStyle>;
+    }
+  }
 
-interface IScaleLimite {
-  min: number;
-  max: number;
+}>{};
+
+enum ERoam {
+  scale = "scale",
+  move = "move"
 }
 
 interface IItemStyle {
   // 地图区域的颜色
-  areaColor: string;
+  areaColor: string | Object;
   // 图形的颜色
   color: string;
   // 图形的描边颜色

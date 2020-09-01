@@ -7,7 +7,7 @@ import warnConfigure from "./configure/WarnConfigure";
 import { WARN_DEFAULT_VALUE } from "glaway-bi-model/view/Warn";
 import { ChartHandler } from "../../interfaces/ChartHandler";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
-import { BarChartOption } from "glaway-bi-model/view/dashboard/chart/ChartOption";
+import { BarSeriesOption } from "glaway-bi-model/view/dashboard/chart/SeriesOption";
 import echarts from "echarts";
 
 /**
@@ -28,7 +28,7 @@ export default class BarHandler implements ChartHandler {
   constructor(
     public result: AnalysisResults,
     public dashboard: Dashboard,
-    public sampleStyle: BarChartOption
+    public sampleStyle: BarSeriesOption
   ) {
     this.fieldNames = EChartsService.splitFieldNames(
       this.result[0],

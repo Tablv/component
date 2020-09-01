@@ -1,7 +1,7 @@
-import { ChartOption } from "./ChartOption";
+import { SeriesOption } from "./SeriesOption";
 import * as baseOption from "./ChartBaseOption";
 
-export interface PieChartOption extends ChartOption, Partial<{
+export interface PieSeriesOption extends SeriesOption, Partial<{
   /**
    * 组件id
    */
@@ -223,10 +223,10 @@ export interface PieChartOption extends ChartOption, Partial<{
     name: string;
     value: string;
     selected: boolean;
-    lable: PieChartOption["label"];
-    labelLine: PieChartOption["labelLine"];
-    itemStyle: PieChartOption["lineStyle"];
-    tooltip: PieChartOption["tooltip"];
+    lable: PieSeriesOption["label"];
+    labelLine: PieSeriesOption["labelLine"];
+    itemStyle: PieSeriesOption["lineStyle"];
+    tooltip: PieSeriesOption["tooltip"];
   }>>;
 
   /**

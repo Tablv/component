@@ -1,6 +1,6 @@
-import { ChartOption } from "./ChartOption";
+import { SeriesOption } from "./SeriesOption";
 
-export interface LineChartOption extends ChartOption {
+export interface LineSeriesOption extends SeriesOption {
   axisLabel: {
     interval: 0;
     rotate: 0;

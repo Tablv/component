@@ -1,7 +1,7 @@
-import { ChartOption } from "./ChartOption";
+import { SeriesOption } from "./SeriesOption";
 import * as baseOption from "./ChartBaseOption";
 
-export interface GaugeChartOption extends ChartOption, Partial<{
+export interface GaugeSeriesOption extends SeriesOption, Partial<{
   type: string;
 
   /**

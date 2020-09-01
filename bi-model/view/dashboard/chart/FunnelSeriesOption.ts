@@ -1,9 +1,9 @@
-import { ChartOption } from "./ChartOption";
+import { SeriesOption } from "./SeriesOption";
 
 /**
  * 漏斗图配置
  */
-export interface FunnelChartOption extends ChartOption, Partial<{
+export interface FunnelSeriesOption extends SeriesOption, Partial<{
   /**
    * 数据最小值
    */

@@ -5,7 +5,7 @@ import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import EChartsService from "../EChartsService";
 import { ChartHandler } from "../../interfaces/ChartHandler";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
-import { GaugeChartOption } from "glaway-bi-model/view/dashboard/chart/GaugeChartOption";
+import { GaugeSeriesOption } from "glaway-bi-model/view/dashboard/chart/GaugeSeriesOption";
 
 /**
  * 仪表盘处理
@@ -26,7 +26,7 @@ export default class GaugeHandler implements ChartHandler {
   constructor(
     public result: AnalysisResults,
     public dashboard: Dashboard,
-    public sampleStyle: GaugeChartOption
+    public sampleStyle: GaugeSeriesOption
   ) {
     this.fieldNames = EChartsService.splitFieldNames(
       this.result[0],
@@ -46,6 +46,7 @@ export default class GaugeHandler implements ChartHandler {
     }
 
     style.series = this.getSeries();
+
     style.tooltip = this.getTooltips();
 
     return style;
@@ -93,11 +94,11 @@ export default class GaugeHandler implements ChartHandler {
       colorGroup[0][0] = <number>LineColor[3][0] / sum;
       colorGroup[1][0] = <number>LineColor[3][1] / sum;
     } else {
-      colorGroup = this.dashboard.echarts.sampleStyle.global.color.map(
+      colorGroup = this.dashboard.echarts.color?.map(
         (item, index) => {
           return [(index + 3) / 10, item];
         }
-      );
+      ) || [];
     }
 
     const seriesData = {

@@ -15,9 +15,8 @@ export default function(result: AnalysisResults, dashboard: Dashboard) {
 
   /**
    * 配置相关参数
-   *
    */
-  style.color = dashboard.echarts.sampleStyle.global.color;
+  style.color = dashboard.echarts.color;
 
   style.grid = gridGenerator(dashboard);
 

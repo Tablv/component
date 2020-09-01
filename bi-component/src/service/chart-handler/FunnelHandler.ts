@@ -4,7 +4,7 @@ import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import EChartsService from "../EChartsService";
 import { ChartHandler } from "../../interfaces/ChartHandler";
-import { FunnelChartOption } from "glaway-bi-model/view/dashboard/chart/FunnelChartOption";
+import { FunnelSeriesOption } from "glaway-bi-model/view/dashboard/chart/FunnelSeriesOption";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
 import { map } from "lodash";
 
@@ -27,7 +27,7 @@ export default class FunnelHandler implements ChartHandler {
   constructor(
     public result: AnalysisResults,
     public dashboard: Dashboard,
-    public sampleStyle: FunnelChartOption
+    public sampleStyle: FunnelSeriesOption
   ) {
     this.fieldNames = EChartsService.splitFieldNames(
       this.result[0],

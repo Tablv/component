@@ -60,7 +60,6 @@ export default class ChartConfig {
     /**
      * 柱图部分
      */
-
     // 柱图
     bar: BarConfig,
 

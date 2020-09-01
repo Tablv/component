@@ -4,7 +4,7 @@ import { SplitedFieldNames } from "../EChartsService";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
 import EChartsService from "../EChartsService";
 import { ChartHandler } from "../../interfaces/ChartHandler";
-import { LineChartOption } from "glaway-bi-model/view/dashboard//chart/ChartOption";
+import { LineSeriesOption } from "glaway-bi-model/view/dashboard//chart/SeriesOption";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import warnConfigure from "./configure/WarnConfigure";
 import { WARN_DEFAULT_VALUE } from "glaway-bi-model/view/Warn";
@@ -28,7 +28,7 @@ export default class LineHandler implements ChartHandler {
   constructor(
     public result: AnalysisResults,
     public dashboard: Dashboard,
-    public sampleStyle: LineChartOption
+    public sampleStyle: LineSeriesOption
   ) {
     this.fieldNames = EChartsService.splitFieldNames(
       this.result[0],

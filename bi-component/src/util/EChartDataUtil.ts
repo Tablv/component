@@ -1,6 +1,6 @@
 import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
-import { BarChartOption } from "glaway-bi-model/view/dashboard/chart/ChartOption";
-import { PieChartOption } from "glaway-bi-model/view/dashboard/chart/PieOption";
+import { BarSeriesOption } from "glaway-bi-model/view/dashboard/chart/SeriesOption";
+import { PieSeriesOption } from "glaway-bi-model/view/dashboard/chart/PieSeriesOption";
 
 export default class EChartServiceUtil {
   /**
@@ -373,14 +373,14 @@ export default class EChartServiceUtil {
    *
    * @param sampleStyle 样例样式
    */
-  public static getBarWidth(sampleStyle: BarChartOption): string | undefined {
+  public static getBarWidth(sampleStyle: BarSeriesOption): string | undefined {
     return sampleStyle
       ? sampleStyle.width.value + sampleStyle.width.unit
       : undefined;
   }
 
   public static getBarSeriesLabel(
-    sampleStyle: BarChartOption
+    sampleStyle: BarSeriesOption
   ): echarts.EChartOption.SeriesBar["label"] {
     return sampleStyle
       ? {
@@ -399,7 +399,7 @@ export default class EChartServiceUtil {
    * @param sampleStyle 样例样式
    */
   public static getPieSeriesLabel(
-    sampleStyle: PieChartOption
+    sampleStyle: PieSeriesOption
   ): echarts.EChartOption.SeriesPie["label"] {
     return sampleStyle
       ? {

@@ -44,10 +44,10 @@ export default class TargetPieHandler extends GaugeHandler {
         item = item + "%";
       });
     }
-
+    const colorList = this.dashboard.echarts.color || ["#fff000", "000fff"];
     let colorGroup = [
-      [actual / comparison, this.dashboard.echarts.sampleStyle.global.color[1]],
-      [1, this.dashboard.echarts.sampleStyle.global.color[0]]
+      [actual / comparison, colorList[1]],
+      [1, colorList[0]]
     ];
     const decimals = this.sampleStyle.decimals.value;
     const seriesData = {

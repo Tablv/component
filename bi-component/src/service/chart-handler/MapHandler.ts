@@ -3,12 +3,10 @@ import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import EChartsService from "../EChartsService";
-import warnConfigure from "./configure/WarnConfigure";
-import { WARN_DEFAULT_VALUE } from "glaway-bi-model/view/Warn";
 import { ChartHandler } from "../../interfaces/ChartHandler";
-import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
-import { MapChartOption } from "glaway-bi-model/view/dashboard/chart/MapChartOption";
+import { MapSeriesOption } from "glaway-bi-model/view/dashboard/chart/MapSeriesOption";
 import echarts from "echarts";
+import GEOHandler from "glaway-bi-component/src/service/option-handler/GEOHandler";
 
 /**
  * 柱图处理
@@ -28,7 +26,7 @@ export default class MapHandler implements ChartHandler {
   constructor(
     public result: AnalysisResults,
     public dashboard: Dashboard,
-    public sampleStyle: MapChartOption
+    public sampleStyle: MapSeriesOption
   ) {
     this.fieldNames = EChartsService.splitFieldNames(
       this.result[0],
@@ -58,59 +56,12 @@ export default class MapHandler implements ChartHandler {
     style.tooltip = this.getToolTip();
 
     // 地图组件
-    style.geo = this.getGeo();
+    style.geo = GEOHandler.getGEO(this.sampleStyle);
 
     // dataset
     style.dataset = this.getDataSet();
 
     return style;
-  }
-
-  /**
-   * @function 获取地图组件
-   */
-  public getGeo(): Object {
-    const mapList = this.sampleStyle.mapList as Array<string>;
-    let geo: Object = {
-      id: 0,
-      map: mapList[mapList.length - 1],
-      showLegendSymbol: false,
-      // 宽高比
-      aspectScale: 0.75,
-      zoom: 1.2,
-      itemStyle: {
-        // 渐变色
-        areaColor: {
-          type: "radial",
-          x: 1,
-          y: 1,
-          x2: 0,
-          y2: 0,
-          colorStops: [
-            {
-              offset: 0,
-              color: "#abcdef" // 0% 处的颜色
-            },
-            {
-              offset: 0.5,
-              color: "#123456" // 50% 处的颜色
-            },
-            {
-              offset: 1,
-              color: "#abcdef" // 100% 处的颜色
-            }
-          ],
-          global: true // 缺省为 false
-        }
-      },
-      // 高亮
-      emphasis: {
-        itemStyle: {
-          areaColor: "red"
-        }
-      }
-    };
-    return geo;
   }
 
   /**
@@ -123,6 +74,7 @@ export default class MapHandler implements ChartHandler {
       {
         type: "map",
         map: mapList[mapList.length - 1],
+        showLegendSymbol: false,
         geoIndex: 0,
         datasetIndex: 0
       },
@@ -174,7 +126,7 @@ export default class MapHandler implements ChartHandler {
       // realtime: false,
       // calculable: false,
       inRange: {
-        color: this.dashboard.echarts.sampleStyle.global.color
+        color: this.dashboard.echarts.color
       }
     });
     return visualMapList;

@@ -1,5 +1,5 @@
 import VisualData from "./VisualData";
-import EChartsOption from "./EChartsOption";
+import EChartsOption from "./chart/EChartsOption";
 import StaticData from "./StaticData";
 import AnalysisData from "./AnalysisData";
 import EventsConfig from "./EventsConfig";

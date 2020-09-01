@@ -5,7 +5,7 @@ import {
 } from "glaway-bi-model/types/AnalysisResults";
 import ReactWhere from "glaway-bi-model/view/ReactWhere";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
-import EChartsOption from "glaway-bi-model/view/dashboard/EChartsOption";
+import EChartsOption from "glaway-bi-model/view/dashboard/chart/EChartsOption";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
 import { FieldType } from "glaway-bi-model/enums/FieldType";
 import AnalysisData from "glaway-bi-model/view/dashboard/AnalysisData";
