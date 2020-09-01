@@ -141,7 +141,7 @@ export const generalDataTemplate: any = {
         fontSize: 18
       }
     },
-    
+
     legend: {
       show: true,
       orient: "horizontal",

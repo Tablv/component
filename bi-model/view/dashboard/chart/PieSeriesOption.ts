@@ -192,7 +192,10 @@ export interface PieSeriesOption extends SeriesOption, Partial<{
   /**
    * 饼图的中心（圆心）坐标
    */
-  center: Array<string | number>;
+  center: Array<string | number | {
+    value: number | string,
+    unit: string;
+  }>;
 
   /**
    * 饼图的半径

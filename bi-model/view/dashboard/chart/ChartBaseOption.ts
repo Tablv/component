@@ -73,7 +73,7 @@ export interface ITextShadow {
   // 文字本身的阴影颜色
   textShadowColor: string;
   // 文字本身的阴影长度
-  textShadowBlur: string;
+  textShadowBlur: number;
   // 文字本身的阴影 X 偏移
   textShadowOffsetX: number;
   // 文字本身的阴影 Y 偏移
@@ -85,7 +85,7 @@ export interface IShadow {
   // 文字块的背景阴影颜色
   shadowColor: string;
   // 文字块的背景阴影长度
-  shadowBlur: string;
+  shadowBlur: number;
   // 文字块的背景阴影X偏移
   shadowOffsetX: number;
   // 文字块的背景阴影Y偏移

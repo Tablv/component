@@ -22,7 +22,10 @@ export interface GaugeSeriesOption extends SeriesOption, Partial<{
   /**
    * 仪表盘的中心（圆心）坐标
    */
-  center: Array<string | number>;
+  center: Array<string | number | {
+    value: number | string,
+    unit: string;
+  }>;
 
   /**
    * 是否启用图例hover时的联动高亮

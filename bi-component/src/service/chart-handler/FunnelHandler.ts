@@ -6,7 +6,7 @@ import EChartsService from "../EChartsService";
 import { ChartHandler } from "../../interfaces/ChartHandler";
 import { FunnelSeriesOption } from "glaway-bi-model/view/dashboard/chart/FunnelSeriesOption";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
-import { map } from "lodash";
+import { Iunit } from "./GlobalHandler";
 
 /**
  * 漏斗图处理
@@ -61,6 +61,14 @@ export default class FunnelHandler implements ChartHandler {
     let series: Array<echarts.EChartOption.Series> = [];
     const { dimensions, measures } = this.fieldNames;
 
+    let top,
+      left = "0";
+    if (this.sampleStyle.center) {
+      const center = this.sampleStyle.center as Iunit[];
+      top = center[0].value + center[0].unit;
+      left = center[1].value + center[1].unit;
+    }
+
     // 实际值必须唯一，
     const decimals = this.sampleStyle.decimals.value;
     const seriesData = {
@@ -92,8 +100,8 @@ export default class FunnelHandler implements ChartHandler {
       maxSize: this.sampleStyle.maxSize + "%",
       width: this.sampleStyle.width + "%",
       height: this.sampleStyle.height + "%",
-      top: this.sampleStyle.center ? this.sampleStyle.center[1] : 0,
-      left: this.sampleStyle.center ? this.sampleStyle.center[0] : 0
+      top,
+      left
     } as any;
 
     if (dimensions.length) {
@@ -105,7 +113,6 @@ export default class FunnelHandler implements ChartHandler {
       const serieData = this.getSeriesUndimesion(seriesData);
       series.push(serieData);
     }
-
     return series;
   }
 

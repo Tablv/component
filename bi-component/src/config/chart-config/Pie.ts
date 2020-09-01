@@ -16,30 +16,21 @@ const templates = {
           fontFamily: "Microsoft YaHei",
           isShowNumber: false
         },
-        center: ["50%", "50%"],
+        center: [
+          {
+            value: 50,
+            unit: "%"
+          },
+          {
+            value: 50,
+            unit: "%"
+          }
+        ],
         decimals: {
           value: 2,
           unit: ""
         },
-        radius: [0, 60],
-        grid: {
-          top: {
-            value: 50,
-            unit: "%"
-          },
-          left: {
-            value: 50,
-            unit: "%"
-          },
-          right: {
-            value: 50,
-            unit: "%"
-          },
-          bttom: {
-            value: 50,
-            unit: "%"
-          }
-        }
+        radius: [0, 60]
       }
     }
   }

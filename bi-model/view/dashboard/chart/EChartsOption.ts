@@ -4,14 +4,14 @@ import {
   BarPercentageSeriesOption,
   HBarSeriesOption,
   HBarStackSeriesOption,
-  LineSeriesOption,
   BiaxialSeriesOption,
   HBarPercentageSeriesOption,
-  FunnelSeriesOption
 } from "glaway-bi-model/view/dashboard/chart/SeriesOption";
 import { PieSeriesOption } from "glaway-bi-model/view/dashboard/chart/PieSeriesOption";
 import { GaugeSeriesOption } from "glaway-bi-model/view/dashboard/chart/GaugeSeriesOption";
 import { MapSeriesOption } from "glaway-bi-model/view/dashboard/chart/MapSeriesOption";
+import { LineSeriesOption } from "glaway-bi-model/view/dashboard/chart/LineSeriesOption";
+import { FunnelSeriesOption } from "glaway-bi-model/view/dashboard/chart/FunnelSeriesOption";
 /**
  * ECharts Option
  */

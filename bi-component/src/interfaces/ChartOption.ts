@@ -24,8 +24,8 @@ export interface ChartOption {
       textShadowOffsetX: number;
       textShadowOffsetY: number;
       rich: object;
-    }
-  }
+    };
+  };
 }
 enum ETarget {
   "self" = "self",

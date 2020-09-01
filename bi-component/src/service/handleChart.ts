@@ -32,5 +32,10 @@ export default function handleChart(
   // 结果配置
   const resultStyle = ObjectUtil.merge(styleCustomized, styleGlobal);
 
+  /**
+   * 关闭动画
+   */
+  resultStyle.animation = false;
+
   return resultStyle;
 }

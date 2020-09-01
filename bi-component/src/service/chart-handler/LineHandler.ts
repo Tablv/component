@@ -4,7 +4,7 @@ import { SplitedFieldNames } from "../EChartsService";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
 import EChartsService from "../EChartsService";
 import { ChartHandler } from "../../interfaces/ChartHandler";
-import { LineSeriesOption } from "glaway-bi-model/view/dashboard//chart/SeriesOption";
+import { LineSeriesOption } from "glaway-bi-model/view/dashboard/chart/LineSeriesOption";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import warnConfigure from "./configure/WarnConfigure";
 import { WARN_DEFAULT_VALUE } from "glaway-bi-model/view/Warn";

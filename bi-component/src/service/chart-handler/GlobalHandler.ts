@@ -4,8 +4,8 @@
 
 import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
-import GEOHandler from '../option-handler/GEOHandler';
-import VisualMapHandler from '../option-handler/VisualMapHandler';
+import GEOHandler from "../option-handler/GEOHandler";
+import VisualMapHandler from "../option-handler/VisualMapHandler";
 
 /**
  * 全局处理方法
@@ -18,17 +18,17 @@ export default function(result: AnalysisResults, dashboard: Dashboard) {
    * 返回的 Echarts 样式对象
    */
   let style: echarts.EChartOption = {};
-  
+
   /**
    * 标题
    */
   style.title = dashboard.echarts.title as echarts.EChartTitleOption;
-  
+
   /**
    * 配色
    */
   style.color = dashboard.echarts.color;
-  
+
   /**
    * 图例组件
    */
@@ -71,7 +71,7 @@ function gridGenerator(dashboard: Dashboard): echarts.EChartOption.Grid {
   };
 }
 
-interface Iunit {
+export interface Iunit {
   value: string;
   unit: string;
 }

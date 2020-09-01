@@ -56,7 +56,16 @@ const templates = {
           value: 0,
           unit: ""
         },
-        center: ["50px", "50px"]
+        center: [
+          {
+            value: 50,
+            unit: "px"
+          },
+          {
+            value: 50,
+            unit: "px"
+          }
+        ]
       }
     }
   }

@@ -1,6 +1,7 @@
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
 import GaugeHandler from "./GaugeHandler";
+import { Iunit } from "./GlobalHandler";
 
 /**
  * 仪表盘处理
@@ -44,6 +45,12 @@ export default class TargetPieHandler extends GaugeHandler {
         item = item + "%";
       });
     }
+
+    let center: Iunit[] = [];
+    if (this.sampleStyle.center) {
+      center = this.sampleStyle.center as Iunit[];
+    }
+
     const colorList = this.dashboard.echarts.color || ["#fff000", "000fff"];
     let colorGroup = [
       [actual / comparison, colorList[1]],
@@ -75,7 +82,7 @@ export default class TargetPieHandler extends GaugeHandler {
         }
       },
       title: this.sampleStyle.title,
-      center: this.sampleStyle.center,
+      center: center.map(item => item.value + item.unit),
       radius: this.sampleStyle.radius + "%",
       splitNumber: 1,
       pointer: { show: false },

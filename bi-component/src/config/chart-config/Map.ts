@@ -48,7 +48,7 @@ const templates = {
     geo: {
       id: 0,
       show: true,
-      map: 'china',
+      map: "china",
       // roam: 'scale',
       // center: [115.97, 29.71],
       // aspectScale: 75,
@@ -66,7 +66,7 @@ const templates = {
       //   // 定位右下角经纬度
       //   [180, -90]
       // ],
-      mapList: ['china'],
+      mapList: ["china"]
       // itemStyle: {
       //   areaColor: {
       //     type: "radial",
@@ -154,7 +154,7 @@ const templates = {
     },
     // 视觉映射组件
     visualMap: {
-      type: 'piecewise',
+      type: "piecewise",
       show: true,
       min: 0,
       max: 10000
@@ -217,7 +217,6 @@ const config = {
     }
   ]
 };
-
 
 const MapConfig: ChartConfigItem = {
   templates,

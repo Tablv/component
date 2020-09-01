@@ -14,7 +14,7 @@
  */
 
 import { GEO } from "@/interfaces/options/GEO";
-import EChartsOption from 'glaway-bi-model/view/dashboard/chart/EChartsOption';
+import EChartsOption from "glaway-bi-model/view/dashboard/chart/EChartsOption";
 
 export default class GEOHandler {
   /**
@@ -28,7 +28,7 @@ export default class GEOHandler {
       map: mapList[mapList.length - 1],
       // 宽高比
       aspectScale: 0.75,
-      zoom: 1.2,
+      zoom: 1.2
       // zoom: geoEvent.zoom,
       // itemStyle: geoEvent.itemStyle
     };

@@ -6,6 +6,7 @@ import EChartsService from "../EChartsService";
 import { ChartHandler } from "../../interfaces/ChartHandler";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
 import { GaugeSeriesOption } from "glaway-bi-model/view/dashboard/chart/GaugeSeriesOption";
+import { Iunit } from "./GlobalHandler";
 
 /**
  * 仪表盘处理
@@ -94,11 +95,15 @@ export default class GaugeHandler implements ChartHandler {
       colorGroup[0][0] = <number>LineColor[3][0] / sum;
       colorGroup[1][0] = <number>LineColor[3][1] / sum;
     } else {
-      colorGroup = this.dashboard.echarts.color?.map(
-        (item, index) => {
+      colorGroup =
+        this.dashboard.echarts.color?.map((item, index) => {
           return [(index + 3) / 10, item];
-        }
-      ) || [];
+        }) || [];
+    }
+
+    let center: Iunit[] = [];
+    if (this.sampleStyle.center) {
+      center = this.sampleStyle.center as Iunit[];
     }
 
     const seriesData = {
@@ -152,7 +157,7 @@ export default class GaugeHandler implements ChartHandler {
       },
       title: this.sampleStyle.title,
       radius: this.sampleStyle.radius + "%",
-      center: this.sampleStyle.center,
+      center: center.map(item => item.value + item.unit),
       max: this.sampleStyle.max || comparison,
       min: this.sampleStyle.min,
       data: [

@@ -63,7 +63,10 @@ export interface FunnelSeriesOption extends SeriesOption, Partial<{
   /**
    * 仪表盘的中心（圆心）坐标
    */
-  center: Array<string | number>;
+  center: Array<string | number | {
+    value: number | string,
+    unit: string;
+  }>;
 
   /**
    * 漏斗图组件的宽度。 默认自适应。

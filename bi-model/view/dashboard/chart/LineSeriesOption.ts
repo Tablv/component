@@ -1,3 +1,7 @@
+/**
+ * 线形图
+ */
+
 import { SeriesOption } from "./SeriesOption";
 
 export interface LineSeriesOption extends SeriesOption {

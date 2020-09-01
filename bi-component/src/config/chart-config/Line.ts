@@ -32,7 +32,7 @@ const templates = {
         // 是否连接空数据
         connectNulls: false,
         // 是否平缓曲线
-        smooth: false,
+        smooth: false
       }
     },
     grid: {

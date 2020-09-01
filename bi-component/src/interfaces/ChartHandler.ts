@@ -8,20 +8,13 @@ import {
   HBarSeriesOption,
   HBarStackSeriesOption,
   HBarPercentageSeriesOption,
-  LineSeriesOption,
-  // PieSeriesOption,
-  // RadarSeriesOption,
-  // RosePieSeriesOption,
-  // RPieSeriesOption,
-  // SunPieSeriesOption,
-  // TargetPieSeriesOption,
-  // GaugeSeriesOption,
-  FunnelSeriesOption,
   BiaxialSeriesOption
 } from "glaway-bi-model/view/dashboard/chart/SeriesOption";
 import { GaugeSeriesOption } from "glaway-bi-model/view/dashboard/chart/GaugeSeriesOption";
 import { PieSeriesOption } from "glaway-bi-model/view/dashboard/chart/PieSeriesOption";
 import { MapSeriesOption } from "glaway-bi-model/view/dashboard/chart/MapSeriesOption";
+import { LineSeriesOption } from "glaway-bi-model/view/dashboard/chart/LineSeriesOption";
+import { FunnelSeriesOption } from "glaway-bi-model/view/dashboard/chart/FunnelSeriesOption";
 
 export interface RegistryConstructor {
   bar: CharthandlerConstructor<BarSeriesOption>;

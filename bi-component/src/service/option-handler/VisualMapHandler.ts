@@ -15,8 +15,10 @@
 
 import EChartsOption from "glaway-bi-model/view/dashboard/chart/EChartsOption";
 
- export default class VisualMapHandler {
-   public static getVisualMap(echarts: EChartsOption): Array<echarts.EChartOption.VisualMap> {
+export default class VisualMapHandler {
+  public static getVisualMap(
+    echarts: EChartsOption
+  ): Array<echarts.EChartOption.VisualMap> {
     const visualMapList = [] as Array<echarts.EChartOption.VisualMap>;
     visualMapList.push({
       show: true,
@@ -30,5 +32,5 @@ import EChartsOption from "glaway-bi-model/view/dashboard/chart/EChartsOption";
       }
     });
     return visualMapList;
-   }
- }
+  }
+}
