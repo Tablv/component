@@ -23,25 +23,7 @@ const templates = {
           value: 0,
           unit: ""
         },
-        center: ["50%", "50%"],
-        grid: {
-          top: {
-            value: 50,
-            unit: "%"
-          },
-          left: {
-            value: 50,
-            unit: "%"
-          },
-          right: {
-            value: 50,
-            unit: "%"
-          },
-          bttom: {
-            value: 50,
-            unit: "%"
-          }
-        }
+        center: ["50%", "50%"]
       }
     },
     // 地图组件
@@ -49,14 +31,14 @@ const templates = {
       id: 0,
       show: true,
       map: "china",
-      // roam: 'scale',
-      // center: [115.97, 29.71],
-      // aspectScale: 75,
-      // zoom: 1.2,
-      // scaleLimit: {
-      //   min: 1,
-      //   max: 1
-      // },
+      roam: 'scale',
+      center: [115.97, 29.71],
+      aspectScale: 75,
+      zoom: 1.2,
+      scaleLimit: {
+        min: 1,
+        max: 1
+      },
       // selectedMode: false,
       // nameMap: {},
       // nameProperty: 'name',
@@ -66,82 +48,82 @@ const templates = {
       //   // 定位右下角经纬度
       //   [180, -90]
       // ],
-      mapList: ["china"]
-      // itemStyle: {
-      //   areaColor: {
-      //     type: "radial",
-      //     x: 1,
-      //     y: 1,
-      //     x2: 0,
-      //     y2: 0,
-      //     colorStops: [
-      //       {
-      //         offset: 0,
-      //         color: "#abcdef" // 0% 处的颜色
-      //       },
-      //       {
-      //         offset: 0.5,
-      //         color: "#123456" // 50% 处的颜色
-      //       },
-      //       {
-      //         offset: 1,
-      //         color: "#abcdef" // 100% 处的颜色
-      //       }
-      //     ],
-      //     global: true // 缺省为 false
-      //   },
-      //   color: 'auto',
-      //   borderColor: '#000',
-      //   borderWidth: 0,
-      //   borderType: 'solid',
-      //   shadowBlur: 0,
-      //   shadowColor: 'auto',
-      //   shadowOffsetX: 0,
-      //   shadowOffsetY: 0,
-      //   opacity: 1,
-      // },
-      // emphasis: {
-      //   itemStyle: {
-      //     areaColor: {
-      //       type: "radial",
-      //       x: 1,
-      //       y: 1,
-      //       x2: 0,
-      //       y2: 0,
-      //       colorStops: [
-      //         {
-      //           offset: 0,
-      //           color: "#abcdef" // 0% 处的颜色
-      //         },
-      //         {
-      //           offset: 0.5,
-      //           color: "#123456" // 50% 处的颜色
-      //         },
-      //         {
-      //           offset: 1,
-      //           color: "#abcdef" // 100% 处的颜色
-      //         }
-      //       ],
-      //       global: true // 缺省为 false
-      //     },
-      //     color: 'auto',
-      //     borderColor: '#000',
-      //     borderWidth: 0,
-      //     borderType: 'solid',
-      //     shadowBlur: 0,
-      //     shadowColor: 'auto',
-      //     shadowOffsetX: 0,
-      //     shadowOffsetY: 0,
-      //     opacity: 1
-      //   }
-      // },
+      mapList: ["china"],
+      itemStyle: {
+        areaColor: {
+          type: "radial",
+          x: 1,
+          y: 1,
+          x2: 0,
+          y2: 0,
+          colorStops: [
+            {
+              offset: 0,
+              color: "#abcdef" // 0% 处的颜色
+            },
+            {
+              offset: 0.5,
+              color: "#123456" // 50% 处的颜色
+            },
+            {
+              offset: 1,
+              color: "#abcdef" // 100% 处的颜色
+            }
+          ],
+          global: true // 缺省为 false
+        },
+        color: 'auto',
+        borderColor: '#000',
+        borderWidth: 0,
+        borderType: 'solid',
+        shadowBlur: 0,
+        shadowColor: 'auto',
+        shadowOffsetX: 0,
+        shadowOffsetY: 0,
+        opacity: 1,
+      },
+      emphasis: {
+        itemStyle: {
+          areaColor: {
+            type: "radial",
+            x: 1,
+            y: 1,
+            x2: 0,
+            y2: 0,
+            colorStops: [
+              {
+                offset: 0,
+                color: "#abcdef" // 0% 处的颜色
+              },
+              {
+                offset: 0.5,
+                color: "#123456" // 50% 处的颜色
+              },
+              {
+                offset: 1,
+                color: "#abcdef" // 100% 处的颜色
+              }
+            ],
+            global: true // 缺省为 false
+          },
+          color: 'auto',
+          borderColor: '#000',
+          borderWidth: 0,
+          borderType: 'solid',
+          shadowBlur: 0,
+          shadowColor: 'auto',
+          shadowOffsetX: 0,
+          shadowOffsetY: 0,
+          opacity: 1
+        }
+      },
       // zlevel: 1,
       // z: 1,
       // left: 'auto',
       // top: 'auto',
       // right: 'auto',
       // bottom: 'auto',
-      // layoutCenter: ['50%', '50%'],
+      layoutCenter: ['50%', '50%'],
       // layoutSize: 100,
       // regions: [{
       //   name: '北京',

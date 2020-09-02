@@ -38,22 +38,10 @@ const templates = {
     grid: {
       show: false,
       containLabel: true,
-      top: {
-        value: 60,
-        unit: ""
-      },
-      left: {
-        value: 50,
-        unit: ""
-      },
-      right: {
-        value: 50,
-        unit: ""
-      },
-      bottom: {
-        value: 30,
-        unit: ""
-      }
+      top: 60,
+      left: 60,
+      right: 60,
+      bottom: 60
     }
   }
 };

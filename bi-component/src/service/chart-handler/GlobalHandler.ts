@@ -6,6 +6,7 @@ import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
 import GEOHandler from "../option-handler/GEOHandler";
 import VisualMapHandler from "../option-handler/VisualMapHandler";
+import { ChartType } from 'glaway-bi-model/enums/ChartType';
 
 /**
  * 全局处理方法
@@ -14,6 +15,7 @@ import VisualMapHandler from "../option-handler/VisualMapHandler";
  * @param dashboard 仪表盘对象
  */
 export default function(result: AnalysisResults, dashboard: Dashboard) {
+  const chartType: ChartType = dashboard.visualData.type;
   /**
    * 返回的 Echarts 样式对象
    */
@@ -38,14 +40,14 @@ export default function(result: AnalysisResults, dashboard: Dashboard) {
    * 直角坐标系
    */
   if (dashboard.echarts.grid) {
-    style.grid = gridGenerator(dashboard);
+    style.grid = dashboard.echarts.grid as echarts.EChartOption.Grid;
   }
 
   /**
-   * 地图组件
+   * 地图坐标系
    */
   if (dashboard.echarts.geo) {
-    style.geo = GEOHandler.getGEO(dashboard.echarts);
+    style.geo = GEOHandler.getGEO(dashboard.echarts, chartType);
   }
   /**
    * 视觉映射组件
@@ -57,21 +59,3 @@ export default function(result: AnalysisResults, dashboard: Dashboard) {
   return style;
 }
 
-function gridGenerator(dashboard: Dashboard): echarts.EChartOption.Grid {
-  const gridTop = dashboard.echarts.grid?.top as Iunit,
-    gridBottom = dashboard.echarts.grid?.bottom as Iunit,
-    gridLeft = dashboard.echarts.grid?.left as Iunit,
-    gridRight = dashboard.echarts.grid?.right as Iunit;
-
-  return {
-    top: gridTop.value + gridTop.unit,
-    bottom: gridBottom.value + gridBottom.unit,
-    left: gridLeft.value + gridLeft.unit,
-    right: gridRight.value + gridRight.unit
-  };
-}
-
-export interface Iunit {
-  value: string;
-  unit: string;
-}

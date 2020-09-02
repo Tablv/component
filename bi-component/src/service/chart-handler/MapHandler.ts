@@ -40,8 +40,6 @@ export default class MapHandler implements ChartHandler {
     let style: echarts.EChartOption = {};
 
     if (ObjectUtil.isEmpty(this.result)) {
-      style.xAxis = [];
-      style.yAxis = [];
       style.series = [];
       return {};
     }
@@ -70,13 +68,13 @@ export default class MapHandler implements ChartHandler {
         showLegendSymbol: false,
         geoIndex: 0,
         datasetIndex: 0
-      },
-      {
-        type: chartTypeList[1],
-        coordinateSystem: "geo",
-        geoIndex: 0,
-        datasetIndex: 1
       }
+      // {
+      //   type: chartTypeList[1],
+      //   coordinateSystem: "geo",
+      //   geoIndex: 0,
+      //   datasetIndex: 1
+      // }
     ];
     return series;
   }
@@ -108,23 +106,7 @@ export default class MapHandler implements ChartHandler {
       }
     ];
   }
-
-  // public getVisualMap(): Array<echarts.EChartOption.VisualMap> {
-  //   const visualMapList = [] as Array<echarts.EChartOption.VisualMap>;
-  //   visualMapList.push({
-  //     show: true,
-  //     type: "piecewise",
-  //     min: 800,
-  //     max: 50000,
-  //     // realtime: false,
-  //     // calculable: false,
-  //     inRange: {
-  //       color: this.dashboard.echarts.color
-  //     }
-  //   });
-  //   return visualMapList;
-  // }
-
+  
   public getToolTip(): echarts.EChartOption.Tooltip {
     return {
       trigger: "item",

@@ -19,9 +19,11 @@ export default class VisualMapHandler {
   public static getVisualMap(
     echarts: EChartsOption
   ): Array<echarts.EChartOption.VisualMap> {
+    const visualMap = echarts.visualMap;
+
     const visualMapList = [] as Array<echarts.EChartOption.VisualMap>;
     visualMapList.push({
-      show: true,
+      show: visualMap?.show,
       type: "piecewise",
       min: 800,
       max: 50000,

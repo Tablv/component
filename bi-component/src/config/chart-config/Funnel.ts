@@ -26,25 +26,6 @@ const templates = {
         gap: 2,
         width: 77,
         height: 80,
-        grid: {
-          // 初始值需要与全局配置保持一致
-          top: {
-            value: 50,
-            unit: "px"
-          },
-          left: {
-            value: 50,
-            unit: "px"
-          },
-          right: {
-            value: 50,
-            unit: "px"
-          },
-          bottom: {
-            value: 30,
-            unit: "px"
-          }
-        },
         label: {
           show: false,
           position: "inside",
@@ -56,16 +37,7 @@ const templates = {
           value: 0,
           unit: ""
         },
-        center: [
-          {
-            value: 50,
-            unit: "px"
-          },
-          {
-            value: 50,
-            unit: "px"
-          }
-        ]
+        center: ["50", "50"]
       }
     }
   }

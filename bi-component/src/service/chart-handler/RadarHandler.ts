@@ -7,7 +7,6 @@ import { ChartHandler } from "glaway-bi-component/src/interfaces/ChartHandler";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
 // import { RadarSeriesOption } from "glaway-bi-model/view/dashboard/chart/SeriesOption";
 import { PieSeriesOption } from "glaway-bi-model/view/dashboard/chart/PieSeriesOption";
-import { Iunit } from "./GlobalHandler";
 
 /**
  * 雷达图处理
@@ -65,14 +64,10 @@ export default class RadarHandler implements ChartHandler {
    * 获取radar坐标
    */
   getRadar(): echarts.EChartOption.SeriesRadar.DataObject {
-    let center: Iunit[] = [];
-    if (this.sampleStyle.center) {
-      center = this.sampleStyle.center as Iunit[];
-    }
 
     let radarData: any = {
       indicator: [],
-      center: center.map(item => item.value + item.unit),
+      center: this.sampleStyle.center,
       radius:
         typeof this.sampleStyle.radius === "object"
           ? this.sampleStyle.radius.map(item => item + "%")
