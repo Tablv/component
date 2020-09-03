@@ -4,9 +4,10 @@
 
 import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
-import GEOHandler from "../option-handler/GEOHandler";
-import VisualMapHandler from "../option-handler/VisualMapHandler";
-import { ChartType } from 'glaway-bi-model/enums/ChartType';
+import GEOHandler from "glaway-bi-component/src/service/option-handler/GEOHandler";
+import VisualMapHandler from "glaway-bi-component/src/service/option-handler/VisualMapHandler";
+import { ChartType } from "glaway-bi-model/enums/ChartType";
+import TooltipHandler from "glaway-bi-component/src/service/option-handler/TooltipHandler";
 
 /**
  * 全局处理方法
@@ -37,6 +38,13 @@ export default function(result: AnalysisResults, dashboard: Dashboard) {
   style.legend = dashboard.echarts.legend;
 
   /**
+   * 提示标签
+   */
+  if (dashboard.echarts.tooltip) {
+    style.tooltip = TooltipHandler.getToolTip(dashboard.echarts);
+  }
+
+  /**
    * 直角坐标系
    */
   if (dashboard.echarts.grid) {
@@ -47,7 +55,7 @@ export default function(result: AnalysisResults, dashboard: Dashboard) {
    * 地图坐标系
    */
   if (dashboard.echarts.geo) {
-    style.geo = GEOHandler.getGEO(dashboard.echarts, chartType);
+    style.geo = GEOHandler.getGEO(dashboard.echarts);
   }
   /**
    * 视觉映射组件
@@ -58,4 +66,3 @@ export default function(result: AnalysisResults, dashboard: Dashboard) {
 
   return style;
 }
-

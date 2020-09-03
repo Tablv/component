@@ -1,16 +1,8 @@
 import { SplitedFieldNames } from "../service/EChartsService";
 import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
-import {
-  BarSeriesOption,
-  BarStackSeriesOption,
-  BarPercentageSeriesOption,
-  HBarSeriesOption,
-  HBarStackSeriesOption,
-  HBarPercentageSeriesOption,
-  BiaxialSeriesOption
-} from "glaway-bi-model/view/dashboard/chart/SeriesOption";
 import { GaugeSeriesOption } from "glaway-bi-model/view/dashboard/chart/GaugeSeriesOption";
+import { BarSeriesOption } from "glaway-bi-model/view/dashboard/chart/BarSeriesOption";
 import { PieSeriesOption } from "glaway-bi-model/view/dashboard/chart/PieSeriesOption";
 import { MapSeriesOption } from "glaway-bi-model/view/dashboard/chart/MapSeriesOption";
 import { LineSeriesOption } from "glaway-bi-model/view/dashboard/chart/LineSeriesOption";
@@ -19,13 +11,13 @@ import { FunnelSeriesOption } from "glaway-bi-model/view/dashboard/chart/FunnelS
 export interface RegistryConstructor {
   bar: CharthandlerConstructor<BarSeriesOption>;
 
-  barStack: CharthandlerConstructor<BarStackSeriesOption>;
+  barStack: CharthandlerConstructor<BarSeriesOption>;
 
-  barPercentage: CharthandlerConstructor<BarPercentageSeriesOption>;
+  barPercentage: CharthandlerConstructor<BarSeriesOption>;
 
-  hbar: CharthandlerConstructor<HBarSeriesOption>;
-  hbarStack: CharthandlerConstructor<HBarStackSeriesOption>;
-  hbarPercentage: CharthandlerConstructor<HBarPercentageSeriesOption>;
+  hbar: CharthandlerConstructor<BarSeriesOption>;
+  hbarStack: CharthandlerConstructor<BarSeriesOption>;
+  hbarPercentage: CharthandlerConstructor<BarSeriesOption>;
 
   /**
    * 饼图
@@ -34,8 +26,6 @@ export interface RegistryConstructor {
   rpie: CharthandlerConstructor<PieSeriesOption>;
   rosepie: CharthandlerConstructor<PieSeriesOption>;
   sunpie: CharthandlerConstructor<PieSeriesOption>;
-  // targetpie: CharthandlerConstructor<PieSeriesOption>;
-  targetpie: CharthandlerConstructor<GaugeSeriesOption>;
 
   /**
    * 雷达图
@@ -51,6 +41,7 @@ export interface RegistryConstructor {
    * 仪表盘图
    */
   gauge: CharthandlerConstructor<GaugeSeriesOption>;
+  targetpie: CharthandlerConstructor<GaugeSeriesOption>;
 
   /**
    * 漏斗图

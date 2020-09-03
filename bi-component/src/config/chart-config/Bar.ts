@@ -38,6 +38,12 @@ const templates = {
       left: 50,
       right: 50,
       bottom: 50
+    },
+    /**
+     * 提示信息
+     */
+    tooltip: {
+      show: false
     }
   }
 };

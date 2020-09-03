@@ -23,15 +23,15 @@ const templates = {
           value: 0,
           unit: ""
         },
-        center: ["50%", "50%"]
+        center: ["50%", "50%"],
+        geoIndex: 0
       }
     },
     // 地图组件
     geo: {
-      id: 0,
       show: true,
       map: "china",
-      roam: 'scale',
+      roam: "scale",
       center: [115.97, 29.71],
       aspectScale: 75,
       zoom: 1.2,
@@ -72,15 +72,15 @@ const templates = {
           ],
           global: true // 缺省为 false
         },
-        color: 'auto',
-        borderColor: '#000',
+        color: "auto",
+        borderColor: "#000",
         borderWidth: 0,
-        borderType: 'solid',
+        borderType: "solid",
         shadowBlur: 0,
-        shadowColor: 'auto',
+        shadowColor: "auto",
         shadowOffsetX: 0,
         shadowOffsetY: 0,
-        opacity: 1,
+        opacity: 1
       },
       emphasis: {
         itemStyle: {
@@ -106,12 +106,12 @@ const templates = {
             ],
             global: true // 缺省为 false
           },
-          color: 'auto',
-          borderColor: '#000',
+          color: "auto",
+          borderColor: "#000",
           borderWidth: 0,
-          borderType: 'solid',
+          borderType: "solid",
           shadowBlur: 0,
-          shadowColor: 'auto',
+          shadowColor: "auto",
           shadowOffsetX: 0,
           shadowOffsetY: 0,
           opacity: 1
@@ -123,7 +123,7 @@ const templates = {
       // top: 'auto',
       // right: 'auto',
       // bottom: 'auto',
-      layoutCenter: ['50%', '50%'],
+      layoutCenter: ["50%", "50%"]
       // layoutSize: 100,
       // regions: [{
       //   name: '北京',
@@ -140,6 +140,12 @@ const templates = {
       show: true,
       min: 0,
       max: 10000
+    },
+    /**
+     * 提示信息
+     */
+    tooltip: {
+      show: false
     }
   }
 };

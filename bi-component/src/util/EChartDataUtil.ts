@@ -1,5 +1,5 @@
 import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
-import { BarSeriesOption } from "glaway-bi-model/view/dashboard/chart/SeriesOption";
+import { BarSeriesOption } from "glaway-bi-model/view/dashboard/chart/BarSeriesOption";
 import { PieSeriesOption } from "glaway-bi-model/view/dashboard/chart/PieSeriesOption";
 
 export default class EChartServiceUtil {

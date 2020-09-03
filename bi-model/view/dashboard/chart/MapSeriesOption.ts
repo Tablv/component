@@ -58,7 +58,7 @@ export interface MapSeriesOption extends SeriesOption, Partial<{
    * 滚轮缩放的极限控制
    * 通过min max 最小和最大的缩放值，默认的缩放为1
    */
-  scaleLimit: IScaleLimite;
+  scaleLimit: baseOption.IScaleLimite;
 
   /**
    * 自定义地图的名称映射
@@ -91,12 +91,6 @@ export interface MapSeriesOption extends SeriesOption, Partial<{
 
   // 组件所有图形的z值
   z: number;
-
-  left: string | number;
-  top: string | number;
-  right: string | number;
-  bottom: string | number;
-
   layoutCenter: Array<number | string>;
   layoutSize: number | string;
   geoIndex: number;
@@ -119,32 +113,15 @@ export interface MapSeriesOption extends SeriesOption, Partial<{
   //   position: string | Array<number | string> | Function;
   //   formatter: string | Function;
   // }
-}>{}
+} & baseOption.IPosition>{}
 
-interface IScaleLimite {
-  min: number;
-  max: number;
-}
 
-interface IItemStyle {
+
+interface IItemStyle extends baseOption.IBorder, baseOption.IShadow {
   // 地图区域的颜色
   areaColor: string;
   // 图形的颜色
   color: string;
-  // 图形的描边颜色
-  borderColor: string;
-  // 描边宽度
-  borderWidth: number;
-  // 柱条的描边类型
-  borderType: string;
-  // 图形阴影的模糊大小
-  shadowBlur: number;
-  // 阴影颜色
-  shadowColor: string;
-  // 阴影水平方向上的偏移距离
-  shadowOffsetX: number;
-  // 阴影垂直方向上的偏移距离
-  shadowOffsetY: number;
   // 图形透明度
   opacity: number;
 }

@@ -14,25 +14,20 @@
  */
 
 import { GEO } from "@/interfaces/options/GEO";
-import EChartsOption, { EChartsSampleStyle } from "glaway-bi-model/view/dashboard/chart/EChartsOption";
-import { ChartType } from 'glaway-bi-model/enums/ChartType';
+import EChartsOption, {
+  EChartsSampleStyle
+} from "glaway-bi-model/view/dashboard/chart/EChartsOption";
+import { ChartType } from "glaway-bi-model/enums/ChartType";
 
 export default class GEOHandler {
   /**
    * @function 获取地图组件
    */
-  public static getGEO(echarts: EChartsOption, chartType: ChartType): GEO {
+  public static getGEO(echarts: EChartsOption): GEO {
     const geoEvent: GEO = echarts.geo as GEO;
     const mapList = geoEvent.mapList as Array<string>;
-    // let layoutCenter = null;
-    // if (echarts.sampleStyle[chartType]) {
-    //   const sampleStyle: any = echarts.sampleStyle[chartType]
-    //   if (sampleStyle.center) {
-    //     layoutCenter = sampleStyle.center.map((item: any) => item.value + item.unit);
-    //   }
-    // }
     let geo: GEO = {
-      id: 0,
+      show: geoEvent.show,
       map: mapList[mapList.length - 1],
       // 宽高比
       aspectScale: <number>geoEvent.aspectScale / 100,

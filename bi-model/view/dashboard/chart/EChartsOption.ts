@@ -1,17 +1,11 @@
-import {
-  BarSeriesOption,
-  BarStackSeriesOption,
-  BarPercentageSeriesOption,
-  HBarSeriesOption,
-  HBarStackSeriesOption,
-  BiaxialSeriesOption,
-  HBarPercentageSeriesOption,
-} from "glaway-bi-model/view/dashboard/chart/SeriesOption";
+import { BiaxialSeriesOption } from "glaway-bi-model/view/dashboard/chart/SeriesOption";
 import { PieSeriesOption } from "glaway-bi-model/view/dashboard/chart/PieSeriesOption";
+import { BarSeriesOption } from "glaway-bi-model/view/dashboard/chart/BarSeriesOption";
 import { GaugeSeriesOption } from "glaway-bi-model/view/dashboard/chart/GaugeSeriesOption";
 import { MapSeriesOption } from "glaway-bi-model/view/dashboard/chart/MapSeriesOption";
 import { LineSeriesOption } from "glaway-bi-model/view/dashboard/chart/LineSeriesOption";
 import { FunnelSeriesOption } from "glaway-bi-model/view/dashboard/chart/FunnelSeriesOption";
+import * as baseOption from "./ChartBaseOption";
 /**
  * ECharts Option
  */
@@ -19,46 +13,32 @@ export default interface EChartsOption extends Partial<{
   /**
    * 标题组件，包含主标题和副标题
    */
-  title: {
-    text: string;
-    left: string;
-    textStyle: {
-      color: string;
-      fontStyle: string;
-      fontWeight: string | number;
-      fontFamily: string;
-      fontSize: number;
-      lineHeight: number;
-      backgroundColor: string | object;
-      borderColor: string;
-      borderWidth: number;
-      borderRadius: number | number[];
-      padding: number | number[];
-      shadowColor: string;
-      shadowBlur: number;
-      shadowOffsetX: number;
-      shadowOffsetY: number;
-      width: string | number;
-      height: string | number;
-      textBorderColor: string;
-      textBorderWidth: number;
-      textShadowColor: string;
-      textShadowBlur: number;
-      textShadowOffsetX: number;
-      textShadowOffsetY: number;
-      rich: object;
-    };
-  };
-
-  /**
-   * 图例组件。
-   */
-  legend: {
+  title: Partial<{
+    id: string;
     show: boolean;
-    left: string;
-    top: string;
-    data: Array<string>;
-  };
+    text: string;
+    link: string;
+    target: baseOption.ETarget;
+    subtext: string;
+    sublink: string;
+    subtarget: baseOption.ETarget;
+    textAlign: baseOption.EAlign;
+    textVerticalAlign: baseOption.EVerticalAlign;
+    triggerEvent: boolean;
+    padding: number | number[];
+    itemGap: number;
+    z: number;
+    zlevel: number;
+    backgroundColor: string;
+    textStyle: Partial<{
+      rich: object;
+    } & baseOption.IFont & baseOption.IHWL& baseOption.ITextBorder & baseOption.ITextShadow>;
+    subtextStyle: Partial<{
+      rich: object;
+      align: baseOption.ETarget;
+      verticalAlign: baseOption.EAlign;
+    } & baseOption.IFont & baseOption.IHWL& baseOption.ITextBorder & baseOption.ITextShadow>;
+  } & baseOption.IBorder & baseOption.IShadow & baseOption.IPosition>;
 
   /**
    * 直角坐标系
@@ -68,34 +48,16 @@ export default interface EChartsOption extends Partial<{
     show: boolean;
     zlevel: number;
     z: number;
-    left: string | number | {
-      value: string | number;
-      unit: string;
-    };
-    top: string | number | {
-      value: string | number;
-      unit: string;
-    };
-    bottom: string | number | {
-      value: string | number;
-      unit: string;
-    };
-    right: string | number | {
-      value: string | number;
-      unit: string;
-    };
+    left: string | number | baseOption.IValueUnit;
+    top: string | number | baseOption.IValueUnit;
+    bottom: string | number | baseOption.IValueUnit;
+    right: string | number | baseOption.IValueUnit;
     width: string | number;
     height: string | number;
     containLabel: boolean;
     backgroundColor: string;
-    borderColor: string;
-    borderWidth: number;
-    shadowBlur: number;
-    shadowColor: string;
-    shadowOffsetX: number;
-    shadowOffsetY: number;
     tooltip: Object;
-  };
+  } & baseOption.IShadow & baseOption.IBorder;
 
   /**
    * 视觉映射组件
@@ -103,8 +65,7 @@ export default interface EChartsOption extends Partial<{
   visualMap: {
     type: string;
     id: string | number;
-    min: number;
-    max: number;
+    show: boolean;
     range: number[];
     calculable: boolean;
     realtime: boolean;
@@ -115,7 +76,6 @@ export default interface EChartsOption extends Partial<{
     algin: string;
     text: string[];
     textGap: number;
-    show: boolean;
     dimension: number;
     seriesIndex: number | Array<any>;
     hoverLink: boolean;
@@ -124,43 +84,40 @@ export default interface EChartsOption extends Partial<{
     controller: Object;
     zlevel: number;
     z: number;
-    left: string | number;
-    top: string | number;
-    right: string | number;
-    bottom: string | number;
     orient: string;
     padding: number | number[];
     backgroundColor: string;
-    borderColor: string;
-    borderWidth: number;
     color: string[];
-    textStyle: {
-      color: string;
-      fontStyle: string;
-      fontWeight: string | number;
-      fontFamily: string;
-      fontSize: number;
-      lineHeight: number;
-      backgroundColor: string | object;
-      borderColor: string;
-      borderWidth: number;
-      borderRadius: number | number[];
-      padding: number | number[];
-      shadowColor: string;
-      shadowBlur: number;
-      shadowOffsetX: number;
-      shadowOffsetY: number;
-      width: string | number;
-      height: string | number;
-      textBorderColor: string;
-      textBorderWidth: number;
-      textShadowColor: string;
-      textShadowBlur: number;
-      textShadowOffsetX: number;
-      textShadowOffsetY: number;
-      rich: object;
-    }
-  };
+    textStyle: baseOption.ItextStyle;
+  } & baseOption.IPosition & baseOption.IBorder & baseOption.IScaleLimite;
+
+   /**
+   * 图例组件。
+   */
+  legend: {
+    type: string;
+    id: string;
+    zlevel: number;
+    z: number;
+    show: boolean;
+    widht: string | number;
+    height: string | number;
+    orient: string;
+    align: string;
+    padding: number | number[];
+    itemGap: number;
+    itemWidth: number;
+    itemHeight: number;
+    symbolKeepAspect: boolean;
+    formatter: string | Function;
+    selectedMode: boolean;
+    inactiveColor: string;
+    selected: Object;
+    textStyle: baseOption.ItextStyle;
+    icon: string;
+    backgroundColor: string;
+  } & baseOption.IPosition & baseOption.IBorder & baseOption.IShadow;
+
 
   tooltip: {
     show: boolean;
@@ -173,7 +130,23 @@ export default interface EChartsOption extends Partial<{
       label: Object; /// 后面修改
       lineStyle: Object; // 后面修改
     };
-  };
+    showContent: boolean;
+    alwaysShowContent: boolean;
+    triggerOn: string;
+    showDelay: number;
+    hideDelay: number;
+    enterable: boolean;
+    renderMode: string;
+    confine: boolean;
+    appendToBody: boolean;
+    transitionDuration: number;
+    position: string | Function | Array<number | string>;
+    formatter: string | Function;
+    backgroundColor: string;
+    padding: number | number[];
+    textStyle: baseOption.ItextStyle;
+    extraCssText: string;
+  } & baseOption.IBorder;
 
   geo: Object; // 以后修改
 
@@ -234,19 +207,19 @@ export interface EChartsSampleStyle {
   bar?: BarSeriesOption;
 
   // 堆积柱图
-  barStack?: BarStackSeriesOption;
+  barStack?: BarSeriesOption;
 
   // 百分比堆积柱图
-  barPercentage?: BarPercentageSeriesOption;
+  barPercentage?: BarSeriesOption;
 
   // 条图
-  hbar?: HBarSeriesOption;
+  hbar?: BarSeriesOption;
 
   // 堆积条图
-  hbarStack?: HBarStackSeriesOption;
+  hbarStack?: BarSeriesOption;
 
   // 百分比堆积条图
-  hbarPercentage?: HBarPercentageSeriesOption;
+  hbarPercentage?: BarSeriesOption;
 
   // 饼图配置
   pie?: PieSeriesOption;

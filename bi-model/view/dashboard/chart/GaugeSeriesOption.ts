@@ -22,10 +22,7 @@ export interface GaugeSeriesOption extends SeriesOption, Partial<{
   /**
    * 仪表盘的中心（圆心）坐标
    */
-  center: Array<string | number | {
-    value: number | string,
-    unit: string;
-  }>;
+  center: Array<string | number | baseOption.IValueUnit>;
 
   /**
    * 是否启用图例hover时的联动高亮
@@ -48,10 +45,7 @@ export interface GaugeSeriesOption extends SeriesOption, Partial<{
   clockwise: boolean;
 
   
-  data: Array<{
-    name: string;
-    value: number;
-  }>
+  data: any;
 
   /**
    * 数据最小值
@@ -102,7 +96,7 @@ export interface GaugeSeriesOption extends SeriesOption, Partial<{
     distance: number;
     formatter: string | Function;
     opacity: number;
-  }> & Partial<Itext>;
+  }> & Partial<baseOption.ItextStyle>;
   
   /**
    * 仪表盘指针
@@ -118,17 +112,17 @@ export interface GaugeSeriesOption extends SeriesOption, Partial<{
    */
   itemStyle: Partial<{
     opacity: number;
-  } & IBorder & baseOption.IShadow>;
+  } & baseOption.IBorder & baseOption.IShadow>;
   
   /**
    * 仪表盘标题。
    */
   title: Partial<{
     offsetCenter: Array<string | number>;
-  }> & Partial<Itext>;
+  }> & Partial<baseOption.ItextStyle>;
 
 
-  detail: Partial<Itext>;
+  detail: Partial<baseOption.ItextStyle>;
 
   silent: boolean;
 
@@ -140,13 +134,13 @@ export interface GaugeSeriesOption extends SeriesOption, Partial<{
     formatter: string | Function;
     backgroundColor: string;
     padding: number | number[];
+    extraCssText: string;
     textStyle: Partial<{
       lineHeight: number;
       width: number;
       height: number;
     } & baseOption.IFont & baseOption.ITextShadow>;
-    extraCssText: string;
-  } & IBorder>;
+  } & baseOption.IBorder>;
 
   /**
    * 
@@ -167,55 +161,9 @@ export interface GaugeSeriesOption extends SeriesOption, Partial<{
   
 }> {};
 
-enum ELineType {
-  solid = "solid",
-  dashed = "dashed",
-  dotted = "dotted"
-}
-
-interface IBorder {
-  borderColor: string;
-
-  borderWidth: number;
-
-  borderType: ELineType;
-}
-
-interface Itext {
-  show: boolean;
-  color: string;
-  fontStyle: string;
-  fontWeight: string | number;
-  fontFamily: string;
-  fontSize: number;
-  lineHeight: number;
-  backgroundColor: string | object;
-  borderColor: string;
-  borderWidth: number;
-  borderRadius: number | number[];
-  padding: number | number[];
-  shadowColor: string;
-  shadowBlur: string;
-  shadowOffsetX: number;
-  shadowOffsetY: number;
-  width: string | number;
-  height: string | number;
-  textBorderColor: string;
-  textBorderWidth: number;
-  textShadowColor: string;
-  textShadowBlur: string;
-  textShadowOffsetX: number;
-  textShadowOffsetY: number;
-  rich: object;
-}
-
-interface IlineStyle {
+interface IlineStyle extends baseOption.IShadow {
   color: any[];
   width: number;
   type: string;
-  shadowBlur: string;
-  shadowColor: string;
-  shadowOffsetX: number;
-  shadowOffsetY: number;
   opacity: number;
 }

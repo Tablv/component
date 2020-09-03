@@ -1,4 +1,5 @@
 import { SeriesOption } from "./SeriesOption";
+import * as baseOption from "./ChartBaseOption";
 
 /**
  * 漏斗图配置
@@ -86,7 +87,7 @@ export interface FunnelSeriesOption extends SeriesOption, Partial<{
     borderWidth: number;
     borderType: string;
     opacity: number
-  } & IShadow>;
+  } & baseOption.IShadow>;
 
   /**
    * 标签的视觉引导线样式
@@ -99,19 +100,19 @@ export interface FunnelSeriesOption extends SeriesOption, Partial<{
       width: number;
       type: string;
       opacity: number;
-    } & IShadow>;
+    } & baseOption.IShadow>;
   };
 
   /**
    * 所有图形的 zlevel 值。
    */
-  zlevel?: number;
+  zlevel: number;
 
   /**
    * 组件的所有图形的z值。控制图形的前后顺序。z值小的图形会被z值大的图形覆盖。
    * z相比zlevel优先级更低，而且不会创建新的 Canvas。
    */
-  z?: number;
+  z: number;
 
   /**
    * 
@@ -131,10 +132,3 @@ export interface FunnelSeriesOption extends SeriesOption, Partial<{
   };
   
 }> {}
-
-interface IShadow {
-  shadowBlur: string;
-  shadowColor: string;
-  shadowOffsetX: number;
-  shadowOffsetY: number;
-}

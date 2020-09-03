@@ -1,4 +1,4 @@
-export interface ILabel extends IFont, IBorder, IShadow, ITextShadow, ITextBorder  {
+export interface ILabel extends ItextStyle {
   show: boolean;
   // 'top' 'left' 'right' 'bottom' 'inside'
   // map 支持：top / left / right / bottom / inside / insideLeft / insideRight / insideTop / insideBottom / insideTopLeft / insideBottomLeft / insideTopRight / insideBottomRight
@@ -19,21 +19,49 @@ export interface ILabel extends IFont, IBorder, IShadow, ITextShadow, ITextBorde
   algin: string;
   // 文字垂直对齐方式，默认自动
   verticalAlgin: string;
-  // 行高
-  lineHeight: number;
-  // 文字块背景色
-  backgroundColor: string;
-  // 文字块的内边距
+  offsetCenter: string[] | number[];
+};
+
+export interface ItextStyle extends 
+  IFont, 
+  IHWL, 
+  IBorder,
+  IShadow,
+  ITextShadow,
+  ITextBorder {
+  show: boolean;
+  backgroundColor: string | object;
   padding: number | number[];
+  rich: object;
+}
+
+export interface IScaleLimite {
+  min: number;
+  max: number;
+}
+
+export interface IValueUnit {
+  value: number | string,
+  unit: string;
+}
+
+// 定位
+export interface IPosition {
+  left: number | string;
+  top: number | string;
+  bottom: number | string;
+  right: number | string;
+}
+
+// 高度 宽度 行高
+export interface IHWL {
   // 文字块的宽度
   width: number | string;
   // 文字块的高度
   height: number | string;
-  
-  offsetCenter: string[] | number[];
-  // 富文本
-  rich: object;
-};
+  // 行高
+  lineHeight: number;
+}
 
 // 字体
 export interface IFont {
@@ -52,12 +80,14 @@ export interface IFont {
 
 // 边框
 export interface IBorder {
-  // 文字块边框颜色
+  // 边框颜色
   borderColor: string;
-  // 文字块边框宽度
+  // 边框宽度
   borderWidth: string;
-  // 文字块的圆角
+  // 圆角
   borderRadius: number | any[];
+  // 边框类型
+  borderType: ELineType;
 }
 
 // 文本边框
@@ -121,20 +151,17 @@ export enum EFontWeight {
   lighter = "lighter"
 }
 
-// export enum EFontFamily {
-//   'sans-serif' = "sans-serif",
-//   bold = "bold",
-//   bolder = "bolder",
-//   lighter = "lighter"
-// }
-
+// 水平对齐
 export enum EAlign {
+  auto = "auto",
   left = "left",
   center = "center",
   right = "right"
 }
 
+// 垂直对齐
 export enum EVerticalAlign {
+  auto = "auto",
   top = "top",
   middle = "middle",
   bottom = "bottom"
@@ -149,4 +176,9 @@ export enum ELineType {
 export enum ESeriesLayoutBy {
   column = "column",
   row = "row"
+}
+
+export enum ETarget {
+  self = "self",
+  blank = "blank"
 }

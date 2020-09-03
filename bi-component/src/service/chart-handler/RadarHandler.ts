@@ -64,7 +64,6 @@ export default class RadarHandler implements ChartHandler {
    * 获取radar坐标
    */
   getRadar(): echarts.EChartOption.SeriesRadar.DataObject {
-
     let radarData: any = {
       indicator: [],
       center: this.sampleStyle.center,

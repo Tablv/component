@@ -129,6 +129,9 @@ export const generalDataTemplate: any = {
       global: {}
     },
     animation: false,
+    /**
+     * 标题
+     */
     title: {
       show: true,
       text: "图表",
@@ -141,7 +144,9 @@ export const generalDataTemplate: any = {
         fontSize: 18
       }
     },
-
+    /**
+     * 图例
+     */
     legend: {
       show: true,
       orient: "horizontal",
@@ -151,9 +156,6 @@ export const generalDataTemplate: any = {
       data: [],
       right: "10",
       top: "30"
-    },
-    tooltip: {
-      show: false
     },
     color: [
       "#118DFF",

@@ -98,27 +98,6 @@ export interface PieSeriesOption extends SeriesOption, Partial<{
    * z相比zlevel优先级更低，而且不会创建新的 Canvas
    */
   x: number;
-
-  /**
-   * 漏斗图组件离容器左侧的距离。
-   */
-  left: number | string;
-
-  /**
-   * 组件离容器上侧的距离
-   */
-  top: number | string;
-
-  /**
-   * 组件离容器右侧的距离。
-   */
-  right: number | string;
-
-  /**
-   * 组件离容器下侧的距离
-   */
-  bottom: number | string;
-
   /**
    * 组件的宽度
    * 默认自适应。
@@ -130,41 +109,6 @@ export interface PieSeriesOption extends SeriesOption, Partial<{
    * 默认自适应
    */
   height: string | number;
-
-  /**
-   * 饼图图形上的文本标签
-   */
-  lable: Partial<{
-    show: boolean;
-
-    position: baseOption.EPosition;
-
-    formatter: string | Function;
-
-    /**
-     * 标签旋转
-     * 如果为 true，则为径向排布
-     * 如果为 number ，旋转指定角度
-     * 从 -90 度到 90 度。正值是逆时针
-     */
-    rotate: boolean | number;
-    
-    align: baseOption.EAlign;
-
-    verticalAlign: baseOption.EVerticalAlign;
-
-    lineHeight: number;
-
-    backgroundColor: string; // object放弃
-
-    padding: number | number[];
-
-    width: number | string;
-
-    height: number | string;
-
-    rich: object;
-  } & baseOption.IFont & baseOption.IBorder & baseOption.ITextBorder & baseOption.ITextShadow & baseOption.IShadow>;
 
   /**
    * 标签的视觉引导线样式
@@ -192,10 +136,7 @@ export interface PieSeriesOption extends SeriesOption, Partial<{
   /**
    * 饼图的中心（圆心）坐标
    */
-  center: Array<string | number | {
-    value: number | string,
-    unit: string;
-  }>;
+  center: Array<string | number | baseOption.IValueUnit>;
 
   /**
    * 饼图的半径
@@ -226,7 +167,7 @@ export interface PieSeriesOption extends SeriesOption, Partial<{
     name: string;
     value: string;
     selected: boolean;
-    lable: PieSeriesOption["label"];
+    lable: baseOption.ILabel;
     labelLine: PieSeriesOption["labelLine"];
     itemStyle: PieSeriesOption["lineStyle"];
     tooltip: PieSeriesOption["tooltip"];
@@ -240,11 +181,7 @@ export interface PieSeriesOption extends SeriesOption, Partial<{
     formatter: string | Function;
     backgroundColor: string;
     padding: number | number[];
-    textStyle: Partial<{
-      lineHeight: number;
-      width: number;
-      height: number;
-    } & baseOption.IFont & baseOption.ITextShadow>;
+    textStyle: Partial<baseOption.IHWL & baseOption.IFont & baseOption.ITextShadow>;
     extraCssText: string;
   } & baseOption.IBorder>;
 
@@ -270,6 +207,6 @@ export interface PieSeriesOption extends SeriesOption, Partial<{
     outside: string | number;
     axisLineWidth: string | number;
   };
-}> {
+} & baseOption.IPosition> {
   type: string;
 }

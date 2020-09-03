@@ -40,14 +40,12 @@ export default class MapHandler implements ChartHandler {
     let style: echarts.EChartOption = {};
 
     if (ObjectUtil.isEmpty(this.result)) {
+      style.dataset = [];
       style.series = [];
       return {};
     }
     // 图表结构
     style.series = this.getSeries();
-
-    // 数据提示
-    style.tooltip = this.getToolTip();
 
     // dataset
     style.dataset = this.getDataSet();
@@ -59,22 +57,15 @@ export default class MapHandler implements ChartHandler {
    * @function 获取Series数据
    */
   public getSeries(): Array<echarts.EChartOption.Series> {
-    const chartTypeList = ["map", "scatter"];
     const mapList = this.sampleStyle.mapList as Array<string>;
     let series: Array<echarts.EChartOption.Series> = [
       {
         type: "map",
         map: mapList[mapList.length - 1],
-        showLegendSymbol: false,
-        geoIndex: 0,
-        datasetIndex: 0
+        geoIndex: this.sampleStyle.geoIndex,
+        datasetIndex: 0,
+        showLegendSymbol: false
       }
-      // {
-      //   type: chartTypeList[1],
-      //   coordinateSystem: "geo",
-      //   geoIndex: 0,
-      //   datasetIndex: 1
-      // }
     ];
     return series;
   }
@@ -105,12 +96,5 @@ export default class MapHandler implements ChartHandler {
         ]
       }
     ];
-  }
-  
-  public getToolTip(): echarts.EChartOption.Tooltip {
-    return {
-      trigger: "item",
-      formatter: "{b}"
-    };
   }
 }
