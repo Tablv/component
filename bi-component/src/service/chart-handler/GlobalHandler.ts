@@ -35,7 +35,7 @@ export default function(result: AnalysisResults, dashboard: Dashboard) {
   /**
    * 图例组件
    */
-  style.legend = dashboard.echarts.legend;
+  style.legend = dashboard.echarts.legend as echarts.EChartOption.Legend;
 
   /**
    * 提示标签

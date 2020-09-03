@@ -13,7 +13,8 @@ const templates = {
         HBarStackConfig.templates.echarts.sampleStyle.hbarStack
       )
     },
-    grid: ObjectUtil.copy(HBarStackConfig.templates.echarts.grid)
+    grid: ObjectUtil.copy(HBarStackConfig.templates.echarts.grid),
+    tooltip: ObjectUtil.copy(HBarStackConfig.templates.echarts.tooltip)
   }
 };
 

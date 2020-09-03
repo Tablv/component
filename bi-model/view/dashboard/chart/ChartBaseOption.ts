@@ -83,7 +83,7 @@ export interface IBorder {
   // 边框颜色
   borderColor: string;
   // 边框宽度
-  borderWidth: string;
+  borderWidth: number;
   // 圆角
   borderRadius: number | any[];
   // 边框类型

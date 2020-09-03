@@ -47,8 +47,6 @@ export default class GaugeHandler implements ChartHandler {
 
     style.series = this.getSeries();
 
-    style.tooltip = this.getTooltips();
-
     return style;
   }
 
@@ -175,12 +173,5 @@ export default class GaugeHandler implements ChartHandler {
     series.push(seriesData);
 
     return series;
-  }
-
-  // 提示信息
-  getTooltips() {
-    return {
-      formatter: "{b} : {c}"
-    };
   }
 }

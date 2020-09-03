@@ -46,7 +46,6 @@ export default class FunnelHandler implements ChartHandler {
     }
 
     style.series = this.getSeries();
-    style.tooltip = this.getTooltips();
 
     style.legend = this.getLegend();
 
@@ -149,15 +148,6 @@ export default class FunnelHandler implements ChartHandler {
       )
     };
     return Object.assign(andSeriesData, seriesData);
-  }
-
-  /**
-   * @function 提示信息
-   */
-  getTooltips() {
-    return {
-      formatter: "{b} : {c}"
-    };
   }
 
   /**

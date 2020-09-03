@@ -10,7 +10,8 @@ const templates = {
   echarts: {
     sampleStyle: {
       radar: ObjectUtil.copy(PieConfig.templates.echarts.sampleStyle.pie)
-    }
+    },
+    tooltip: ObjectUtil.copy(PieConfig.templates.echarts.tooltip)
   }
 };
 

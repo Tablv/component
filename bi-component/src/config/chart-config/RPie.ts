@@ -12,7 +12,8 @@ const templates = {
       rpie: Object.assign({}, PieConfig.templates.echarts.sampleStyle.pie, {
         radius: [45, 90]
       })
-    }
+    },
+    tooltip: ObjectUtil.copy(PieConfig.templates.echarts.tooltip)
   }
 };
 

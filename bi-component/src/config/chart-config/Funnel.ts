@@ -39,6 +39,29 @@ const templates = {
         },
         center: ["50", "50"]
       }
+    },
+    /**
+     * 提示信息
+     */
+    tooltip: {
+      show: false,
+      backgroundColor: "rgba(50,50,50,0.7)",
+      borderColor: "#333",
+      borderWidth: 0,
+      padding: 5,
+      textStyle: {
+        color: "#fff",
+        fontStyle: "normal",
+        fontWeight: "normal",
+        fontFamily: "Microsoft YaHei",
+        fontSize: 14,
+        textBorderColor: "transparent",
+        textBorderWidth: 0,
+        textShadowColor: "transparent",
+        textShadowBlur: 0,
+        textShadowOffsetX: 0,
+        textShadowOffsetY: 0
+      }
     }
   }
 };

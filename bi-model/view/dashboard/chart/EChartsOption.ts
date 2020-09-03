@@ -95,7 +95,7 @@ export default interface EChartsOption extends Partial<{
    * 图例组件。
    */
   legend: {
-    type: string;
+    type: ILegendType;
     id: string;
     zlevel: number;
     z: number;
@@ -250,4 +250,9 @@ export interface EChartsSampleStyle {
   funnel?: FunnelSeriesOption;
 
   map?: MapSeriesOption;
+}
+
+enum ILegendType {
+  plain = "plain",
+  scroll = "scroll"
 }
