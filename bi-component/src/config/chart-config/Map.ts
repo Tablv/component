@@ -8,6 +8,7 @@ const templates = {
   echarts: {
     sampleStyle: {
       map: {
+        type: "map",
         map: "china",
         mapList: ["china"],
         label: {
@@ -24,7 +25,75 @@ const templates = {
           unit: ""
         },
         center: ["50%", "50%"],
-        geoIndex: 0
+        geoIndex: 0,
+        itemStyle: {
+          areaColor: "#fff000",
+          color: {
+            type: "radial",
+            x: 1,
+            y: 1,
+            x2: 0,
+            y2: 0,
+            colorStops: [
+              {
+                offset: 0,
+                color: "#abcdef" // 0% 处的颜色
+              },
+              {
+                offset: 0.5,
+                color: "#123456" // 50% 处的颜色
+              },
+              {
+                offset: 1,
+                color: "#abcdef" // 100% 处的颜色
+              }
+            ],
+            global: true // 缺省为 false
+          },
+          borderColor: "#000",
+          borderWidth: 0,
+          borderType: "solid",
+          shadowBlur: 0,
+          shadowColor: "auto",
+          shadowOffsetX: 0,
+          shadowOffsetY: 0,
+          opacity: 1
+        },
+        emphasis: {
+          itemStyle: {
+            areaColor: "#f00000",
+            color: {
+              type: "radial",
+              x: 1,
+              y: 1,
+              x2: 0,
+              y2: 0,
+              colorStops: [
+                {
+                  offset: 0,
+                  color: "#abcdef" // 0% 处的颜色
+                },
+                {
+                  offset: 0.5,
+                  color: "#123456" // 50% 处的颜色
+                },
+                {
+                  offset: 1,
+                  color: "#abcdef" // 100% 处的颜色
+                }
+              ],
+              global: true // 缺省为 false
+            },
+            borderColor: "#000",
+            borderWidth: 0,
+            borderType: "solid",
+            shadowBlur: 0,
+            shadowColor: "auto",
+            shadowOffsetX: 0,
+            shadowOffsetY: 0,
+            opacity: 1
+          }
+        }
       }
     },
     // 地图组件
@@ -138,8 +207,9 @@ const templates = {
     visualMap: {
       type: "piecewise",
       show: true,
+      enable: true,
       min: 0,
-      max: 10000
+      max: 100000
     },
     /**
      * 提示信息

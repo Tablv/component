@@ -25,10 +25,8 @@ export default class VisualMapHandler {
     visualMapList.push({
       show: visualMap?.show,
       type: "piecewise",
-      min: 800,
-      max: 50000,
-      // realtime: false,
-      // calculable: false,
+      min: visualMap?.min,
+      max: visualMap?.max,
       inRange: {
         color: echarts.color
       }

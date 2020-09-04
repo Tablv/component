@@ -14,10 +14,8 @@
  */
 
 import { GEO } from "@/interfaces/options/GEO";
-import EChartsOption, {
-  EChartsSampleStyle
-} from "glaway-bi-model/view/dashboard/chart/EChartsOption";
-import { ChartType } from "glaway-bi-model/enums/ChartType";
+import EChartsOption from "glaway-bi-model/view/dashboard/chart/EChartsOption";
+// import GEO from "glaway-bi-model/view/dashboard/chart/options/GEO";
 
 export default class GEOHandler {
   /**

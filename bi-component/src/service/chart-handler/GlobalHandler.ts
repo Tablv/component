@@ -60,7 +60,7 @@ export default function(result: AnalysisResults, dashboard: Dashboard) {
   /**
    * 视觉映射组件
    */
-  if (dashboard.echarts.visualMap) {
+  if (dashboard.echarts.visualMap && dashboard.echarts.visualMap.enable) {
     style.visualMap = VisualMapHandler.getVisualMap(dashboard.echarts);
   }
 

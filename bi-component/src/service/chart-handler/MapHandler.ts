@@ -8,7 +8,8 @@ import { MapSeriesOption } from "glaway-bi-model/view/dashboard/chart/MapSeriesO
 import echarts from "echarts";
 
 /**
- * 柱图处理
+ * 地图处理
+ * 同时处理 挂载geo后，其他点在这里的显示情况
  */
 export default class MapHandler implements ChartHandler {
   /**
@@ -64,7 +65,9 @@ export default class MapHandler implements ChartHandler {
         map: mapList[mapList.length - 1],
         geoIndex: this.sampleStyle.geoIndex,
         datasetIndex: 0,
-        showLegendSymbol: false
+        showLegendSymbol: false,
+        itemStyle: this.sampleStyle.itemStyle,
+        emphasis: this.sampleStyle.emphasis
       }
     ];
     return series;

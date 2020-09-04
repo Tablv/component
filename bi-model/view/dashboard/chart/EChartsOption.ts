@@ -6,6 +6,7 @@ import { MapSeriesOption } from "glaway-bi-model/view/dashboard/chart/MapSeriesO
 import { LineSeriesOption } from "glaway-bi-model/view/dashboard/chart/LineSeriesOption";
 import { FunnelSeriesOption } from "glaway-bi-model/view/dashboard/chart/FunnelSeriesOption";
 import * as baseOption from "./ChartBaseOption";
+import { GEO } from "./options/GEO";
 /**
  * ECharts Option
  */
@@ -66,6 +67,7 @@ export default interface EChartsOption extends Partial<{
     type: string;
     id: string | number;
     show: boolean;
+    enable: boolean;
     range: number[];
     calculable: boolean;
     realtime: boolean;
@@ -148,7 +150,7 @@ export default interface EChartsOption extends Partial<{
     extraCssText: string;
   } & baseOption.IBorder;
 
-  geo: Object; // 以后修改
+  geo: GEO; // 以后修改
 
   color: string[];
 
