@@ -39,7 +39,7 @@ const templates = {
         },
         center: ["50", "50"]
       }
-    },
+    }
   }
 };
 

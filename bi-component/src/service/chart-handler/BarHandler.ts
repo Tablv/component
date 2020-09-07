@@ -9,6 +9,7 @@ import { ChartHandler } from "../../interfaces/ChartHandler";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
 import { BarSeriesOption } from "glaway-bi-model/view/dashboard/chart/BarSeriesOption";
 import echarts from "echarts";
+import LabelHandler from "../option-handler/LabelHandler";
 
 /**
  * 柱图处理
@@ -52,7 +53,6 @@ export default class BarHandler implements ChartHandler {
     style.xAxis = this.getXAxis();
     style.yAxis = this.getYAxis();
     style.series = this.getSeries();
-    // style.legend = this.getLegend();
 
     /**
      * 预警处理
@@ -176,8 +176,8 @@ export default class BarHandler implements ChartHandler {
       itemStyle: {
         barBorderRadius: this.sampleStyle.radius
       },
-      barWidth: EChartDataUtil.getBarWidth(this.sampleStyle),
-      label: EChartDataUtil.getBarSeriesLabel(this.sampleStyle)
+      barWidth: this.getBarWidth(this.sampleStyle),
+      label: LabelHandler.getBarLabel(this.sampleStyle.label)
     };
 
     measures.forEach((measureName, index) => {
@@ -190,13 +190,14 @@ export default class BarHandler implements ChartHandler {
     return series;
   }
 
-  // /**
-  //  * @function 获取图例
-  //  */
-  // public getLegend(): echarts.EChartOption.Legend {
-  //   const legend = {
-  //     data: this.fieldNames.measures
-  //   };
-  //   return legend;
-  // }
+  /**
+   * 获取柱宽
+   *
+   * @param sampleStyle 样例样式
+   */
+  public getBarWidth(sampleStyle: BarSeriesOption): string | undefined {
+    return sampleStyle
+      ? sampleStyle.width.value + sampleStyle.width.unit
+      : undefined;
+  }
 }

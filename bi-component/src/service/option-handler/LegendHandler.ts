@@ -9,9 +9,7 @@
 import EChartsOption from "glaway-bi-model/view/dashboard/chart/EChartsOption";
 
 export default class LegendHandler {
-  public static getLegend(
-    echarts: EChartsOption
-  ): echarts.EChartOption.Legend {
+  public static getLegend(echarts: EChartsOption): echarts.EChartOption.Legend {
     const legend = echarts.legend;
     return {
       type: legend?.type,
@@ -35,14 +33,14 @@ export default class LegendHandler {
       shadowBlur: legend?.shadowBlur,
       shadowColor: legend?.shadowColor,
       shadowOffsetX: legend?.shadowOffsetX,
-      shadowOffsetY: legend?.shadowOffsetY,
+      shadowOffsetY: legend?.shadowOffsetY
       // formatter: function (name) {
       //   return echarts..format.truncateText(name, 40, '14px Microsoft Yahei', '…');
       // },
       // tooltip: {
       //   show: true
       // }
-    }
+    };
   }
 }
 

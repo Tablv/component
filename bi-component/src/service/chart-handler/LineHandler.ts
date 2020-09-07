@@ -8,6 +8,7 @@ import { LineSeriesOption } from "glaway-bi-model/view/dashboard/chart/LineSerie
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import warnConfigure from "./configure/WarnConfigure";
 import { WARN_DEFAULT_VALUE } from "glaway-bi-model/view/Warn";
+import LabelHandler from "../option-handler/LabelHandler";
 
 /**
  * 折线图处理
@@ -52,7 +53,6 @@ export default class LineHandler implements ChartHandler {
     style.xAxis = this.getXAxis();
     style.yAxis = this.getYAxis();
     style.series = this.getSeries();
-    style.legend = this.getLegend();
 
     /**
      * 预警处理
@@ -125,13 +125,7 @@ export default class LineHandler implements ChartHandler {
     const connectNulls = this.sampleStyle.connectNulls;
     const seriesData = {
       type: "line",
-      label: {
-        show: this.sampleStyle.label.show,
-        position: this.sampleStyle.label.position,
-        color: this.sampleStyle.label.color,
-        fontSize: this.sampleStyle.label.fontSize,
-        fontFamily: this.sampleStyle.label.fontFamily
-      },
+      label: LabelHandler.getLineLabel(this.sampleStyle),
       symbol: this.sampleStyle.symbol,
       symbolSize: this.sampleStyle.symbolSize,
       symbolRotate: this.sampleStyle.symbolRotate,
@@ -201,15 +195,5 @@ export default class LineHandler implements ChartHandler {
       )
     };
     return Object.assign(andSeriesData, seriesData);
-  }
-
-  /**
-   * @function 获取图例
-   */
-  public getLegend(): echarts.EChartOption.Legend {
-    const legend = {
-      data: this.fieldNames.measures
-    };
-    return legend;
   }
 }

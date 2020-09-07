@@ -14,7 +14,6 @@ const templates = {
       )
     },
     grid: ObjectUtil.copy(BarStackConfig.templates.echarts.grid)
-    // tooltip: ObjectUtil.copy(BarStackConfig.templates.echarts.tooltip)
   }
 };
 

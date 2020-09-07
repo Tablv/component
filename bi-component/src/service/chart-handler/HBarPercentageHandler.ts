@@ -1,6 +1,7 @@
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import HBarStackHandler from "./HBarStackHandler";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
+import LabelHandler from "../option-handler/LabelHandler";
 
 /**
  * 百分比堆积条图处理
@@ -89,7 +90,7 @@ export default class HBarPercentageHandler extends HBarStackHandler {
           this.sampleStyle.decimals
         ),
         barWidth: EChartDataUtil.getBarWidth(this.sampleStyle),
-        label: EChartDataUtil.getBarSeriesLabel(this.sampleStyle)
+        label: LabelHandler.getBarLabel(this.sampleStyle.label)
       };
       series.push(seriesData);
     });

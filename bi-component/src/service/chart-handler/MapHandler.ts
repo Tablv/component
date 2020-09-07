@@ -6,6 +6,7 @@ import EChartsService from "../EChartsService";
 import { ChartHandler } from "../../interfaces/ChartHandler";
 import { MapSeriesOption } from "glaway-bi-model/view/dashboard/chart/MapSeriesOption";
 import echarts from "echarts";
+import LabelHandler from "../option-handler/LabelHandler";
 
 /**
  * 地图处理
@@ -66,6 +67,7 @@ export default class MapHandler implements ChartHandler {
         geoIndex: this.sampleStyle.geoIndex,
         datasetIndex: 0,
         showLegendSymbol: false,
+        label: LabelHandler.getMapLabel(this.sampleStyle.label) as any,
         itemStyle: this.sampleStyle.itemStyle,
         emphasis: this.sampleStyle.emphasis
       }

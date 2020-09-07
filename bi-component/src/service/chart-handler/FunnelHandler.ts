@@ -6,6 +6,7 @@ import EChartsService from "../EChartsService";
 import { ChartHandler } from "../../interfaces/ChartHandler";
 import { FunnelSeriesOption } from "glaway-bi-model/view/dashboard/chart/FunnelSeriesOption";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
+import LabelHandler from "../option-handler/LabelHandler";
 
 /**
  * 漏斗图处理
@@ -60,32 +61,15 @@ export default class FunnelHandler implements ChartHandler {
     const { dimensions, measures } = this.fieldNames;
 
     // 实际值必须唯一，
-    const decimals = this.sampleStyle.decimals.value;
     const seriesData = {
       type: "funnel",
-      label: {
-        show: this.sampleStyle.label.show,
-        color: this.sampleStyle.label.color,
-        fontFamily: this.sampleStyle.label.fontFamily,
-        fontSize: this.sampleStyle.label.fontSize,
-        position: this.sampleStyle.label.position,
-        formatter: (params: { value: number; percent: number }) => {
-          const value = Number((params.value * 1).toFixed(decimals));
-          const percent = Number((params.percent * 1).toFixed(decimals));
-          let result = `${percent.toFixed(decimals)}%`;
-          if (this.sampleStyle.label.isShowNumber) {
-            result = `${value}` + `(${result})`;
-          }
-          return result;
-        }
-      },
+      label: LabelHandler.getFunnelLabel(this.sampleStyle),
       labelLine: this.sampleStyle.labelLine,
       itemStyle: this.sampleStyle.itemStyle,
       sort: this.sampleStyle.sort,
       funnelAlign: this.sampleStyle.funnelAlign,
       gap: this.sampleStyle.gap,
       min: this.sampleStyle.min,
-      // max: this.sampleStyle.max,
       minSize: this.sampleStyle.minSize + "%",
       maxSize: this.sampleStyle.maxSize + "%",
       width: this.sampleStyle.width + "%",

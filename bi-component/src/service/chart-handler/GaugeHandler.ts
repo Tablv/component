@@ -6,6 +6,7 @@ import EChartsService from "../EChartsService";
 import { ChartHandler } from "../../interfaces/ChartHandler";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
 import { GaugeSeriesOption } from "glaway-bi-model/view/dashboard/chart/GaugeSeriesOption";
+import LabelHandler from "../option-handler/LabelHandler";
 
 /**
  * 仪表盘处理
@@ -100,21 +101,7 @@ export default class GaugeHandler implements ChartHandler {
 
     const seriesData = {
       type: "gauge",
-      detail: {
-        show: this.sampleStyle.label.show,
-        color: this.sampleStyle.label.color,
-        fontFamily: this.sampleStyle.label.fontFamily,
-        fontSize: this.sampleStyle.label.fontSize,
-        offsetCenter: this.sampleStyle.label.offset,
-        formatter: (value: number) => {
-          let result = `${((value / comparison) * 100).toFixed(2)}%`;
-          if (this.sampleStyle.label.isShowNumber) {
-            result = `${value}` + `(${result})`;
-          }
-          const number = [result, `\n${comparison}`].join("");
-          return number;
-        }
-      },
+      detail: LabelHandler.getGaugeLabel(this.sampleStyle, comparison),
       // 坐标轴线
       axisLine: {
         // 属性lineStyle控制线条样式

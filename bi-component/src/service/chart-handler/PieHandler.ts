@@ -6,6 +6,7 @@ import EChartsService from "../EChartsService";
 import { ChartHandler } from "glaway-bi-component/src/interfaces/ChartHandler";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
 import { PieSeriesOption } from "glaway-bi-model/view/dashboard/chart/PieSeriesOption";
+import LabelHandler from "../option-handler/LabelHandler";
 
 /**
  * 饼图处理
@@ -42,28 +43,9 @@ export default class PieHandler implements ChartHandler {
       return {};
     }
 
-    style.legend = this.getLegend();
     style.series = this.getSeries();
 
     return style;
-  }
-
-  /**
-   * 获取图例
-   *
-   * @param fieldNames 分析结果划分数据
-   */
-  public getLegend(): echarts.EChartOption.Legend {
-    let legend: echarts.EChartOption.Legend = {};
-
-    // dimension 存在元素 走 一维度一度量
-    const dimensionName = this.fieldNames.dimensions[0];
-
-    legend.data = dimensionName
-      ? this.result.map((data: any) => data[dimensionName] as string)
-      : this.fieldNames.measures;
-
-    return legend;
   }
 
   /**
@@ -83,7 +65,7 @@ export default class PieHandler implements ChartHandler {
           : this.sampleStyle.radius,
       itemStyle: {},
       center: this.sampleStyle.center,
-      label: EChartDataUtil.getPieSeriesLabel(this.sampleStyle),
+      label: LabelHandler.getPieLabel(this.sampleStyle),
       data: [] as echarts.EChartOption.SeriesBar["data"]
     };
 

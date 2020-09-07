@@ -5,8 +5,8 @@ import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import EChartsService from "../EChartsService";
 import { ChartHandler } from "glaway-bi-component/src/interfaces/ChartHandler";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
-// import { RadarSeriesOption } from "glaway-bi-model/view/dashboard/chart/SeriesOption";
 import { PieSeriesOption } from "glaway-bi-model/view/dashboard/chart/PieSeriesOption";
+import LabelHandler from "../option-handler/LabelHandler";
 
 /**
  * 雷达图处理
@@ -44,20 +44,9 @@ export default class RadarHandler implements ChartHandler {
       return {};
     }
 
-    style.legend = this.getLegend();
     style.series = this.getSeries();
     style.radar = this.getRadar();
     return style;
-  }
-
-  /**
-   * 获取图例
-   */
-  public getLegend(): echarts.EChartOption.Legend {
-    const legend = {
-      data: this.fieldNames.measures
-    };
-    return legend;
   }
 
   /**
@@ -90,13 +79,7 @@ export default class RadarHandler implements ChartHandler {
     return [
       {
         type: "radar",
-        label: {
-          show: this.sampleStyle.label.show,
-          position: this.sampleStyle.label.position,
-          color: this.sampleStyle.label.color,
-          fontSize: this.sampleStyle.label.fontSize,
-          fontFamily: this.sampleStyle.label.fontFamily
-        },
+        label: LabelHandler.getPieLabel(this.sampleStyle),
         data: this.fieldNames.measures.map(measureName =>
           EChartDataUtil.getRadarDataByAxisName(measureName, this.result)
         )

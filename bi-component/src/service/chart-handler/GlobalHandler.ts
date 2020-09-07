@@ -8,7 +8,7 @@ import GEOHandler from "glaway-bi-component/src/service/option-handler/GEOHandle
 import VisualMapHandler from "glaway-bi-component/src/service/option-handler/VisualMapHandler";
 import { ChartType } from "glaway-bi-model/enums/ChartType";
 import TooltipHandler from "glaway-bi-component/src/service/option-handler/TooltipHandler";
-import LegendHandler from '../option-handler/LegendHandler';
+import LegendHandler from "../option-handler/LegendHandler";
 
 /**
  * 全局处理方法

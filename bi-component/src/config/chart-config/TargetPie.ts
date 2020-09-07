@@ -28,8 +28,6 @@ const templates = {
           },
           label: {
             show: true,
-            hidePosition: true,
-            position: "",
             color: "auto",
             fontSize: 16,
             fontFamily: "Microsoft YaHei",

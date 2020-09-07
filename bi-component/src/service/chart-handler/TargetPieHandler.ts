@@ -1,6 +1,7 @@
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import EChartDataUtil from "glaway-bi-component/src/util/EChartDataUtil";
 import GaugeHandler from "./GaugeHandler";
+import LabelHandler from '../option-handler/LabelHandler';
 
 /**
  * 仪表盘处理
@@ -53,20 +54,7 @@ export default class TargetPieHandler extends GaugeHandler {
     const decimals = this.sampleStyle.decimals.value;
     const seriesData = {
       type: "gauge",
-      detail: {
-        show: this.sampleStyle.label.show,
-        color: this.sampleStyle.label.color,
-        fontFamily: this.sampleStyle.label.fontFamily,
-        fontSize: this.sampleStyle.label.fontSize,
-        offsetCenter: this.sampleStyle.label.offset,
-        formatter: (value: number) => {
-          let result = `${((value / comparison) * 100).toFixed(decimals)}%`;
-          if (this.sampleStyle.label.isShowNumber) {
-            result = `${value}` + `(${result})`;
-          }
-          return result;
-        }
-      },
+      detail: LabelHandler.getTargetLabel(this.sampleStyle, comparison),
       // 坐标轴线
       axisLine: {
         // 属性lineStyle控制线条样式
