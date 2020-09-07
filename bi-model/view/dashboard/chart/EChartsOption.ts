@@ -102,7 +102,7 @@ export default interface EChartsOption extends Partial<{
     zlevel: number;
     z: number;
     show: boolean;
-    widht: string | number;
+    width: string | number;
     height: string | number;
     orient: string;
     align: string;

@@ -8,6 +8,7 @@ import GEOHandler from "glaway-bi-component/src/service/option-handler/GEOHandle
 import VisualMapHandler from "glaway-bi-component/src/service/option-handler/VisualMapHandler";
 import { ChartType } from "glaway-bi-model/enums/ChartType";
 import TooltipHandler from "glaway-bi-component/src/service/option-handler/TooltipHandler";
+import LegendHandler from '../option-handler/LegendHandler';
 
 /**
  * 全局处理方法
@@ -35,7 +36,9 @@ export default function(result: AnalysisResults, dashboard: Dashboard) {
   /**
    * 图例组件
    */
-  style.legend = dashboard.echarts.legend as echarts.EChartOption.Legend;
+  if (dashboard.echarts.legend) {
+    style.legend = LegendHandler.getLegend(dashboard.echarts);
+  }
 
   /**
    * 提示标签

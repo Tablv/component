@@ -52,7 +52,7 @@ export default class BarHandler implements ChartHandler {
     style.xAxis = this.getXAxis();
     style.yAxis = this.getYAxis();
     style.series = this.getSeries();
-    style.legend = this.getLegend();
+    // style.legend = this.getLegend();
 
     /**
      * 预警处理
@@ -190,13 +190,13 @@ export default class BarHandler implements ChartHandler {
     return series;
   }
 
-  /**
-   * @function 获取图例
-   */
-  public getLegend(): echarts.EChartOption.Legend {
-    const legend = {
-      data: this.fieldNames.measures
-    };
-    return legend;
-  }
+  // /**
+  //  * @function 获取图例
+  //  */
+  // public getLegend(): echarts.EChartOption.Legend {
+  //   const legend = {
+  //     data: this.fieldNames.measures
+  //   };
+  //   return legend;
+  // }
 }

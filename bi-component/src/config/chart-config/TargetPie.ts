@@ -56,7 +56,9 @@ const templates = {
           }
         }
       )
-    }
+    },
+    tooltip: false,
+    legend: false
   }
 };
 

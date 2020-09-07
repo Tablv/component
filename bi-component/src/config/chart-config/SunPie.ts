@@ -10,8 +10,7 @@ const templates = {
   echarts: {
     sampleStyle: {
       sunpie: ObjectUtil.copy(PieConfig.templates.echarts.sampleStyle.pie)
-    },
-    tooltip: ObjectUtil.copy(PieConfig.templates.echarts.tooltip)
+    }
   }
 };
 

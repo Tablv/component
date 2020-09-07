@@ -150,12 +150,63 @@ export const generalDataTemplate: any = {
     legend: {
       show: true,
       orient: "horizontal",
-      textStyle: {
-        fontSize: 12
-      },
-      data: [],
+      algin: "left",
       right: "10",
-      top: "30"
+      top: "30",
+      itemGap: 10,
+      itemWidth: 25,
+      itemHeight: 14,
+      padding: [5, 5, 5, 5],
+      inactiveColor: "#ccc",
+      backgroundColor: "transparent",
+      borderColor: "ccc",
+      borderWidth: 0,
+      borderRadius: 0,
+      shadowBlur: 0,
+      shadowColor: "transparent",
+      shadowOffsetX: 0,
+      shadowOffsetY: 0,
+      textStyle: {
+        fontSize: 12,
+        color: "#000",
+        fontFamily: "Microsoft YaHei",
+        padding: [5, 5, 5, 5],
+        backgroundColor: "transparent",
+        borderColor: "transparent",
+        borderWidth: 0,
+        borderRadius: 5,
+        shadowColor: "transparent",
+        shadowBlur: 0,
+        shadowOffsetX: 0,
+        shadowOffsetY: 0,
+        textShadowColor: "transparent",
+        textShadowBlur: 0,
+        textShadowOffsetX: 0,
+        textShadowOffsetY: 0
+      }
+    },
+    /**
+     * 提示信息
+     */
+    tooltip: {
+      show: false,
+      backgroundColor: "rgba(50,50,50,0.7)",
+      borderColor: "#333",
+      borderWidth: 0,
+      padding: 5,
+      textStyle: {
+        color: "#fff",
+        fontStyle: "normal",
+        fontWeight: "normal",
+        fontFamily: "Microsoft YaHei",
+        fontSize: 14,
+        textBorderColor: "transparent",
+        textBorderWidth: 0,
+        textShadowColor: "transparent",
+        textShadowBlur: 0,
+        textShadowOffsetX: 0,
+        textShadowOffsetY: 0
+      }
     },
     color: [
       "#118DFF",

@@ -11,8 +11,7 @@ const templates = {
     sampleStyle: {
       hbar: ObjectUtil.copy(BarConfig.templates.echarts.sampleStyle.bar)
     },
-    grid: ObjectUtil.copy(BarConfig.templates.echarts.grid),
-    tooltip: ObjectUtil.copy(BarConfig.templates.echarts.tooltip)
+    grid: ObjectUtil.copy(BarConfig.templates.echarts.grid)
   }
 };
 
