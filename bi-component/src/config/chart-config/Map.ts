@@ -13,11 +13,24 @@ const templates = {
         mapList: ["china"],
         label: {
           show: false,
-          position: "top",
           color: "#000",
           fontFamily: "Microsoft YaHei",
           fontSize: 12,
-          isShowNumber: false
+          padding: [5, 5, 5, 5],
+          borderColor: "transparent",
+          borderWidth: 0,
+          borderRadius: 0,
+          shadowBlur: 0,
+          shadowColor: "transparent",
+          shadowOffsetX: 0,
+          shadowOffsetY: 0,
+          backgroundColor: "transparent",
+          textBorderColor: "transparent",
+          textBorderWidth: 0,
+          textShadowColor: "transparent",
+          textShadowBlur: 0,
+          textShadowOffsetX: 0,
+          textShadowOffsetY: 0
         },
         pointer: {},
         decimals: {
