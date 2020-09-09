@@ -59,19 +59,119 @@ export default class MapHandler implements ChartHandler {
    * @function 获取Series数据
    */
   public getSeries(): Array<echarts.EChartOption.Series> {
+    const eoption = this.dashboard.echarts;
     const mapList = this.sampleStyle.mapList as Array<string>;
     let series: Array<echarts.EChartOption.Series> = [
       {
         type: "map",
+        name: "地图",
         map: mapList[mapList.length - 1],
         geoIndex: this.sampleStyle.geoIndex,
         datasetIndex: 0,
         showLegendSymbol: false,
         label: LabelHandler.getMapLabel(this.sampleStyle.label) as any,
         itemStyle: this.sampleStyle.itemStyle,
-        emphasis: this.sampleStyle.emphasis
+        emphasis: this.sampleStyle.emphasis,
+        zlevel: 1,
       }
     ];
+    if (eoption.effectScatter && eoption.effectScatter.show) {
+      series.push(this.getEffectScatterSeries())
+    } else {
+      series.push(this.getScatterSeries())
+    }
+    if (eoption.lines) {
+      series.push(this.getLines())
+    }
+    return series;
+  }
+
+  public getScatterSeries(): echarts.EChartOption.Series {
+    const series: echarts.EChartOption.Series = {
+      type: "scatter",
+      name: "散点",
+      geoIndex: this.sampleStyle.geoIndex,
+      datasetIndex: 1,
+      coordinateSystem: 'geo',
+      symbol: this.dashboard.echarts.effectScatter.symbol,
+      symbolRotate: this.dashboard.echarts.effectScatter.symbolRotate,
+      symbolSize: this.dashboard.echarts.effectScatter.symbolSize,
+      itemStyle: this.dashboard.echarts.effectScatter.itemStyle,
+      label: LabelHandler.getMapLabel(this.sampleStyle.label) as any,
+      zlevel: 2,
+    }
+    return series;
+  }
+
+  /**
+   * 涟漪散点
+   */
+  public getEffectScatterSeries(): echarts.EChartOption.Series {
+    const series: echarts.EChartOption.Series = {
+      type: "effectScatter",
+      name: "涟漪散点",
+      geoIndex: this.sampleStyle.geoIndex,
+      datasetIndex: 1,
+      coordinateSystem: 'geo',
+      symbol: this.dashboard.echarts.effectScatter.symbol,
+      symbolRotate: this.dashboard.echarts.effectScatter.symbolRotate,
+      symbolSize: this.dashboard.echarts.effectScatter.symbolSize,
+      itemStyle: this.dashboard.echarts.effectScatter.itemStyle,
+      rippleEffect: this.dashboard.echarts.effectScatter.rippleEffect,
+      label: LabelHandler.getMapLabel(this.sampleStyle.label) as any,
+      zlevel: 3,
+    }
+    return series;
+  }
+
+  /**
+   * 路径
+   */
+  public getLines(): echarts.EChartOption.Series {
+    const series: echarts.EChartOption.Series =  {
+      type: "lines",
+      name: "路径",
+      zlevel: 4,
+      geoIndex: this.sampleStyle.geoIndex,
+      coordinateSystem: 'geo',
+      symbol: this.dashboard.echarts.lines.symbol,
+      symbolSize: this.dashboard.echarts.lines.symbolSize,
+      lineStyle: this.dashboard.echarts.lines.lineStyle,
+      effect: this.dashboard.echarts.lines.effect,
+      label: LabelHandler.getMapLabel(this.sampleStyle.label) as any,
+      data: [
+        {
+          name: 'No.1',
+          coords: [
+            [116.096385, 35.389503], [116.045792, 34.799773]
+          ]
+        },
+        {
+          name: 'No.2',
+          coords: [
+            [116.096385, 35.389503], [115.369691, 35.400801]
+          ]
+        },
+        {
+          name: 'No.3',
+          coords: [
+            [116.096385, 35.389503], [115.495792, 35.490801]
+          ]
+        },
+        {
+          name: 'No.4',
+          coords: [
+            [116.096385, 35.389503], [114.495792, 34.799773]
+          ]
+        },
+        {
+          name: 'No.5',
+          coords: [
+            [116.096385, 35.389503], [115.495792, 34.709773]
+          ]
+        },
+      ]
+    }
     return series;
   }
 

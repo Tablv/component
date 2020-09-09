@@ -32,11 +32,6 @@ const templates = {
           textShadowOffsetX: 0,
           textShadowOffsetY: 0
         },
-        pointer: {},
-        decimals: {
-          value: 0,
-          unit: ""
-        },
         center: ["50%", "50%"],
         geoIndex: 0,
         itemStyle: {
@@ -223,6 +218,50 @@ const templates = {
       enable: true,
       min: 0,
       max: 100000
+    },
+    effectScatter: {
+      show: true,
+      // 'circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow', 'none'
+      symbol: "circle",
+      symbolRotate: 0,
+      symbolSize: 20,
+      itemStyle: {
+        color: "#fff000",
+        borderColor: "#000",
+        borderWidth: 0,
+        borderType: "solid",
+        shadowBlur: 0,
+        shadowColor: "auto",
+        shadowOffsetX: 0,
+        shadowOffsetY: 0
+      },
+      rippleEffect: {
+        color: "auto",
+        scale: 2.5
+      }
+    },
+    lines: {
+      show: true,
+      symbol: "circle",
+      symbolSize: 10,
+      effect: {
+        show: true,
+        symbol: "circle",
+        symbolSize: 5,
+        color: "red",
+        trailLength: 0.2,
+        loop: true
+      },
+      lineStyle: {
+        color: "#ff00ff",
+        width: 5,
+        type: "solid",
+        curveness: 0.5,
+        shadowBlur: 0,
+        shadowColor: "auto",
+        shadowOffsetX: 0,
+        shadowOffsetY: 0
+      }
     }
   }
 };

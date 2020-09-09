@@ -30,8 +30,8 @@ export default class GEOHandler {
       // 宽高比
       aspectScale: <number>geoEvent.aspectScale / 100,
       zoom: <number>geoEvent.zoom,
-      layoutCenter: geoEvent.layoutCenter,
-      layoutSize: 100,
+      // layoutCenter: geoEvent.layoutCenter,
+      // layoutSize: 100,
       itemStyle: geoEvent.itemStyle
     };
     return geo;

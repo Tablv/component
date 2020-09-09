@@ -30,5 +30,13 @@ enum ITrigger {
 }
 
 function toolTipFormatter(params: any) {
-  return `name: ${params.name}<br />value: ${params.value}`;
+  let result = ""
+  if (typeof params.value === 'object') {
+    params.dimensionNames.forEach((item: string) => {
+      result = result + item + ": " + params.data[item] + "<br/>";
+    })
+  } else {
+    result = `name: ${params.name}<br />value: ${params.value}`;
+  }
+  return result;
 }
